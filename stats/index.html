@@ -697,16 +697,21 @@ function updatePopulation() {
 
     for (const value of population) {
         const i = Math.floor(value / width);
-        if (i >= 0 && i < BINS) counts[i]++;
+
+        if (i >= 0 && i < BINS) {
+            counts[i]++;
+        }
     }
 
-    popChart.data.labels = counts.map((_, i =>
+    popChart.data.labels = counts.map((_, i) =>
         Number(((i + 0.5) * width).toFixed(2))
     );
-    popChart.data.datasets[0].data =
-        counts.map(c => c / POP_SIZE);
 
-    popChart.update("none");
+    popChart.data.datasets[0].data = counts.map(
+        count => count / POP_SIZE
+    );
+
+    popChart.update();
 }
 
 function renderSampleChart(values, type, n) {

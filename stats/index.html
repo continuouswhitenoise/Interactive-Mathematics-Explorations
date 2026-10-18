@@ -702,7 +702,7 @@ function updatePopulation() {
 
     popChart.data.labels = counts.map((_, i =>
         Number(((i + 0.5) * width).toFixed(2))
-    ));
+    );
     popChart.data.datasets[0].data =
         counts.map(c => c / POP_SIZE);
 

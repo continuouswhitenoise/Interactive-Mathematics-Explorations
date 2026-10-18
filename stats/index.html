@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,20 +10,15 @@
 :root {
     --bg: #02090c;
     --panel: rgba(5, 22, 27, 0.88);
-    --panel2: #071b20;
     --border: rgba(65, 197, 190, 0.19);
     --text: #e0fffc;
     --muted: #789e9e;
-    --teal: #0b9d91;
     --aqua: #72fff0;
     --cyan: #b1fff8;
-    --deep: #075e60;
     --red: #ff789f;
-    --glow: rgba(63, 255, 233, 0.12);
 }
 
 * { box-sizing: border-box; }
-
 html { min-height: 100%; }
 
 body {
@@ -35,9 +29,9 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                  Roboto, Helvetica, Arial, sans-serif;
     background:
-        radial-gradient(ellipse at 50% -10%, rgba(0, 124, 119, .25), transparent 55%),
-        radial-gradient(ellipse at 0% 35%, rgba(0, 71, 79, .17), transparent 42%),
-        radial-gradient(ellipse at 100% 75%, rgba(0, 111, 111, .12), transparent 40%),
+        radial-gradient(ellipse at 50% -10%, rgba(0,124,119,.25), transparent 55%),
+        radial-gradient(ellipse at 0% 35%, rgba(0,71,79,.17), transparent 42%),
+        radial-gradient(ellipse at 100% 75%, rgba(0,111,111,.12), transparent 40%),
         linear-gradient(160deg, #02080b, #031216 50%, #02090c);
     background-attachment: fixed;
 }
@@ -94,7 +88,7 @@ h1 {
 
 h1 span {
     color: var(--aqua);
-    text-shadow: 0 0 30px rgba(114, 255, 240, .23);
+    text-shadow: 0 0 30px rgba(114,255,240,.23);
 }
 
 .subtitle {
@@ -106,15 +100,14 @@ h1 span {
 
 .panel {
     position: relative;
-    background:
-        linear-gradient(145deg, rgba(10, 37, 42, .91), rgba(3, 17, 22, .94));
+    background: linear-gradient(145deg, rgba(10,37,42,.91), rgba(3,17,22,.94));
     border: 1px solid var(--border);
     border-radius: 17px;
     padding: 23px;
     margin-bottom: 20px;
     box-shadow:
-        0 15px 45px rgba(0, 0, 0, .24),
-        inset 0 1px 0 rgba(180, 255, 249, .035);
+        0 15px 45px rgba(0,0,0,.24),
+        inset 0 1px 0 rgba(180,255,249,.035);
     backdrop-filter: blur(14px);
 }
 
@@ -225,7 +218,7 @@ button {
 button:hover:not(:disabled) {
     filter: brightness(1.2);
     transform: translateY(-1px);
-    box-shadow: 0 0 18px rgba(73, 255, 229, .09);
+    box-shadow: 0 0 18px rgba(73,255,229,.09);
 }
 
 button:focus-visible {
@@ -414,6 +407,29 @@ footer {
     </p>
 </header>
 
+<!-- GRAPHS FIRST -->
+<section class="chart-grid">
+    <div class="panel">
+        <h2 class="section-heading"><span class="dot"></span>The Population</h2>
+        <p class="description">
+            The original distribution from which individual observations are drawn.
+            It does not become normal when n increases.
+        </p>
+        <div class="chart-wrap"><canvas id="popChart"></canvas></div>
+    </div>
+
+    <div class="panel">
+        <h2 class="section-heading"><span class="dot pink"></span>Sampling Distribution</h2>
+        <p class="description">
+            The teal histogram shows simulated sample means. The pink curve
+            shows the normal approximation with mean μ and standard deviation σ/√n.
+        </p>
+        <div class="live-note" id="previewTag">LIVE EXPLORATION</div>
+        <div class="chart-wrap"><canvas id="sampleChart"></canvas></div>
+    </div>
+</section>
+
+<!-- CONTROLS DIRECTLY BELOW THE GRAPHS -->
 <section class="panel">
     <div class="controls">
         <div class="control-group">
@@ -453,27 +469,6 @@ footer {
     </div>
     <div class="progress-track">
         <div id="progressBar"></div>
-    </div>
-</section>
-
-<section class="chart-grid">
-    <div class="panel">
-        <h2 class="section-heading"><span class="dot"></span>The Population</h2>
-        <p class="description">
-            The original distribution from which individual observations are drawn.
-            It does not become normal when n increases.
-        </p>
-        <div class="chart-wrap"><canvas id="popChart"></canvas></div>
-    </div>
-
-    <div class="panel">
-        <h2 class="section-heading"><span class="dot pink"></span>Sampling Distribution</h2>
-        <p class="description">
-            The teal histogram shows simulated sample means. The pink curve
-            shows the normal approximation with mean μ and standard deviation σ/√n.
-        </p>
-        <div class="live-note" id="previewTag">LIVE EXPLORATION</div>
-        <div class="chart-wrap"><canvas id="sampleChart"></canvas></div>
     </div>
 </section>
 
@@ -536,7 +531,9 @@ const TOTAL = 10000;
 const POP_SIZE = 10000;
 const BINS = 40;
 const BATCH = 200;
-const PREVIEW_COUNT = 180;
+
+// More preview means make the histogram less noisy.
+const PREVIEW_COUNT = 1000;
 
 const $ = id => document.getElementById(id);
 
@@ -697,10 +694,7 @@ function updatePopulation() {
 
     for (const value of population) {
         const i = Math.floor(value / width);
-
-        if (i >= 0 && i < BINS) {
-            counts[i]++;
-        }
+        if (i >= 0 && i < BINS) counts[i]++;
     }
 
     popChart.data.labels = counts.map((_, i) =>
@@ -711,15 +705,13 @@ function updatePopulation() {
         count => count / POP_SIZE
     );
 
-    popChart.update();
+    popChart.update("none");
 }
 
 function renderSampleChart(values, type, n) {
     const { mean, sd } = params(type);
     const se = sd / Math.sqrt(n);
 
-    // Use a fixed theoretical window so the curve remains comparable
-    // with the histogram as the slider changes.
     const min = mean - 4.2 * se;
     const max = mean + 4.2 * se;
     const width = (max - min) / BINS;
@@ -737,7 +729,9 @@ function renderSampleChart(values, type, n) {
     for (let i = 0; i < BINS; i++) {
         const x = min + (i + 0.5) * width;
         labels.push(Number(x.toFixed(4)));
-        densities.push(values.length ? counts[i] / (values.length * width) : 0);
+        densities.push(
+            values.length ? counts[i] / (values.length * width) : 0
+        );
         curve.push(normalPDF(x, mean, se));
     }
 
@@ -756,27 +750,27 @@ function makePreview(n) {
     const type = distributionInput.value;
     const preview = new Array(PREVIEW_COUNT);
 
-    // Small, fast preview for slider exploration. Each value is the
-    // mean of n independent draws from the selected population.
     for (let i = 0; i < PREVIEW_COUNT; i++) {
         let sum = 0;
 
         for (let j = 0; j < n; j++) {
-            sum += population[Math.floor(Math.random() * population.length)];
+            sum += population[
+                Math.floor(Math.random() * population.length)
+            ];
         }
 
         preview[i] = sum / n;
     }
 
     renderSampleChart(preview, type, n);
-    previewTag.textContent = `LIVE PREVIEW · ${PREVIEW_COUNT} SAMPLE MEANS`;
+    previewTag.textContent =
+        `LIVE PREVIEW · ${PREVIEW_COUNT.toLocaleString()} SAMPLE MEANS`;
 }
 
 function updateControls() {
     runBtn.disabled = running;
     pauseBtn.disabled = !running;
     pauseBtn.textContent = paused ? "▶ Play" : "Ⅱ Pause";
-    // Keep the sample-size slider active during the simulation.
     sizeInput.disabled = false;
     distributionInput.disabled = running;
     resetBtn.disabled = false;
@@ -842,7 +836,12 @@ async function runSimulation() {
             }
 
             completed = end;
-            renderSampleChart(means.slice(0, completed), type, currentRun.n);
+
+            renderSampleChart(
+                means.slice(0, completed),
+                type,
+                currentRun.n
+            );
 
             const percent = completed / TOTAL * 100;
             progressBar.style.width = percent + "%";
@@ -857,6 +856,7 @@ async function runSimulation() {
         status.textContent =
             `Complete · ${TOTAL.toLocaleString()} sample means · n = ${currentRun.n}`;
         previewTag.textContent = "SIMULATION COMPLETE";
+
     } catch (error) {
         console.error(error);
         status.textContent = "An error occurred. Check the browser console.";
@@ -881,7 +881,6 @@ function pauseOrPlay() {
 }
 
 function reset() {
-    // Invalidate the current asynchronous simulation.
     generation++;
     running = false;
     paused = false;
@@ -904,12 +903,11 @@ function onSizeInput() {
     $("nStat").textContent = n;
 
     if (running && currentRun) {
-        // Changing n during a full run starts a fresh set of sample means
-        // at the new sample size, keeping the histogram statistically valid.
         currentRun.n = n;
         completed = 0;
         means = new Array(TOTAL);
         progressBar.style.width = "0%";
+
         renderSampleChart([], currentRun.type, n);
         status.textContent =
             `Sample size changed to n = ${n}. Restarting the 10,000 sample means…`;

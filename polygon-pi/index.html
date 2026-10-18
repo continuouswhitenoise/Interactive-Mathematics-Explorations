@@ -289,7 +289,7 @@
       if (isPlaying && elapsed >= intervalMs) {
         lastTime = timestamp;
         let nextN = currentN + direction;
-        if (nextN > 60) { nextN = 59; direction = -1; }
+        if (nextN > 120) { nextN = 119; direction = -1; }
         else if (nextN < 3) { nextN = 4; direction = 1; }
         updateView(nextN);
       }
@@ -327,7 +327,7 @@
         btnPlay.click();
       } else if (e.code === "ArrowRight") {
         isPlaying = false; btnPlay.textContent = "Play";
-        updateView(Math.min(60, currentN + 1));
+        updateView(Math.min(120, currentN + 1));
       } else if (e.code === "ArrowLeft") {
         isPlaying = false; btnPlay.textContent = "Play";
         updateView(Math.max(3, currentN - 1));

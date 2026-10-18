@@ -161,8 +161,8 @@
           <div class="metric"><div class="name">Arc length s</div><div class="number" id="sMetric">0.000</div></div>
           <div class="metric"><div class="name">Position x</div><div class="number" id="xOut">2.000</div></div>
           <div class="metric"><div class="name">Position y</div><div class="number" id="yOut">0.000</div></div>
-          <div class="metric"><div class="name">Work density F · T</div><div class="number" id="workOut">—</div></div>
-          <div class="metric"><div class="name">Flux density F · N</div><div class="number" id="fluxOut">—</div></div>
+          <div class="metric"><div class="name">Tangential Component:  F · T</div><div class="number" id="workOut">—</div></div>
+          <div class="metric"><div class="name">Normal Component: F · N</div><div class="number" id="fluxOut">—</div></div>
         </div>
         <p class="note">The curve is sampled numerically to build an arc-length lookup table. The slider uses that table to move approximately uniformly with respect to arc length. The displayed work and flux values are pointwise densities, not the total line integrals.</p>
       </div>
@@ -172,19 +172,19 @@
 
   <section class="panel graphs-panel" aria-label="Work and flux density graphs">
     <h2>Work and Flux Graphs</h2>
-    <p class="intro" style="margin-bottom:14px">Each graph shows its density as a function of arc length <i>s</i>. The shaded region follows the moving point, showing the signed accumulated area from the start of the curve to the current position.</p>
+    <p class="intro" style="margin-bottom:14px">Each graph shows a component of the vector field as a function of arc length <i>s</i>. The shaded region follows the moving point, showing the signed accumulated area from the start of the curve to the current position.</p>
     <div class="graphs-grid">
       <div class="graph-card">
         <h3>Work</h3>
         <p class="graph-subtitle">f<sub>work</sub>(s) = F(R(s)) · T(s)</p>
         <canvas id="workGraph" width="520" height="260" aria-label="Graph of work density against arc length with signed area shaded up to the current position"></canvas>
-        <div class="integral-readout"><span>Accumulated work</span><strong id="workIntegralOut">0.0000</strong></div>
+        <div class="integral-readout"><span>Accumulated Work</span><strong id="workIntegralOut">0.0000</strong></div>
       </div>
       <div class="graph-card">
         <h3>Flux</h3>
         <p class="graph-subtitle">f<sub>flux</sub>(s) = F(R(s)) · N(s)</p>
         <canvas id="fluxGraph" width="520" height="260" aria-label="Graph of flux density against arc length with signed area shaded up to the current position"></canvas>
-        <div class="integral-readout"><span>Accumulated flux</span><strong id="fluxIntegralOut">0.0000</strong></div>
+        <div class="integral-readout"><span>Accumulated Flux</span><strong id="fluxIntegralOut">0.0000</strong></div>
       </div>
     </div>
     <div class="graph-key">

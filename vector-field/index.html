@@ -109,15 +109,15 @@
         <div>Φ(s) = ∫₀ˢ f<sub>flux</sub>(u) du</div>
       </div>
       <div class="section">
-        <h2>Define the mathematics</h2>
+        <h2>Define:</h2>
         <p class="note" style="margin-top:0">Enter expressions using JavaScript-style math notation. Supported examples include <code>sin(t)</code>, <code>pi</code>, <code>t^2</code>, and <code>exp(-x^2-y^2)</code>. Click Apply to rebuild the curve and field.</p>
         <div class="formula-grid">
-          <label class="formula-field">r₁(t) — x-coordinate<input id="rxInput" value="2*cos(t)" spellcheck="false"></label>
-          <label class="formula-field">r₂(t) — y-coordinate<input id="ryInput" value="sin(t)" spellcheck="false"></label>
+          <label class="formula-field">x(t) — x-coordinate<input id="rxInput" value="2*cos(t)" spellcheck="false"></label>
+          <label class="formula-field">y(t) — y-coordinate<input id="ryInput" value="sin(t)" spellcheck="false"></label>
           <label class="formula-field">t minimum<input id="tMinInput" value="0" spellcheck="false"></label>
           <label class="formula-field">t maximum<input id="tMaxInput" value="2*pi" spellcheck="false"></label>
-          <label class="formula-field">F₁(x,y)<input id="fxInput" value="-y" spellcheck="false"></label>
-          <label class="formula-field">F₂(x,y)<input id="fyInput" value="x" spellcheck="false"></label>
+          <label class="formula-field">P(x,y)<input id="fxInput" value="-y" spellcheck="false"></label>
+          <label class="formula-field">Q(x,y)<input id="fyInput" value="x" spellcheck="false"></label>
         </div>
         <div class="controls"><button id="applyBtn" class="primary">Apply expressions</button><span id="formulaStatus" class="status" role="status">Current example loaded.</span></div>
       </div>

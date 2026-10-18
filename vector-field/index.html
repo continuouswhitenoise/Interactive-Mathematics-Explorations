@@ -187,13 +187,13 @@
     <p class="intro" style="margin-bottom:14px">The graphs show the tangential and normal components of the vector field as functions of arc length <i>s</i>. The shaded regions represent the accumulated signed areas, illustrating the corresponding line integrals as the point moves along the curve.</p>
     <div class="graphs-grid">
       <div class="graph-card">
-        <h3>Work = \(\int_0^s \mathbf{F}(\mathbf{r}(s))\cdot\mathbf{T}(s)\,ds \)</h3>
+        <h3>Work = \(\int_0^L \mathbf{F}(\mathbf{R}(s))\cdot\mathbf{T}(s)\,ds \)</h3>
         <p class="graph-subtitle">f<sub>work</sub>(s) = F(R(s)) · T(s)</p>
         <canvas id="workGraph" width="520" height="260" aria-label="Graph of work density against arc length with signed area shaded up to the current position"></canvas>
         <div class="integral-readout"><span>Accumulated Work</span><strong id="workIntegralOut">0.0000</strong></div>
       </div>
       <div class="graph-card">
-        <h3>Flux</h3>
+        <h3>Flux = \(\int_0^L \mathbf{F}(\mathbf{R}(s))\cdot\mathbf{N}(s)\,ds \)</h3>
         <p class="graph-subtitle">f<sub>flux</sub>(s) = F(R(s)) · N(s)</p>
         <canvas id="fluxGraph" width="520" height="260" aria-label="Graph of flux density against arc length with signed area shaded up to the current position"></canvas>
         <div class="integral-readout"><span>Accumulated Flux</span><strong id="fluxIntegralOut">0.0000</strong></div>

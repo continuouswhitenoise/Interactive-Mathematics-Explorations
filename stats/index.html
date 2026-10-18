@@ -4,182 +4,275 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central Limit Theorem Lab</title>
+<title>Central Limit Theorem</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 
 <style>
 :root {
-    --bg: #070f12;
-    --panel: #0d1b1e;
-    --panel2: #122629;
-    --border: #234347;
-    --text: #e0f2f1;
-    --muted: #8ba9a9;
-    --teal: #14b8a6;
-    --aqua: #5eead4;
-    --deep: #0f766e;
-    --red: #fb7185;
+    --bg: #02090c;
+    --panel: rgba(5, 22, 27, 0.88);
+    --panel2: #071b20;
+    --border: rgba(65, 197, 190, 0.19);
+    --text: #e0fffc;
+    --muted: #789e9e;
+    --teal: #0b9d91;
+    --aqua: #72fff0;
+    --cyan: #b1fff8;
+    --deep: #075e60;
+    --red: #ff789f;
+    --glow: rgba(63, 255, 233, 0.12);
 }
 
 * { box-sizing: border-box; }
 
+html { min-height: 100%; }
+
 body {
     margin: 0;
-    padding: 28px 18px 45px;
-    background:
-        radial-gradient(ellipse at 50% 0%, #10383b 0%, transparent 55%),
-        var(--bg);
+    min-height: 100vh;
+    padding: 30px 18px 45px;
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                  Roboto, Helvetica, Arial, sans-serif;
+    background:
+        radial-gradient(ellipse at 50% -10%, rgba(0, 124, 119, .25), transparent 55%),
+        radial-gradient(ellipse at 0% 35%, rgba(0, 71, 79, .17), transparent 42%),
+        radial-gradient(ellipse at 100% 75%, rgba(0, 111, 111, .12), transparent 40%),
+        linear-gradient(160deg, #02080b, #031216 50%, #02090c);
+    background-attachment: fixed;
 }
 
-main { max-width: 1150px; margin: auto; }
-header { margin-bottom: 26px; }
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .17;
+    background-image:
+        radial-gradient(1px 1px at 12% 18%, #a5fff8 50%, transparent 100%),
+        radial-gradient(2px 2px at 78% 25%, #72fff0 50%, transparent 100%),
+        radial-gradient(1px 1px at 89% 67%, #b1fff8 50%, transparent 100%),
+        radial-gradient(1px 1px at 25% 79%, #72fff0 50%, transparent 100%),
+        radial-gradient(2px 2px at 54% 48%, #72fff0 50%, transparent 100%),
+        radial-gradient(1px 1px at 42% 10%, #b1fff8 50%, transparent 100%);
+    z-index: -1;
+}
+
+main { max-width: 1180px; margin: auto; }
+
+header {
+    margin: 12px 0 30px;
+    position: relative;
+}
 
 .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: var(--aqua);
     text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 11px;
-    font-weight: 800;
+    letter-spacing: 4px;
+    font-size: 10px;
+    font-weight: 850;
+}
+
+.eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--aqua);
+    box-shadow: 0 0 12px var(--aqua);
 }
 
 h1 {
-    margin: 9px 0;
-    font-size: clamp(28px, 5vw, 43px);
-    letter-spacing: -1.5px;
-    line-height: 1.15;
+    margin: 13px 0 12px;
+    font-size: clamp(32px, 5.5vw, 55px);
+    letter-spacing: -2px;
+    line-height: 1.08;
+    font-weight: 780;
 }
-h1 span { color: var(--aqua); }
 
-.subtitle, .description {
-    color: var(--muted);
-    line-height: 1.7;
+h1 span {
+    color: var(--aqua);
+    text-shadow: 0 0 30px rgba(114, 255, 240, .23);
 }
-.subtitle { max-width: 750px; }
+
+.subtitle {
+    max-width: 760px;
+    color: #8cb4b3;
+    line-height: 1.85;
+    font-size: 14px;
+}
 
 .panel {
-    background: linear-gradient(145deg, #102326, #0b171a);
+    position: relative;
+    background:
+        linear-gradient(145deg, rgba(10, 37, 42, .91), rgba(3, 17, 22, .94));
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 17px;
     padding: 23px;
     margin-bottom: 20px;
-    box-shadow: 0 12px 35px #00000025;
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, .24),
+        inset 0 1px 0 rgba(180, 255, 249, .035);
+    backdrop-filter: blur(14px);
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(114,255,240,.24), transparent);
+    pointer-events: none;
 }
 
 .controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+    gap: 24px;
     align-items: end;
 }
 
 .control-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 11px;
+    min-width: 0;
 }
 
 label {
-    font-size: 12px;
-    color: #c1d9d8;
-    font-weight: 750;
-    letter-spacing: .5px;
+    font-size: 10px;
+    color: #a9cecb;
+    font-weight: 800;
+    letter-spacing: 1.5px;
 }
 
 select, button { font: inherit; }
 
 select {
     width: 100%;
-    background: var(--panel2);
+    background: #061a1f;
     color: var(--text);
-    border: 1px solid #315357;
-    border-radius: 9px;
+    border: 1px solid #24565a;
+    border-radius: 10px;
     padding: 12px;
+    outline: none;
 }
 
-input[type="range"] {
-    width: 100%;
-    accent-color: var(--aqua);
-    cursor: pointer;
-    margin: 8px 0;
+select:focus-visible {
+    border-color: var(--aqua);
+    box-shadow: 0 0 0 3px rgba(114,255,240,.09);
 }
 
 .slider-label {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
 }
 
 .n-value {
     color: var(--aqua);
-    font-size: 19px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 850;
+    text-shadow: 0 0 16px rgba(114,255,240,.22);
+    white-space: nowrap;
 }
 
-button {
-    border: 1px solid #287c76;
-    border-radius: 9px;
-    padding: 12px 17px;
-    background: linear-gradient(110deg, #0f766e, #115e59);
-    color: #e6fffb;
-    font-weight: 800;
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--aqua);
     cursor: pointer;
-    transition: filter .15s, transform .15s;
-    min-height: 44px;
+    margin: 7px 0;
 }
 
-button:hover:not(:disabled) {
-    filter: brightness(1.2);
-    transform: translateY(-1px);
+input[type="range"]:focus-visible {
+    outline: 1px solid var(--aqua);
+    outline-offset: 5px;
 }
 
-button:disabled { opacity: .45; cursor: not-allowed; }
+.range-ends {
+    display: flex;
+    justify-content: space-between;
+    color: #638d8c;
+    font-size: 11px;
+}
 
 .button-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
+}
+
+button {
+    border: 1px solid #1e8f85;
+    border-radius: 9px;
+    padding: 11px 13px;
+    background: linear-gradient(120deg, #087c73, #075650);
+    color: #eafffc;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    transition: filter .18s, transform .18s, box-shadow .18s;
+    min-height: 43px;
 }
 
 .button-row button { flex: 1; }
 
+button:hover:not(:disabled) {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(73, 255, 229, .09);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--aqua);
+    outline-offset: 3px;
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
 #pauseBtn {
-    background: #142c2f;
-    border-color: #376568;
+    background: #0a272c;
+    border-color: #28565a;
     color: var(--aqua);
 }
 
 #resetBtn {
-    background: #142023;
-    border-color: #33484a;
-    color: #b4cccb;
+    background: #0a191e;
+    border-color: #294247;
+    color: #a3c3c1;
 }
 
-.section-heading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 7px;
-    font-size: 19px;
+.status {
+    color: #82aaa8;
+    font-size: 12px;
+    margin-top: 20px;
+    min-height: 18px;
+    line-height: 1.6;
 }
 
-.dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--aqua);
-    box-shadow: 0 0 12px #5eead455;
-    flex-shrink: 0;
-}
-
-.description { font-size: 13px; margin: 0 0 18px; }
-
-.chart-wrap {
-    height: 290px;
-    position: relative;
+.progress-track {
     width: 100%;
+    height: 4px;
+    background: #102d31;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #08766f, #38cbbd, #a2fff4);
+    box-shadow: 0 0 12px rgba(114,255,240,.45);
+    transition: width .12s linear;
 }
 
 .chart-grid {
@@ -188,70 +281,123 @@ button:disabled { opacity: .45; cursor: not-allowed; }
     gap: 20px;
 }
 
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -.3px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--aqua);
+    box-shadow: 0 0 12px rgba(114,255,240,.7);
+    flex-shrink: 0;
+}
+
+.dot.pink {
+    background: var(--red);
+    box-shadow: 0 0 12px rgba(255,120,159,.65);
+}
+
+.description {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.75;
+    margin: 0 0 19px;
+}
+
+.chart-wrap {
+    height: 290px;
+    position: relative;
+    width: 100%;
+}
+
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 19px;
 }
 
 .stat {
-    background: #091517;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 15px;
+    background: linear-gradient(145deg, rgba(7,31,36,.95), rgba(4,20,25,.95));
+    border: 1px solid rgba(75,175,169,.16);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.015);
 }
 
-.stat-label { color: var(--muted); font-size: 12px; margin-bottom: 9px; }
-.stat-value { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stat-label {
+    color: #759a99;
+    font-size: 11px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.stat-value {
+    font-size: clamp(20px, 2.3vw, 25px);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.5px;
+}
+
 .cyan { color: var(--aqua); }
 .red { color: var(--red); }
 
-.status {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 15px;
-    min-height: 18px;
-}
-
-.progress-track {
-    width: 100%;
-    height: 5px;
-    background: #1b3437;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 9px;
-}
-
-#progressBar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--deep), var(--aqua));
-    transition: width .12s linear;
-}
-
 .explanation {
-    border-left: 3px solid var(--aqua);
-    padding: 4px 0 4px 16px;
-    color: #b4cecc;
-    font-size: 14px;
-    line-height: 1.9;
+    border-left: 2px solid var(--aqua);
+    padding: 5px 0 5px 17px;
+    color: #9bbdbc;
+    font-size: 13px;
+    line-height: 1.95;
 }
 
-.explanation strong { color: var(--text); }
+.explanation strong { color: #e0fffc; }
+
+.live-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid rgba(114,255,240,.16);
+    border-radius: 20px;
+    padding: 6px 10px;
+    color: #8ce8df;
+    background: rgba(18,96,91,.12);
+    font-size: 10px;
+    letter-spacing: .4px;
+    margin-bottom: 13px;
+}
+
+.live-note::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--aqua);
+    box-shadow: 0 0 8px var(--aqua);
+}
 
 footer {
     text-align: center;
-    color: #628180;
-    font-size: 12px;
-    padding-top: 10px;
+    color: #456d6d;
+    font-size: 10px;
+    letter-spacing: 3px;
+    padding: 12px 0;
 }
 
 @media (max-width: 720px) {
-    body { padding: 20px 12px 30px; }
+    body { padding: 22px 12px 30px; }
     .panel { padding: 17px; }
     .chart-grid { grid-template-columns: 1fr; }
-    .chart-wrap { height: 265px; }
+    .chart-wrap { height: 260px; }
+    .controls { gap: 23px; }
+    h1 { letter-spacing: -1.4px; }
 }
 </style>
 </head>
@@ -262,9 +408,9 @@ footer {
     <div class="eyebrow">Interactive Probability Lab</div>
     <h1>Central Limit <span>Theorem</span></h1>
     <p class="subtitle">
-        Start with a non-normal population. Draw thousands of random
-        samples and watch the distribution of their means approach
-        a normal curve as the sample size increases.
+        Begin with a non-normal population. Draw random samples and
+        observe how their means become more concentrated and their
+        distribution approaches a normal curve as the sample size grows.
     </p>
 </header>
 
@@ -273,8 +419,8 @@ footer {
         <div class="control-group">
             <label for="distribution">POPULATION DISTRIBUTION</label>
             <select id="distribution">
-                <option value="skewed">Exponential (right-skewed)</option>
-                <option value="uniform">Uniform (flat)</option>
+                <option value="skewed">Exponential · Right-skewed</option>
+                <option value="uniform">Uniform · Flat</option>
             </select>
         </div>
 
@@ -284,10 +430,11 @@ footer {
                 <span class="n-value">n = <span id="nVal">30</span></span>
             </div>
             <input type="range" id="sampleSize"
-                   min="2" max="100" value="30" step="1">
-            <div class="slider-label">
-                <span class="description">2</span>
-                <span class="description">100</span>
+                   min="2" max="1000" value="30" step="1"
+                   aria-label="Sample size, from 2 to 1000">
+            <div class="range-ends">
+                <span>n = 2</span>
+                <span>n = 1000</span>
             </div>
         </div>
 
@@ -302,7 +449,7 @@ footer {
     </div>
 
     <div id="status" class="status" aria-live="polite">
-        Ready. Press Start to begin.
+        Ready. Move the slider to explore, or press Start for 10,000 samples.
     </div>
     <div class="progress-track">
         <div id="progressBar"></div>
@@ -311,21 +458,21 @@ footer {
 
 <section class="chart-grid">
     <div class="panel">
-        <h2 class="section-heading"><span class="dot"></span> The Population</h2>
+        <h2 class="section-heading"><span class="dot"></span>The Population</h2>
         <p class="description">
-            The distribution from which individual observations are drawn.
+            The original distribution from which individual observations are drawn.
+            It does not become normal when n increases.
         </p>
         <div class="chart-wrap"><canvas id="popChart"></canvas></div>
     </div>
 
     <div class="panel">
-        <h2 class="section-heading">
-            <span class="dot" style="background:var(--red);box-shadow:0 0 12px #fb718555"></span>
-            Sampling Distribution
-        </h2>
+        <h2 class="section-heading"><span class="dot pink"></span>Sampling Distribution</h2>
         <p class="description">
-            Sample means in teal, with the theoretical normal density in red.
+            The teal histogram shows simulated sample means. The pink curve
+            shows the normal approximation with mean μ and standard deviation σ/√n.
         </p>
+        <div class="live-note" id="previewTag">LIVE EXPLORATION</div>
         <div class="chart-wrap"><canvas id="sampleChart"></canvas></div>
     </div>
 </section>
@@ -333,8 +480,8 @@ footer {
 <section class="panel">
     <h2 class="section-heading">Theoretical Statistics</h2>
     <p class="description">
-        Exact population parameters and the expected standard error
-        of the sample mean.
+        Exact population parameters and the theoretical standard error
+        of the sample mean. These update as you move the slider.
     </p>
     <div class="stats-grid">
         <div class="stat">
@@ -363,17 +510,22 @@ footer {
         The original distribution remains exponential or uniform.
 
         <br><strong>2. The sample means concentrate.</strong>
-        Their standard deviation is σ/√n, so larger samples produce
-        means that tend to lie closer to the population mean.
+        Their standard deviation is σ/√n. Increasing n narrows the
+        sampling distribution around the population mean.
 
         <br><strong>3. The shape approaches normality.</strong>
         Under the usual conditions of the Central Limit Theorem,
-        the sampling distribution approaches a normal distribution
-        as n increases. It need not be exactly normal for finite n.
+        the sampling distribution of the sample mean approaches a
+        normal distribution as n increases. It need not be exactly
+        normal for finite n.
+
+        <br><strong>4. The pink curve is theoretical.</strong>
+        It is the normal approximation, not a curve fitted to the
+        simulated histogram.
     </div>
 </section>
 
-<footer>CENTRAL LIMIT THEOREM LAB</footer>
+<footer>CENTRAL LIMIT THEOREM</footer>
 </main>
 
 <script>
@@ -383,7 +535,8 @@ footer {
 const TOTAL = 10000;
 const POP_SIZE = 10000;
 const BINS = 40;
-const BATCH = 250;
+const BATCH = 200;
+const PREVIEW_COUNT = 180;
 
 const $ = id => document.getElementById(id);
 
@@ -394,14 +547,14 @@ const pauseBtn = $("pauseBtn");
 const resetBtn = $("resetBtn");
 const status = $("status");
 const progressBar = $("progressBar");
+const previewTag = $("previewTag");
 
-let popChart, sampleChart;
+let popChart;
+let sampleChart;
 let population = [];
 let populationType = null;
-
 let running = false;
 let paused = false;
-let cancelRequested = false;
 let generation = 0;
 let completed = 0;
 let means = [];
@@ -415,11 +568,13 @@ function params(type) {
 
 function makePopulation(type) {
     const data = new Array(POP_SIZE);
+
     for (let i = 0; i < POP_SIZE; i++) {
         data[i] = type === "skewed"
             ? -10 * Math.log(1 - Math.random())
             : 30 * Math.random();
     }
+
     return data;
 }
 
@@ -428,42 +583,53 @@ function chartOptions(xTitle, yTitle) {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
+        interaction: { intersect: false, mode: "index" },
         scales: {
             x: {
-                grid: { color: "#ffffff0b" },
-                ticks: { color: "#8ba9a9", maxTicksLimit: 8, maxRotation: 0 },
-                title: { display: true, text: xTitle, color: "#8ba9a9" },
-                border: { color: "#315357" }
+                grid: { color: "rgba(144,255,245,.055)" },
+                ticks: {
+                    color: "#789e9e",
+                    maxTicksLimit: 7,
+                    maxRotation: 0
+                },
+                title: { display: true, text: xTitle, color: "#789e9e" },
+                border: { color: "#24565a" }
             },
             y: {
                 beginAtZero: true,
-                grid: { color: "#ffffff0b" },
-                ticks: { color: "#8ba9a9", maxTicksLimit: 5 },
-                title: { display: true, text: yTitle, color: "#8ba9a9" },
-                border: { color: "#315357" }
+                grid: { color: "rgba(144,255,245,.055)" },
+                ticks: { color: "#789e9e", maxTicksLimit: 5 },
+                title: { display: true, text: yTitle, color: "#789e9e" },
+                border: { color: "#24565a" }
             }
         },
         plugins: {
             legend: {
                 labels: {
-                    color: "#c1d9d8",
+                    color: "#a9cecb",
                     usePointStyle: true,
-                    boxWidth: 8,
-                    padding: 15
+                    pointStyle: "circle",
+                    boxWidth: 7,
+                    padding: 15,
+                    font: { size: 10 }
                 }
             },
             tooltip: {
-                backgroundColor: "#071315",
-                titleColor: "#e0f2f1",
-                bodyColor: "#c1d9d8",
-                borderColor: "#315357",
-                borderWidth: 1
+                backgroundColor: "#031316",
+                titleColor: "#b1fff8",
+                bodyColor: "#c1e6e3",
+                borderColor: "#24565a",
+                borderWidth: 1,
+                padding: 10
             }
         }
     };
 }
 
 function createCharts() {
+    const popOptions = chartOptions("Population value", "Relative frequency");
+    popOptions.plugins.legend.display = false;
+
     popChart = new Chart($("popChart"), {
         type: "bar",
         data: {
@@ -471,20 +637,15 @@ function createCharts() {
             datasets: [{
                 label: "Relative frequency",
                 data: [],
-                backgroundColor: "#0f766eaa",
-                borderColor: "#5eead4",
+                backgroundColor: "rgba(20,184,166,.42)",
+                hoverBackgroundColor: "rgba(114,255,240,.7)",
+                borderColor: "rgba(114,255,240,.75)",
                 borderWidth: 1,
                 barPercentage: 1,
                 categoryPercentage: 1
             }]
         },
-        options: {
-            ...chartOptions("Population value", "Relative frequency"),
-            plugins: {
-                ...chartOptions("Population value", "Relative frequency").plugins,
-                legend: { display: false }
-            }
-        }
+        options: popOptions
     });
 
     sampleChart = new Chart($("sampleChart"), {
@@ -496,22 +657,26 @@ function createCharts() {
                     type: "bar",
                     label: "Simulated sample means",
                     data: [],
-                    backgroundColor: "#14b8a688",
-                    borderColor: "#5eead4",
+                    backgroundColor: "rgba(36,207,190,.38)",
+                    hoverBackgroundColor: "rgba(114,255,240,.7)",
+                    borderColor: "rgba(114,255,240,.85)",
                     borderWidth: 1,
                     barPercentage: 1,
-                    categoryPercentage: 1
+                    categoryPercentage: 1,
+                    order: 2
                 },
                 {
                     type: "line",
                     label: "Theoretical normal density",
                     data: [],
-                    borderColor: "#fb7185",
-                    backgroundColor: "#fb7185",
-                    borderWidth: 3,
+                    borderColor: "#ff789f",
+                    backgroundColor: "rgba(255,120,159,.10)",
+                    borderWidth: 2.5,
                     pointRadius: 0,
-                    tension: 0.25,
-                    fill: false
+                    pointHoverRadius: 0,
+                    tension: 0.3,
+                    fill: false,
+                    order: 1
                 }
             ]
         },
@@ -535,27 +700,28 @@ function updatePopulation() {
         if (i >= 0 && i < BINS) counts[i]++;
     }
 
-    popChart.data.labels = counts.map((_, i) =>
-        (i + 0.5) * width
-    );
+    popChart.data.labels = counts.map((_, i =>
+        Number(((i + 0.5) * width).toFixed(2))
+    ));
     popChart.data.datasets[0].data =
         counts.map(c => c / POP_SIZE);
+
     popChart.update("none");
 }
 
-function updateSampleChart() {
-    const type = currentRun.type;
-    const n = currentRun.n;
+function renderSampleChart(values, type, n) {
     const { mean, sd } = params(type);
     const se = sd / Math.sqrt(n);
 
+    // Use a fixed theoretical window so the curve remains comparable
+    // with the histogram as the slider changes.
     const min = mean - 4.2 * se;
     const max = mean + 4.2 * se;
     const width = (max - min) / BINS;
     const counts = new Array(BINS).fill(0);
 
-    for (let i = 0; i < completed; i++) {
-        const index = Math.floor((means[i] - min) / width);
+    for (const value of values) {
+        const index = Math.floor((value - min) / width);
         if (index >= 0 && index < BINS) counts[index]++;
     }
 
@@ -565,8 +731,8 @@ function updateSampleChart() {
 
     for (let i = 0; i < BINS; i++) {
         const x = min + (i + 0.5) * width;
-        labels.push(Number(x.toFixed(3)));
-        densities.push(completed ? counts[i] / (completed * width) : 0);
+        labels.push(Number(x.toFixed(4)));
+        densities.push(values.length ? counts[i] / (values.length * width) : 0);
         curve.push(normalPDF(x, mean, se));
     }
 
@@ -578,7 +744,37 @@ function updateSampleChart() {
     $("meanStat").textContent = mean.toFixed(3);
     $("sdStat").textContent = sd.toFixed(3);
     $("nStat").textContent = n;
-    $("seStat").textContent = se.toFixed(3);
+    $("seStat").textContent = se.toFixed(4);
+}
+
+function makePreview(n) {
+    const type = distributionInput.value;
+    const preview = new Array(PREVIEW_COUNT);
+
+    // Small, fast preview for slider exploration. Each value is the
+    // mean of n independent draws from the selected population.
+    for (let i = 0; i < PREVIEW_COUNT; i++) {
+        let sum = 0;
+
+        for (let j = 0; j < n; j++) {
+            sum += population[Math.floor(Math.random() * population.length)];
+        }
+
+        preview[i] = sum / n;
+    }
+
+    renderSampleChart(preview, type, n);
+    previewTag.textContent = `LIVE PREVIEW · ${PREVIEW_COUNT} SAMPLE MEANS`;
+}
+
+function updateControls() {
+    runBtn.disabled = running;
+    pauseBtn.disabled = !running;
+    pauseBtn.textContent = paused ? "▶ Play" : "Ⅱ Pause";
+    // Keep the sample-size slider active during the simulation.
+    sizeInput.disabled = false;
+    distributionInput.disabled = running;
+    resetBtn.disabled = false;
 }
 
 function nextFrame() {
@@ -589,29 +785,14 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function updateControls() {
-    runBtn.disabled = running;
-    pauseBtn.disabled = !running;
-    pauseBtn.textContent = paused ? "▶ Play" : "Ⅱ Pause";
-    sizeInput.disabled = running;
-    distributionInput.disabled = running;
-    resetBtn.disabled = false;
-}
-
 async function runSimulation() {
     if (running) return;
 
     running = true;
     paused = false;
-    cancelRequested = false;
 
     const thisGeneration = ++generation;
     const type = distributionInput.value;
-    const n = Number(sizeInput.value);
-
-    currentRun = { type, n };
-    completed = 0;
-    means = new Array(TOTAL);
 
     if (populationType !== type) {
         population = makePopulation(type);
@@ -619,50 +800,58 @@ async function runSimulation() {
         updatePopulation();
     }
 
+    currentRun = { type, n: Number(sizeInput.value) };
+    completed = 0;
+    means = new Array(TOTAL);
+
     updateControls();
     runBtn.textContent = "Running…";
     progressBar.style.width = "0%";
-    status.textContent = "Preparing simulation…";
+    previewTag.textContent = "FULL SIMULATION";
+    status.textContent = "Generating sample means…";
 
-    updateSampleChart();
+    renderSampleChart([], type, currentRun.n);
 
     try {
         while (completed < TOTAL) {
-            if (thisGeneration !== generation || cancelRequested) return;
+            if (thisGeneration !== generation) return;
 
             if (paused) {
-                await sleep(100);
+                await sleep(80);
                 continue;
             }
 
+            const nForBatch = currentRun.n;
             const end = Math.min(completed + BATCH, TOTAL);
 
             for (let i = completed; i < end; i++) {
                 let sum = 0;
-                for (let j = 0; j < n; j++) {
+
+                for (let j = 0; j < nForBatch; j++) {
                     sum += population[
                         Math.floor(Math.random() * population.length)
                     ];
                 }
-                means[i] = sum / n;
+
+                means[i] = sum / nForBatch;
             }
 
             completed = end;
-            updateSampleChart();
+            renderSampleChart(means.slice(0, completed), type, currentRun.n);
 
             const percent = completed / TOTAL * 100;
             progressBar.style.width = percent + "%";
             status.textContent =
                 `${paused ? "Paused" : "Simulating"} · ` +
-                `${completed.toLocaleString()} / ${TOTAL.toLocaleString()} samples ` +
-                `(${percent.toFixed(0)}%)`;
+                `${completed.toLocaleString()} / ${TOTAL.toLocaleString()} sample means · ` +
+                `n = ${currentRun.n} · ${percent.toFixed(0)}%`;
 
             await nextFrame();
         }
 
         status.textContent =
-            `Complete · ${TOTAL.toLocaleString()} samples · n = ${n}`;
-        runBtn.textContent = "✓ Complete";
+            `Complete · ${TOTAL.toLocaleString()} sample means · n = ${currentRun.n}`;
+        previewTag.textContent = "SIMULATION COMPLETE";
     } catch (error) {
         console.error(error);
         status.textContent = "An error occurred. Check the browser console.";
@@ -678,16 +867,17 @@ async function runSimulation() {
 
 function pauseOrPlay() {
     if (!running) return;
+
     paused = !paused;
     pauseBtn.textContent = paused ? "▶ Play" : "Ⅱ Pause";
     status.textContent = paused
-        ? `Paused · ${completed.toLocaleString()} samples generated`
-        : `Resuming · ${completed.toLocaleString()} samples generated`;
+        ? `Paused · ${completed.toLocaleString()} sample means · n = ${currentRun.n}`
+        : `Resuming · ${completed.toLocaleString()} sample means · n = ${currentRun.n}`;
 }
 
 function reset() {
+    // Invalidate the current asynchronous simulation.
     generation++;
-    cancelRequested = true;
     running = false;
     paused = false;
     completed = 0;
@@ -695,47 +885,80 @@ function reset() {
     currentRun = null;
 
     progressBar.style.width = "0%";
-    status.textContent = "Reset. Press Start to run a new simulation.";
-
-    sampleChart.data.labels = [];
-    sampleChart.data.datasets.forEach(ds => ds.data = []);
-    sampleChart.update("none");
+    runBtn.textContent = "▶ Start";
+    status.textContent = "Reset. Move the slider to explore or press Start.";
+    previewTag.textContent = "LIVE EXPLORATION";
 
     updateControls();
-    runBtn.textContent = "▶ Start";
-    $("meanStat").textContent = "—";
-    $("sdStat").textContent = "—";
-    $("seStat").textContent = "—";
-    $("nStat").textContent = sizeInput.value;
+    makePreview(Number(sizeInput.value));
+}
+
+function onSizeInput() {
+    const n = Number(sizeInput.value);
+    $("nVal").textContent = n;
+    $("nStat").textContent = n;
+
+    if (running && currentRun) {
+        // Changing n during a full run starts a fresh set of sample means
+        // at the new sample size, keeping the histogram statistically valid.
+        currentRun.n = n;
+        completed = 0;
+        means = new Array(TOTAL);
+        progressBar.style.width = "0%";
+        renderSampleChart([], currentRun.type, n);
+        status.textContent =
+            `Sample size changed to n = ${n}. Restarting the 10,000 sample means…`;
+        return;
+    }
+
+    makePreview(n);
+    status.textContent =
+        `Live preview · n = ${n}. Press Start to generate 10,000 sample means.`;
+}
+
+function onDistributionChange() {
+    population = makePopulation(distributionInput.value);
+    populationType = distributionInput.value;
+    updatePopulation();
+
+    completed = 0;
+    means = [];
+    currentRun = null;
+    progressBar.style.width = "0%";
+
+    makePreview(Number(sizeInput.value));
+    status.textContent =
+        "Population changed. Explore the slider or press Start for 10,000 sample means.";
 }
 
 // Controls
 runBtn.addEventListener("click", runSimulation);
 pauseBtn.addEventListener("click", pauseOrPlay);
 resetBtn.addEventListener("click", reset);
-
-sizeInput.addEventListener("input", () => {
-    $("nVal").textContent = sizeInput.value;
-    $("nStat").textContent = sizeInput.value;
-});
-
-distributionInput.addEventListener("change", () => {
-    population = makePopulation(distributionInput.value);
-    populationType = distributionInput.value;
-    updatePopulation();
-    status.textContent = "Population changed. Press Start to simulate.";
-});
+sizeInput.addEventListener("input", onSizeInput);
+distributionInput.addEventListener("change", onDistributionChange);
 
 // Initialize
 if (typeof Chart === "undefined") {
-    status.textContent = "Chart.js failed to load. Check your internet connection.";
+    status.textContent =
+        "Chart.js failed to load. Check your internet connection or CDN access.";
     runBtn.disabled = true;
+    pauseBtn.disabled = true;
 } else {
     createCharts();
+
     population = makePopulation(distributionInput.value);
     populationType = distributionInput.value;
+
     updatePopulation();
     updateControls();
+
+    $("nVal").textContent = sizeInput.value;
+    $("nStat").textContent = sizeInput.value;
+
+    makePreview(Number(sizeInput.value));
+    status.textContent =
+        "Ready · Move the slider for a live preview, or press Start for 10,000 sample means.";
 }
 })();
 </script>

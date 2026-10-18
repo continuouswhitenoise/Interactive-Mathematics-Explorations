@@ -3,36 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central Limit Theorem Lab</title>
-
+<title>Central Limit Theorem Explorer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
 <style>
 :root {
-    --bg: #04110f;
-    --panel: #091b18;
-    --panel2: #0d2520;
-    --border: #20483d;
-    --text: #e1f1e9;
-    --muted: #91b5a5;
+    --bg: #030d0b;
+    --panel: #091a15;
+    --panel2: #0d251c;
+    --border: #204537;
+    --text: #e1f1e8;
+    --muted: #91b5a3;
     --mint: #7ce0b2;
-    --mint-dark: #245b48;
-    --pink: #ff83bd;
-    --gold: #e8d59a;
-    --danger: #ff9c9c;
+    --magenta: #ff00ff;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     padding: 24px;
     color: var(--text);
     background:
-        radial-gradient(ellipse at 15% 0%, #12372b 0%, transparent 42%),
-        radial-gradient(ellipse at 90% 90%, #0b2927 0%, transparent 40%),
+        radial-gradient(ellipse at 15% 0%, #123426 0%, transparent 42%),
+        radial-gradient(ellipse at 90% 90%, #0a2520 0%, transparent 40%),
         var(--bg);
     font-family: Inter, system-ui, -apple-system, sans-serif;
     min-height: 100vh;
@@ -50,15 +44,15 @@ header {
 
 .eyebrow {
     color: var(--mint);
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
+    font-size: .75rem;
+    letter-spacing: .2em;
     text-transform: uppercase;
     font-weight: 800;
 }
 
 h1 {
     font-size: clamp(2rem, 5vw, 3.2rem);
-    letter-spacing: -0.045em;
+    letter-spacing: -.045em;
     margin: 10px 0;
     color: #e9fff4;
 }
@@ -76,7 +70,7 @@ h1 {
     padding: 13px 20px;
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: #071814;
+    background: #06130f;
     color: var(--mint);
     font-size: 1.08rem;
 }
@@ -89,11 +83,11 @@ h1 {
 
 .panel {
     min-width: 0;
-    background: linear-gradient(155deg, #0c211c, #071511);
+    background: linear-gradient(155deg, #0c2119, #06120e);
     border: 1px solid var(--border);
     border-radius: 18px;
     padding: 20px;
-    box-shadow: 0 12px 40px #00000020;
+    box-shadow: 0 12px 40px #00000030;
 }
 
 .panel h2 {
@@ -103,7 +97,7 @@ h1 {
 
 .panel-description {
     color: var(--muted);
-    font-size: 0.84rem;
+    font-size: .84rem;
     line-height: 1.55;
     margin: 0 0 15px;
 }
@@ -117,12 +111,12 @@ h1 {
 .controls {
     margin-top: 18px;
     display: grid;
-    grid-template-columns: minmax(220px, 1.2fr) minmax(220px, 0.8fr);
+    grid-template-columns: minmax(220px, 1.2fr) minmax(220px, .8fr);
     gap: 18px;
 }
 
 .control-block {
-    background: #081a16;
+    background: #071611;
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 20px;
@@ -130,26 +124,24 @@ h1 {
 }
 
 .control-block h3 {
-    font-size: 0.96rem;
+    font-size: .96rem;
     margin: 0 0 15px;
 }
 
 label {
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: .85rem;
 }
 
-select, button {
-    font: inherit;
-}
+select, button { font: inherit; }
 
 select {
     width: 100%;
     margin-top: 8px;
     padding: 11px 12px;
     color: var(--text);
-    background: #102b23;
-    border: 1px solid #315c4c;
+    background: #10291f;
+    border: 1px solid #315a46;
     border-radius: 9px;
 }
 
@@ -180,7 +172,7 @@ input[type="range"] {
     display: flex;
     justify-content: space-between;
     color: #789b8b;
-    font-size: 0.75rem;
+    font-size: .75rem;
 }
 
 .button-row {
@@ -192,24 +184,24 @@ input[type="range"] {
 
 button {
     padding: 10px 15px;
-    border: 1px solid #315c4c;
+    border: 1px solid #315a46;
     border-radius: 9px;
-    background: #102b23;
+    background: #10291f;
     color: var(--text);
     cursor: pointer;
     font-weight: 700;
-    font-size: 0.85rem;
-    transition: background 0.18s, transform 0.18s, border-color 0.18s;
+    font-size: .85rem;
+    transition: background .18s, transform .18s, border-color .18s;
 }
 
 button:hover:not(:disabled) {
-    background: #194032;
+    background: #194331;
     border-color: var(--mint);
     transform: translateY(-1px);
 }
 
 button:disabled {
-    opacity: 0.35;
+    opacity: .4;
     cursor: not-allowed;
 }
 
@@ -224,14 +216,14 @@ button.primary:hover:not(:disabled) {
 }
 
 button.new-sample {
-    border-color: #a54d7c;
-    color: #ffc4df;
-    background: #301526;
+    border-color: var(--magenta);
+    color: #ffa6ff;
+    background: #281126;
 }
 
 button.new-sample:hover:not(:disabled) {
-    background: #482039;
-    border-color: var(--pink);
+    background: #41183c;
+    border-color: #ff80ff;
 }
 
 .auto-pause {
@@ -255,12 +247,12 @@ button.new-sample:hover:not(:disabled) {
     gap: 8px;
     margin-top: 15px;
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: .8rem;
 }
 
 .progress-track {
     height: 5px;
-    background: #18352b;
+    background: #18352a;
     border-radius: 20px;
     overflow: hidden;
     margin-top: 9px;
@@ -270,7 +262,7 @@ button.new-sample:hover:not(:disabled) {
     height: 100%;
     width: 0%;
     background: linear-gradient(90deg, #55bc8c, #b3f5cf);
-    transition: width 0.12s linear;
+    transition: width .1s linear;
 }
 
 .stats {
@@ -282,15 +274,15 @@ button.new-sample:hover:not(:disabled) {
 
 .stat {
     padding: 13px;
-    background: #0c241d;
-    border: 1px solid #1e4134;
+    background: #0b2118;
+    border: 1px solid #1e4131;
     border-radius: 12px;
     min-width: 0;
 }
 
 .stat-label {
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: .75rem;
     margin-bottom: 7px;
 }
 
@@ -303,7 +295,7 @@ button.new-sample:hover:not(:disabled) {
 
 .explanation {
     margin-top: 18px;
-    background: #091b17;
+    background: #071611;
     border: 1px solid var(--border);
     border-radius: 18px;
     padding: 22px;
@@ -317,50 +309,26 @@ button.new-sample:hover:not(:disabled) {
     font-size: 1.05rem;
 }
 
-.explanation strong {
-    color: var(--mint);
-}
-
-.pink {
-    color: var(--pink) !important;
-}
+.explanation strong { color: var(--mint); }
+.explanation .magenta { color: var(--magenta); }
 
 .small-note {
     color: #86a798;
-    font-size: 0.8rem;
+    font-size: .8rem;
     margin-top: 12px;
 }
 
 @media (max-width: 800px) {
-    body {
-        padding: 13px;
-    }
-
-    .graph-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .controls {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-wrap {
-        height: 290px;
-    }
-
-    .panel, .control-block {
-        padding: 15px;
-    }
+    body { padding: 13px; }
+    .graph-grid { grid-template-columns: 1fr; }
+    .controls { grid-template-columns: 1fr; }
+    .chart-wrap { height: 290px; }
+    .panel, .control-block { padding: 15px; }
 }
 
 @media (max-width: 420px) {
-    .stats {
-        grid-template-columns: 1fr;
-    }
-
-    .button-row button {
-        flex: 1 1 auto;
-    }
+    .stats { grid-template-columns: 1fr; }
+    .button-row button { flex: 1 1 auto; }
 }
 </style>
 </head>
@@ -371,12 +339,11 @@ button.new-sample:hover:not(:disabled) {
     <div class="eyebrow">An interactive probability laboratory</div>
     <h1>The Central Limit Theorem</h1>
     <p class="subtitle">
-        Watch the distribution of sample means change as the sample size increases.
-        The population stays the same; the behavior of its sample means changes.
+        Watch the distribution of sample means change as the sample size
+        increases. The population stays the same; the behavior of its
+        sample means changes.
     </p>
-    <div class="formula">
-        SE = σ / √n
-    </div>
+    <div class="formula">SE = σ / √n</div>
 </header>
 
 <section class="graph-grid">
@@ -394,9 +361,9 @@ button.new-sample:hover:not(:disabled) {
     <article class="panel">
         <h2>02 · The Sampling Distribution</h2>
         <p class="panel-description">
-            The histogram shows simulated sample means. The pink curve is
-            the theoretical normal approximation. The horizontal axis stays
-            fixed as n changes.
+            Green bars show simulated sample means. The magenta curve
+            shows the theoretical normal approximation. The horizontal
+            axis stays fixed as n changes.
         </p>
         <div class="chart-wrap">
             <canvas id="samplingChart"></canvas>
@@ -437,7 +404,7 @@ button.new-sample:hover:not(:disabled) {
                 <div class="stat-value" id="seStat">2.00</div>
             </div>
             <div class="stat">
-                <div class="stat-label">Simulated means</div>
+                <div class="stat-label">Sample means</div>
                 <div class="stat-value" id="countStat">0</div>
             </div>
         </div>
@@ -454,7 +421,7 @@ button.new-sample:hover:not(:disabled) {
 
         <label class="auto-pause">
             <input type="checkbox" id="autoPause" checked>
-            Auto-pause when 10,000 sample means are generated
+            Auto-pause after 10,000 sample means
         </label>
 
         <div class="status-line">
@@ -467,9 +434,10 @@ button.new-sample:hover:not(:disabled) {
         </div>
 
         <p class="small-note">
-            Play begins or resumes the simulation. New Random Sample
-            discards the previous means and generates a fresh set using
-            the same population.
+            Spacebar toggles Play/Pause. Drag the slider to preview the
+            new sampling distribution; release it to continue the full
+            simulation. New Random Sample generates fresh observations
+            while preserving the population.
         </p>
     </div>
 </section>
@@ -478,15 +446,15 @@ button.new-sample:hover:not(:disabled) {
     <h2>What should you observe?</h2>
     <p>
         <strong>As n increases, the sampling distribution becomes narrower
-        and taller.</strong> The sample mean has expected value μ and standard
-        error σ/√n. Consequently, its values concentrate around the population
-        mean as n grows.
+        and taller.</strong> The sample mean has expected value μ and
+        standard error σ/√n. Its values therefore concentrate around
+        the population mean as n grows.
     </p>
     <p>
-        The <strong class="pink">pink curve</strong> is the normal density
-        with mean μ and standard deviation σ/√n. The Central Limit Theorem
-        explains why the distribution of standardized sample means approaches
-        a standard normal distribution under its usual assumptions.
+        The <strong class="magenta">magenta curve</strong> is the normal
+        density with mean μ and standard deviation σ/√n. The Central Limit
+        Theorem explains why the distribution of standardized sample means
+        approaches a standard normal distribution under its usual assumptions.
     </p>
     <p>
         In the limit, the unstandardized sample mean converges in probability
@@ -505,7 +473,11 @@ button.new-sample:hover:not(:disabled) {
     const POP_SIZE = 10000;
     const POP_BINS = 40;
     const SAMPLE_BINS = 100;
+
+    // Small live preview; full simulation fills the remaining means.
+    const PREVIEW_COUNT = 350;
     const BATCH = 100;
+    const PREVIEW_DELAY = 65;
 
     const $ = id => document.getElementById(id);
 
@@ -527,17 +499,17 @@ button.new-sample:hover:not(:disabled) {
     let populationType = "exponential";
     let mu = 10;
     let sigma = 10;
-
     let n = Number(sampleSizeSlider.value);
+
     let means = [];
     let completed = 0;
     let running = false;
     let runToken = 0;
     let lastChartUpdate = 0;
+    let previewTimer = null;
+    let sliderIsBeingDragged = false;
 
-    // Fixed horizontal limits for each population type.
-    // These depend on the population, not on n.
-    function getPopulationParameters(type) {
+    function parametersFor(type) {
         if (type === "uniform") {
             return {
                 mu: 15,
@@ -564,7 +536,7 @@ button.new-sample:hover:not(:disabled) {
             return 30 * Math.random();
         }
 
-        // Exponential population with mean 10.
+        // Exponential distribution with mean 10.
         return -10 * Math.log(1 - Math.random());
     }
 
@@ -594,7 +566,6 @@ button.new-sample:hover:not(:disabled) {
             if (value < min || value > max) continue;
 
             let index = Math.floor((value - min) / width);
-
             if (index === binCount) index = binCount - 1;
 
             if (index >= 0 && index < binCount) {
@@ -611,14 +582,11 @@ button.new-sample:hover:not(:disabled) {
 
     function densityFromBins(values, min, max, binCount) {
         const bins = makeBins(values, min, max, binCount);
-        const density = bins.counts.map(
-            count => count / (values.length * bins.width)
-        );
+        const denominator = Math.max(values.length, 1) * bins.width;
 
         return {
             labels: bins.centers.map(x => Number(x.toFixed(3))),
-            density,
-            width: bins.width
+            density: bins.counts.map(count => count / denominator)
         };
     }
 
@@ -630,7 +598,7 @@ button.new-sample:hover:not(:disabled) {
     }
 
     function makePopulationChartData() {
-        const p = getPopulationParameters(populationType);
+        const p = parametersFor(populationType);
         const result = densityFromBins(
             population, p.min, p.max, POP_BINS
         );
@@ -651,12 +619,14 @@ button.new-sample:hover:not(:disabled) {
     }
 
     function makeSamplingChartData() {
-        const p = getPopulationParameters(populationType);
+        const p = parametersFor(populationType);
+
         const result = densityFromBins(
             means, p.sampleMin, p.sampleMax, SAMPLE_BINS
         );
 
         const standardError = sigma / Math.sqrt(n);
+
         const theoretical = result.labels.map(x =>
             normalDensity(x, mu, standardError)
         );
@@ -668,8 +638,8 @@ button.new-sample:hover:not(:disabled) {
                     type: "bar",
                     label: "Simulated sample means",
                     data: result.density,
-                    backgroundColor: "rgba(124, 224, 178, 0.48)",
-                    borderColor: "rgba(124, 224, 178, 0.9)",
+                    backgroundColor: "rgba(124, 224, 178, 0.68)",
+                    borderColor: "#7ce0b2",
                     borderWidth: 1,
                     barPercentage: 1,
                     categoryPercentage: 1,
@@ -679,12 +649,12 @@ button.new-sample:hover:not(:disabled) {
                     type: "line",
                     label: "Theoretical normal curve",
                     data: theoretical,
-                    borderColor: "#ff83bd",
-                    backgroundColor: "rgba(255, 131, 189, 0.10)",
+                    borderColor: "#ff00ff",
+                    backgroundColor: "rgba(255, 0, 255, 0.08)",
                     borderWidth: 2.5,
                     pointRadius: 0,
                     pointHoverRadius: 0,
-                    tension: 0.25,
+                    tension: 0.2,
                     fill: false,
                     order: 1
                 }
@@ -733,9 +703,7 @@ button.new-sample:hover:not(:disabled) {
                     text: "Value",
                     color: "#91b5a5"
                 },
-                border: {
-                    color: "#315344"
-                }
+                border: { color: "#315344" }
             },
             y: {
                 beginAtZero: true,
@@ -751,60 +719,52 @@ button.new-sample:hover:not(:disabled) {
                     text: "Probability density",
                     color: "#91b5a5"
                 },
-                border: {
-                    color: "#315344"
-                }
+                border: { color: "#315344" }
             }
         }
     };
 
-    const populationChart = new Chart(
-        $("populationChart"),
-        {
-            type: "bar",
-            data: makePopulationChartData(),
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    legend: { display: false }
-                },
-                scales: {
-                    ...commonOptions.scales,
-                    x: {
-                        ...commonOptions.scales.x,
-                        title: {
-                            display: true,
-                            text: "Population value",
-                            color: "#91b5a5"
-                        }
+    const populationChart = new Chart($("populationChart"), {
+        type: "bar",
+        data: makePopulationChartData(),
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false }
+            },
+            scales: {
+                ...commonOptions.scales,
+                x: {
+                    ...commonOptions.scales.x,
+                    title: {
+                        display: true,
+                        text: "Population value",
+                        color: "#91b5a5"
                     }
                 }
             }
         }
-    );
+    });
 
-    const samplingChart = new Chart(
-        $("samplingChart"),
-        {
-            type: "bar",
-            data: makeSamplingChartData(),
-            options: {
-                ...commonOptions,
-                scales: {
-                    ...commonOptions.scales,
-                    x: {
-                        ...commonOptions.scales.x,
-                        title: {
-                            display: true,
-                            text: "Sample mean",
-                            color: "#91b5a5"
-                        }
+    const samplingChart = new Chart($("samplingChart"), {
+        type: "bar",
+        data: makeSamplingChartData(),
+        options: {
+            ...commonOptions,
+            scales: {
+                ...commonOptions.scales,
+                x: {
+                    ...commonOptions.scales.x,
+                    title: {
+                        display: true,
+                        text: "Sample mean",
+                        color: "#91b5a5"
                     }
                 }
             }
         }
-    );
+    });
 
     function updateSamplingChart() {
         samplingChart.data = makeSamplingChartData();
@@ -812,17 +772,14 @@ button.new-sample:hover:not(:disabled) {
     }
 
     function updateStats() {
-        const standardError = sigma / Math.sqrt(n);
-
         nValue.textContent = n.toLocaleString();
         meanStat.textContent = mu.toFixed(2);
-        seStat.textContent = standardError.toFixed(3);
+        seStat.textContent = (sigma / Math.sqrt(n)).toFixed(3);
         countStat.textContent = completed.toLocaleString();
     }
 
     function updateProgress() {
         const percent = 100 * completed / TOTAL;
-
         progressText.textContent = `${percent.toFixed(1)}%`;
         progressFill.style.width = `${percent}%`;
         updateStats();
@@ -837,13 +794,6 @@ button.new-sample:hover:not(:disabled) {
         pauseButton.disabled = !running;
     }
 
-    function refreshCharts() {
-        populationChart.data = makePopulationChartData();
-        populationChart.update("none");
-        updateSamplingChart();
-        updateProgress();
-    }
-
     function stopSimulation(message = "Paused") {
         running = false;
         runToken++;
@@ -851,16 +801,39 @@ button.new-sample:hover:not(:disabled) {
         setStatus(message);
     }
 
+    function clearPreviewTimer() {
+        if (previewTimer !== null) {
+            clearTimeout(previewTimer);
+            previewTimer = null;
+        }
+    }
+
     function resetMeans() {
         means = [];
         completed = 0;
         lastChartUpdate = 0;
-        updateProgress();
         updateSamplingChart();
+        updateProgress();
     }
 
     function nextFrame() {
         return new Promise(resolve => requestAnimationFrame(resolve));
+    }
+
+    // Create a fast preview for the currently selected n.
+    // The same preview means are retained when the full simulation begins.
+    function generatePreview() {
+        means = [];
+
+        const count = Math.min(PREVIEW_COUNT, TOTAL);
+
+        for (let i = 0; i < count; i++) {
+            means.push(sampleMean());
+        }
+
+        completed = means.length;
+        updateSamplingChart();
+        updateProgress();
     }
 
     async function simulate(token) {
@@ -881,9 +854,9 @@ button.new-sample:hover:not(:disabled) {
                 lastChartUpdate = now;
             }
 
-            if (completed >= TOTAL) break;
-
-            await nextFrame();
+            if (completed < TOTAL) {
+                await nextFrame();
+            }
         }
 
         if (token !== runToken) return;
@@ -896,19 +869,22 @@ button.new-sample:hover:not(:disabled) {
             if (autoPauseCheckbox.checked) {
                 setStatus("Complete · Auto-paused");
             } else {
-                // Continue by automatically generating another batch.
                 setStatus("Complete · Starting a fresh run");
                 await nextFrame();
 
                 if (token !== runToken) return;
 
-                resetMeans();
+                means = [];
+                completed = 0;
+                updateProgress();
+                updateSamplingChart();
+
                 running = true;
                 updateButtons();
                 setStatus("Running · Auto-restarting");
+
                 const nextToken = ++runToken;
                 simulate(nextToken);
-                return;
             }
         } else {
             running = false;
@@ -917,70 +893,144 @@ button.new-sample:hover:not(:disabled) {
     }
 
     function play() {
-        if (running || completed >= TOTAL) {
-            if (completed >= TOTAL) resetMeans();
-            else return;
+        clearPreviewTimer();
+
+        if (running) return;
+
+        if (completed >= TOTAL) {
+            resetMeans();
         }
 
         running = true;
         updateButtons();
         setStatus("Running");
+
         const token = ++runToken;
         simulate(token);
     }
 
     function pause() {
-        if (!running) return;
+        clearPreviewTimer();
+
+        if (!running) {
+            setStatus("Paused");
+            return;
+        }
+
         stopSimulation("Paused");
     }
 
     function newRandomSample() {
+        clearPreviewTimer();
         stopSimulation("Generating a new random sample…");
         resetMeans();
-        updateSamplingChart();
-        setStatus("New sample ready");
         play();
     }
 
     function changeDistribution() {
+        clearPreviewTimer();
         stopSimulation("Changing population…");
 
         populationType = distributionSelect.value;
 
-        const p = getPopulationParameters(populationType);
+        const p = parametersFor(populationType);
         mu = p.mu;
         sigma = p.sigma;
 
+        // Generate a new population only when its distribution changes.
         generatePopulation();
-        resetMeans();
-        refreshCharts();
 
-        setStatus("Population changed · Ready");
+        resetMeans();
+        populationChart.data = makePopulationChartData();
+        populationChart.update("none");
+
+        // Generate means using the current sample size.
+        generatePreview();
+
+        setStatus("Population changed · Preview ready");
     }
 
-    function changeSampleSize() {
+    function handleSliderInput() {
+        clearPreviewTimer();
+
+        if (running) {
+            stopSimulation("Updating live preview…");
+        }
+
+        n = Number(sampleSizeSlider.value);
+        sliderIsBeingDragged = true;
+
+        updateStats();
+        setStatus("Updating live preview…");
+
+        // Debounce preview calculations so fast dragging stays responsive.
+        previewTimer = setTimeout(() => {
+            previewTimer = null;
+
+            generatePreview();
+
+            if (sliderIsBeingDragged) {
+                setStatus("Live preview · Release slider to simulate");
+            }
+        }, PREVIEW_DELAY);
+    }
+
+    function handleSliderChange() {
+        sliderIsBeingDragged = false;
+        clearPreviewTimer();
+
         n = Number(sampleSizeSlider.value);
 
-        // Keep the population and its graph unchanged.
-        // A new sample of means is generated using the updated n.
-        stopSimulation("Updating sample size…");
-        resetMeans();
-        updateSamplingChart();
-        updateProgress();
+        // Make sure the released value has its own preview.
+        generatePreview();
 
-        setStatus("Sample size updated · Ready");
+        setStatus("Preview ready · Full simulation starting");
+        play();
     }
 
     distributionSelect.addEventListener("change", changeDistribution);
-    sampleSizeSlider.addEventListener("input", changeSampleSize);
+    sampleSizeSlider.addEventListener("input", handleSliderInput);
+    sampleSizeSlider.addEventListener("change", handleSliderChange);
+
     playButton.addEventListener("click", play);
     pauseButton.addEventListener("click", pause);
     newButton.addEventListener("click", newRandomSample);
 
+    // Spacebar toggles Play/Pause, except when a control has focus.
+    document.addEventListener("keydown", event => {
+        if (event.code !== "Space" || event.repeat) return;
+
+        const tag = event.target.tagName;
+
+        if (
+            ["INPUT", "BUTTON", "SELECT", "TEXTAREA"].includes(tag) ||
+            event.target.isContentEditable
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (running) {
+            pause();
+        } else {
+            play();
+        }
+    });
+
+    // Initial population and live preview.
     generatePopulation();
-    refreshCharts();
+
+    const initialParameters = parametersFor(populationType);
+    mu = initialParameters.mu;
+    sigma = initialParameters.sigma;
+
+    populationChart.data = makePopulationChartData();
+    populationChart.update("none");
+
+    generatePreview();
     updateButtons();
-    setStatus("Ready to simulate");
+    setStatus("Ready · Live preview loaded");
 })();
 </script>
 </body>

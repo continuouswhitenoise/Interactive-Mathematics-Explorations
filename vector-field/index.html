@@ -94,20 +94,7 @@
   <h1>2D Work and Flux Line Integrals</h1>
   <p class="intro">Follow a point along a curve and compare the vector field with the curve’s unit tangent and unit normal. Move the arc-length slider or play the motion.</p>
 
-    <section class="panel setup-panel" aria-label="Mathematical setup">
-      <h2>Mathematical setup</h2>
-      <div class="equation setup-equations">
-        <div><span style="color:var(--curve)">r(t)</span> = (x(t), y(t))</div>
-        <div>a ≤ t ≤ b</div>
-        <div><span style="color:var(--field)">F(x,y)</span> = (P(x,y), Q(x,y))</div>
-        <div>R(s) = r(t(s)), &nbsp; 0 ≤ s ≤ L</div>
-        <div>T(s) = R′(s)</div>
-        <div>N(s) = (T₂(s), −T₁(s))</div>
-        <div>f<sub>work</sub>(s) = F(R(s)) · T(s)</div>
-        <div>f<sub>flux</sub>(s) = F(R(s)) · N(s)</div>
-        <div>W(s) = ∫₀ˢ f<sub>work</sub>(u) du</div>
-        <div>Φ(s) = ∫₀ˢ f<sub>flux</sub>(u) du</div>
-      </div>
+    <section class="panel setup-panel" aria-label="Define curve and vector field">
       <div class="section">
         <h2>Define:</h2>
         <p class="note" style="margin-top:0">Enter expressions using JavaScript-style math notation. Supported examples include <code>sin(t)</code>, <code>pi</code>, <code>t^2</code>, and <code>exp(-x^2-y^2)</code>. Click Apply to rebuild the curve and field.</p>
@@ -119,7 +106,10 @@
           <label class="formula-field">P(x,y)<input id="fxInput" value="y" spellcheck="false"></label>
           <label class="formula-field">Q(x,y)<input id="fyInput" value="x" spellcheck="false"></label>
         </div>
-        <div class="controls"><button id="applyBtn" class="primary">Apply</button><span id="formulaStatus" class="status" role="status">Current example loaded.</span></div>
+        <div class="controls">
+          <button id="applyBtn" class="primary">Apply</button>
+          <span id="formulaStatus" class="status" role="status">Current example loaded.</span>
+        </div>
       </div>
     </section>
 

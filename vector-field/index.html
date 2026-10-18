@@ -920,14 +920,15 @@
     for (const p of flowParticles) {
       const q = mapPoint(p.x, p.y, W, H);
       const fade = Math.max(0.25, 1 - p.age / p.maxAge);
-
+      // Main particle
       flowCtx.beginPath();
-      flowCtx.arc(q.x, q.y, 0.85, 0, TAU);
+      flowCtx.arc(q.x, q.y, 0.55, 0, TAU);
       flowCtx.fillStyle = `rgba(167,139,250,${0.48 + 0.52 * fade})`;
       flowCtx.fill();
 
+      // Particle glow
       flowCtx.beginPath();
-      flowCtx.arc(q.x, q.y, 1.9, 0, TAU);
+      flowCtx.arc(q.x, q.y, 1.2, 0, TAU);
       flowCtx.fillStyle = `rgba(167,139,250,${0.11 * fade})`;
       flowCtx.fill();
     }

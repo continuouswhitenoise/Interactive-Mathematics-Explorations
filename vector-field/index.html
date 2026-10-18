@@ -131,13 +131,6 @@
         <label class="check"><input id="showFlowParticles" type="checkbox" checked> Show animated flow</label>
       </div>
       <p class="note" style="margin-top:8px">Particles follow the vector field, leaving fading trails. Use PLAY or the SPACE BAR to start and pause both animations together.</p>
-            <div class="legend">
-        <span><i class="swatch" style="background:var(--curve)"></i>Curve</span>
-        <span><i class="swatch" style="background:var(--point)"></i>Moving point</span>
-        <span><i class="swatch" style="background:var(--tangent)"></i>Unit tangent T</span>
-        <span><i class="swatch" style="background:var(--normal)"></i>Unit normal N</span>
-        <span><i class="swatch" style="background:var(--field)"></i>Field F</span>
-      </div>
       <div class="control-group">
         <div class="label-row"><label for="arcSlider">Arc length position: <i>s</i></label><output id="sOut">0.000</output></div>
         <input id="arcSlider" type="range" min="0" max="1" step="0.001" value="0" aria-label="Arc length position along the curve">
@@ -152,6 +145,13 @@
         <label class="check"><input id="showTangent" type="checkbox" checked> Show tangent</label>
         <label class="check"><input id="showNormal" type="checkbox" checked> Show normal</label>
         <label class="check"><input id="showPointField" type="checkbox" checked> Show field at point</label>
+      </div>
+                  <div class="legend">
+        <span><i class="swatch" style="background:var(--curve)"></i>Curve</span>
+        <span><i class="swatch" style="background:var(--point)"></i>Moving point</span>
+        <span><i class="swatch" style="background:var(--tangent)"></i>Unit tangent T</span>
+        <span><i class="swatch" style="background:var(--normal)"></i>Unit normal N</span>
+        <span><i class="swatch" style="background:var(--field)"></i>Field F</span>
       </div>
       <div class="section">
         <h2>Live readouts</h2>

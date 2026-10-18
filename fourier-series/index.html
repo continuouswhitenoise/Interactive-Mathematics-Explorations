@@ -1,0 +1,1082 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fourier Series Lab</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    color-scheme: dark;
+    --bg: #090b10;
+    --panel: #10141d;
+    --panel-2: #141a25;
+    --border: #252d3b;
+    --text: #edf1fa;
+    --muted: #8995a9;
+    --gold: #f6c75b;
+    --gold-dim: #9f7c32;
+    --wave: #66d9e8;
+    --grid: rgba(151, 169, 196, 0.105);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 50% -15%, #1b2538 0%, transparent 55%),
+        var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    max-width: 1440px;
+    margin: auto;
+    padding: 34px 30px 24px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 27px;
+}
+
+.eyebrow {
+    color: var(--gold);
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-family: Raleway, sans-serif;
+    font-size: clamp(25px, 3.2vw, 39px);
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-top: 10px;
+    max-width: 650px;
+}
+
+.status {
+    border: 1px solid #29453f;
+    color: #8ce0bc;
+    background: #10221f;
+    padding: 9px 13px;
+    border-radius: 7px;
+    font: 11px "DM Mono", monospace;
+    white-space: nowrap;
+}
+
+.status::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #66e1aa;
+    margin-right: 9px;
+    vertical-align: middle;
+    box-shadow: 0 0 9px #66e1aa80;
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 285px;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.graph-card, .side-card, .formula-card {
+    background: rgba(16, 20, 29, 0.94);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.graph-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.graph-heading h2 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.graph-heading span {
+    color: var(--muted);
+    font: 10px "DM Mono", monospace;
+}
+
+.canvas-wrap {
+    position: relative;
+    padding: 8px 8px 0;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.6;
+    min-height: 270px;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 23px;
+    padding: 13px 10px 17px;
+    color: #c6cedc;
+    font-size: 11px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.swatch {
+    width: 23px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.swatch.wave {
+    background: var(--wave);
+}
+
+.swatch.sum {
+    background: var(--gold);
+    box-shadow: 0 0 7px #f6c75b55;
+}
+
+.side-card {
+    padding: 21px 19px;
+}
+
+.section-label {
+    color: var(--muted);
+    font: 10px "DM Mono", monospace;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+}
+
+.n-value {
+    margin: 18px 0 7px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.n-value strong {
+    font: 500 57px "DM Mono", monospace;
+    color: var(--gold);
+    letter-spacing: -4px;
+}
+
+.n-value span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.slider {
+    width: 100%;
+    margin: 16px 0 8px;
+    accent-color: var(--gold);
+    cursor: pointer;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font: 10px "DM Mono", monospace;
+}
+
+.control-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 23px;
+}
+
+.btn {
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #1a2130;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    transition: background .2s, border-color .2s, transform .2s;
+}
+
+.btn:hover {
+    background: #252f42;
+    border-color: #4a5871;
+}
+
+.btn:active {
+    transform: scale(.98);
+}
+
+.btn.primary {
+    color: #17130a;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.btn.primary:hover {
+    background: #ffdb80;
+}
+
+.speed-block {
+    margin-top: 26px;
+}
+
+.speed-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.speed-row span:last-child {
+    font: 11px "DM Mono", monospace;
+    color: var(--gold);
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    background: #151b27;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    outline: none;
+    font-size: 12px;
+}
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 23px;
+    font-size: 12px;
+    color: #c6cedc;
+}
+
+.toggle-row input {
+    accent-color: var(--gold);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 23px 0;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.metric strong {
+    color: var(--text);
+    font: 11px "DM Mono", monospace;
+    text-align: right;
+}
+
+.metric strong.gold {
+    color: var(--gold);
+}
+
+.formula-card {
+    margin-top: 18px;
+    padding: 20px 23px;
+}
+
+.formula-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.formula-top h2 {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.formula-top span {
+    color: var(--muted);
+    font: 10px "DM Mono", monospace;
+}
+
+.formula {
+    overflow-x: auto;
+    padding: 4px 0;
+    color: #e8d7a6;
+    font-family: "DM Mono", monospace;
+    font-size: clamp(12px, 1.5vw, 16px);
+    line-height: 2;
+    white-space: nowrap;
+}
+
+.formula .accent {
+    color: var(--gold);
+}
+
+.formula-note {
+    margin-top: 11px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 23px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: #68758a;
+    font-size: 10px;
+}
+
+footer span:last-child {
+    font-family: "DM Mono", monospace;
+}
+
+@media (max-width: 900px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .side-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 24px;
+    }
+
+    .side-card > .section-label:first-child,
+    .side-card > .n-value,
+    .side-card > .slider,
+    .side-card > .slider-labels,
+    .side-card > .control-row,
+    .side-card > .divider,
+    .side-card > .metric {
+        grid-column: 1 / -1;
+    }
+
+    .speed-block {
+        margin-top: 23px;
+    }
+
+    .toggle-row {
+        align-self: end;
+    }
+}
+
+@media (max-width: 560px) {
+    .app {
+        padding: 23px 12px 18px;
+    }
+
+    header {
+        align-items: flex-start;
+    }
+
+    .status {
+        font-size: 9px;
+        padding: 8px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+    }
+
+    .side-card {
+        display: block;
+    }
+
+    canvas {
+        min-height: 220px;
+    }
+
+    .graph-heading {
+        padding: 14px;
+    }
+
+    .formula-card {
+        padding: 17px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+    <div>
+        <div class="eyebrow">Mathematical Visualization / 01</div>
+        <h1>Fourier Series Explorer</h1>
+        <p class="subtitle">
+            Watch a periodic square wave emerge from the superposition
+            of sinusoidal harmonics. Increase the number of terms and
+            explore the convergence of its Fourier series.
+        </p>
+    </div>
+    <div class="status" id="status">READY</div>
+</header>
+
+<main>
+<div class="workspace">
+
+    <section class="graph-card">
+        <div class="graph-heading">
+            <h2>Periodic Function &amp; Partial Sum</h2>
+            <span id="graphReadout">N = 1 / 50</span>
+        </div>
+
+        <div class="canvas-wrap">
+            <canvas id="plot" aria-label="Interactive graph of a square wave and its Fourier approximation"></canvas>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="swatch wave"></span>
+                <span>Original square wave</span>
+            </div>
+            <div class="legend-item">
+                <span class="swatch sum"></span>
+                <span id="legendSum">Partial sum, N = 1</span>
+            </div>
+        </div>
+    </section>
+
+    <aside class="side-card">
+        <div class="section-label">Approximation controls</div>
+
+        <div class="n-value">
+            <strong id="nDisplay">1</strong>
+            <span>odd harmonics</span>
+        </div>
+
+        <input
+            class="slider"
+            type="range"
+            id="nSlider"
+            min="1"
+            max="50"
+            step="1"
+            value="1"
+            aria-label="Number of Fourier terms"
+        >
+
+        <div class="slider-labels">
+            <span>N = 1</span>
+            <span>N = 50</span>
+        </div>
+
+        <div class="control-row">
+            <button class="btn primary" id="playBtn">▶ Play</button>
+            <button class="btn" id="resetBtn">↺ Reset</button>
+        </div>
+
+        <div class="speed-block">
+            <div class="speed-row">
+                <span>Animation speed</span>
+                <span id="speedLabel">1×</span>
+            </div>
+            <select id="speedSelect" aria-label="Animation speed">
+                <option value="1400">0.5× — Relaxed</option>
+                <option value="700" selected>1× — Normal</option>
+                <option value="350">2× — Fast</option>
+                <option value="120">4× — Very fast</option>
+            </select>
+        </div>
+
+        <div class="toggle-row">
+            <label for="showWave">Show original wave</label>
+            <input type="checkbox" id="showWave" checked>
+        </div>
+
+        <div class="toggle-row">
+            <label for="showGrid">Show coordinate grid</label>
+            <input type="checkbox" id="showGrid" checked>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">Live diagnostics</div>
+
+        <div class="metric">
+            <span>Terms in sum</span>
+            <strong id="termsMetric">1</strong>
+        </div>
+
+        <div class="metric">
+            <span>Highest harmonic</span>
+            <strong id="harmonicMetric">sin(πx/2)</strong>
+        </div>
+
+        <div class="metric">
+            <span>Period</span>
+            <strong>T = 4</strong>
+        </div>
+
+        <div class="metric">
+            <span>Amplitude</span>
+            <strong>A = 1</strong>
+        </div>
+
+        <div class="metric">
+            <span>Convergence</span>
+            <strong class="gold" id="convergenceMetric">Building...</strong>
+        </div>
+    </aside>
+
+</div>
+
+<section class="formula-card">
+    <div class="formula-top">
+        <h2>Fourier partial sum</h2>
+        <span>ODD HARMONICS ONLY</span>
+    </div>
+
+    <div class="formula">
+        S<sub>N</sub>(x) =
+        <span class="accent">4A / π</span>
+        ∑<sub>k=1</sub><sup>N</sup>
+        <span class="accent">sin((2k−1)2πx/T)</span> / (2k−1)
+    </div>
+
+    <div class="formula-note">
+        For this simulation, A = 1 and T = 4. Each additional term
+        contributes another odd harmonic. At points of discontinuity,
+        the Fourier series converges to the midpoint of the jump.
+        Increasing N sharpens the transitions, while the characteristic
+        Gibbs overshoot persists near each discontinuity.
+    </div>
+</section>
+</main>
+
+<footer>
+    <span>FOURIER SERIES · PERIODIC FUNCTIONS · CONVERGENCE</span>
+    <span>Interactive Mathematics</span>
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+// -----------------------------------------------------
+// Fourier series parameters
+// -----------------------------------------------------
+
+const A = 1;
+const T = 4;
+const X_MIN = -8;
+const X_MAX = 8;
+const Y_MIN = -2.4;
+const Y_MAX = 2.4;
+const MAX_N = 50;
+
+const canvas = document.getElementById("plot");
+const ctx = canvas.getContext("2d");
+
+const slider = document.getElementById("nSlider");
+const nDisplay = document.getElementById("nDisplay");
+const playBtn = document.getElementById("playBtn");
+const resetBtn = document.getElementById("resetBtn");
+const speedSelect = document.getElementById("speedSelect");
+const speedLabel = document.getElementById("speedLabel");
+const showWave = document.getElementById("showWave");
+const showGrid = document.getElementById("showGrid");
+const status = document.getElementById("status");
+
+let N = 1;
+let playing = false;
+let animationTimer = null;
+let lastFrame = 0;
+let cssWidth = 0;
+let cssHeight = 0;
+let dpr = 1;
+
+// -----------------------------------------------------
+// Colors
+// -----------------------------------------------------
+
+const COLORS = {
+    background: "#10141d",
+    grid: "rgba(151, 169, 196, 0.105)",
+    majorGrid: "rgba(151, 169, 196, 0.19)",
+    axis: "#77849a",
+    text: "#9ba8bd",
+    gold: "#f6c75b",
+    wave: "#66d9e8"
+};
+
+// -----------------------------------------------------
+// Fourier mathematics
+// -----------------------------------------------------
+
+function harmonic(x, k) {
+    const n = 2 * k - 1;
+
+    return (4 * A) / (Math.PI * n) *
+        Math.sin(2 * Math.PI * n * x / T);
+}
+
+function S_N(x, terms = N) {
+    let total = 0;
+
+    for (let k = 1; k <= terms; k++) {
+        total += harmonic(x, k);
+    }
+
+    return total;
+}
+
+// Periodic square wave. At jumps, use the midpoint value 0.
+// The value at a single point does not affect the Fourier sum.
+function squareWave(x) {
+    const phase = ((x + T / 2) % T + T) % T;
+
+    if (Math.abs(phase) < 1e-10 ||
+        Math.abs(phase - T) < 1e-10 ||
+        Math.abs(phase - T / 2) < 1e-10) {
+        return 0;
+    }
+
+    return phase < T / 2 ? A : -A;
+}
+
+// -----------------------------------------------------
+// Canvas coordinate system
+// -----------------------------------------------------
+
+function X(x) {
+    return (x - X_MIN) / (X_MAX - X_MIN) * cssWidth;
+}
+
+function Y(y) {
+    return (Y_MAX - y) / (Y_MAX - Y_MIN) * cssHeight;
+}
+
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+
+    cssWidth = rect.width;
+    cssHeight = rect.height;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(cssWidth * dpr);
+    canvas.height = Math.round(cssHeight * dpr);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    draw();
+}
+
+// -----------------------------------------------------
+// Coordinate grid and axes
+// -----------------------------------------------------
+
+function drawGrid() {
+    if (!showGrid.checked) return;
+
+    ctx.save();
+    ctx.lineWidth = 1;
+
+    for (let x = X_MIN; x <= X_MAX; x += 0.5) {
+        const major = Math.abs(x - Math.round(x)) < 1e-8;
+
+        ctx.strokeStyle = major ? COLORS.majorGrid : COLORS.grid;
+        ctx.beginPath();
+        ctx.moveTo(X(x), 0);
+        ctx.lineTo(X(x), cssHeight);
+        ctx.stroke();
+    }
+
+    for (let y = Math.ceil(Y_MIN * 2) / 2;
+         y <= Y_MAX;
+         y += 0.5) {
+
+        const major = Math.abs(y - Math.round(y)) < 1e-8;
+
+        ctx.strokeStyle = major ? COLORS.majorGrid : COLORS.grid;
+        ctx.beginPath();
+        ctx.moveTo(0, Y(y));
+        ctx.lineTo(cssWidth, Y(y));
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function drawAxes() {
+    ctx.save();
+    ctx.strokeStyle = COLORS.axis;
+    ctx.lineWidth = 1;
+
+    // Horizontal and vertical axes
+    ctx.beginPath();
+    ctx.moveTo(X(X_MIN), Y(0));
+    ctx.lineTo(X(X_MAX), Y(0));
+    ctx.moveTo(X(0), Y(Y_MIN));
+    ctx.lineTo(X(0), Y(Y_MAX));
+    ctx.stroke();
+
+    ctx.fillStyle = COLORS.text;
+    ctx.font = '10px "DM Mono", monospace';
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
+    for (let x = X_MIN; x <= X_MAX; x++) {
+        if (x === 0) continue;
+        ctx.fillText(String(x), X(x), Y(0) + 8);
+    }
+
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+
+    for (let y = -2; y <= 2; y++) {
+        if (y === 0) continue;
+        ctx.fillText(String(y), X(0) - 8, Y(y));
+    }
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText("x", cssWidth - 16, Y(0) + 8);
+
+    ctx.textBaseline = "bottom";
+    ctx.fillText("y", X(0) + 8, 15);
+
+    // Mark the original square wave's transition levels
+    ctx.fillStyle = COLORS.wave;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText("+A", X(0) - 10, Y(A));
+    ctx.fillText("−A", X(0) - 10, Y(-A));
+
+    // Period markers
+    ctx.fillStyle = COLORS.text;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("−T/2", X(-T / 2), Y(0) + 23);
+    ctx.fillText("T/2", X(T / 2), Y(0) + 23);
+
+    ctx.restore();
+}
+
+// -----------------------------------------------------
+// Draw the square wave as separate line segments
+// -----------------------------------------------------
+
+function drawSquareWave() {
+    if (!showWave.checked) return;
+
+    ctx.save();
+    ctx.strokeStyle = COLORS.wave;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.shadowColor = COLORS.wave;
+    ctx.shadowBlur = 4;
+
+    for (let k = -2; k < 2; k++) {
+        const left = k * T - T / 2;
+        const right = k * T + T / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(X(left), Y(-A));
+        ctx.lineTo(X(left), Y(A));
+        ctx.moveTo(X(left), Y(-A));
+        ctx.lineTo(X(right), Y(-A));
+        ctx.moveTo(X(left), Y(A));
+        ctx.lineTo(X(right), Y(A));
+        ctx.moveTo(X(right), Y(-A));
+        ctx.lineTo(X(right), Y(A));
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+// -----------------------------------------------------
+// Draw the Nth partial sum
+// -----------------------------------------------------
+
+function drawFourierCurve() {
+    ctx.save();
+
+    ctx.strokeStyle = COLORS.gold;
+    ctx.lineWidth = 2.2;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.shadowColor = COLORS.gold;
+    ctx.shadowBlur = 7;
+
+    const samples = Math.max(1400, Math.floor(cssWidth * 3));
+    const dx = (X_MAX - X_MIN) / samples;
+
+    ctx.beginPath();
+
+    for (let i = 0; i <= samples; i++) {
+        const x = X_MIN + i * dx;
+        const y = S_N(x);
+
+        if (i === 0) {
+            ctx.moveTo(X(x), Y(y));
+        } else {
+            ctx.lineTo(X(x), Y(y));
+        }
+    }
+
+    ctx.stroke();
+    ctx.restore();
+}
+
+// -----------------------------------------------------
+// Complete graph rendering
+// -----------------------------------------------------
+
+function draw() {
+    if (!cssWidth || !cssHeight) return;
+
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    ctx.fillStyle = COLORS.background;
+    ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+    drawGrid();
+    drawAxes();
+    drawSquareWave();
+    drawFourierCurve();
+}
+
+// -----------------------------------------------------
+// Update interface
+// -----------------------------------------------------
+
+function updateInterface() {
+    nDisplay.textContent = N;
+    slider.value = N;
+
+    document.getElementById("graphReadout").textContent =
+        `N = ${N} / ${MAX_N}`;
+
+    document.getElementById("legendSum").textContent =
+        `Partial sum, N = ${N}`;
+
+    document.getElementById("termsMetric").textContent = N;
+
+    const highest = 2 * N - 1;
+
+    document.getElementById("harmonicMetric").textContent =
+        highest === 1
+            ? "sin(πx/2)"
+            : `${highest}th harmonic`;
+
+    document.getElementById("convergenceMetric").textContent =
+        N === 1 ? "First term" :
+        N < 10 ? "Developing" :
+        N < 30 ? "Refining" : "High N";
+
+    playBtn.textContent = playing ? "Ⅱ Pause" : "▶ Play";
+    status.textContent = playing ? "ANIMATING" : "READY";
+}
+
+// -----------------------------------------------------
+// Animation
+// -----------------------------------------------------
+
+function stopAnimation() {
+    playing = false;
+
+    if (animationTimer !== null) {
+        clearTimeout(animationTimer);
+        animationTimer = null;
+    }
+
+    lastFrame = 0;
+    updateInterface();
+}
+
+function scheduleNext() {
+    if (!playing) return;
+
+    const delay = Number(speedSelect.value);
+
+    animationTimer = setTimeout(() => {
+        if (!playing) return;
+
+        N++;
+
+        if (N > MAX_N) {
+            N = MAX_N;
+            stopAnimation();
+            draw();
+            updateInterface();
+            return;
+        }
+
+        draw();
+        updateInterface();
+        scheduleNext();
+    }, delay);
+}
+
+function startAnimation() {
+    if (N >= MAX_N) N = 1;
+
+    playing = true;
+    updateInterface();
+    scheduleNext();
+}
+
+playBtn.addEventListener("click", () => {
+    if (playing) {
+        stopAnimation();
+    } else {
+        startAnimation();
+    }
+});
+
+resetBtn.addEventListener("click", () => {
+    stopAnimation();
+    N = 1;
+    draw();
+    updateInterface();
+});
+
+slider.addEventListener("input", () => {
+    stopAnimation();
+    N = Number(slider.value);
+    draw();
+    updateInterface();
+});
+
+speedSelect.addEventListener("change", () => {
+    const labels = {
+        "1400": "0.5×",
+        "700": "1×",
+        "350": "2×",
+        "120": "4×"
+    };
+
+    speedLabel.textContent = labels[speedSelect.value];
+
+    if (playing) {
+        if (animationTimer !== null) {
+            clearTimeout(animationTimer);
+            animationTimer = null;
+        }
+        scheduleNext();
+    }
+});
+
+showWave.addEventListener("change", draw);
+showGrid.addEventListener("change", draw);
+
+window.addEventListener("resize", resizeCanvas);
+
+// Keyboard shortcut: Space to play/pause.
+// Do not intercept Space when a user is operating a control.
+document.addEventListener("keydown", event => {
+    const target = event.target;
+    const isControl = target instanceof HTMLElement &&
+        (target.matches("input, button, select, textarea") ||
+         target.isContentEditable);
+
+    if (event.code === "Space" && !isControl) {
+        event.preventDefault();
+
+        if (playing) {
+            stopAnimation();
+        } else {
+            startAnimation();
+        }
+    }
+
+    if (event.key === "ArrowRight" && !isControl) {
+        stopAnimation();
+        N = Math.min(MAX_N, N + 1);
+        draw();
+        updateInterface();
+    }
+
+    if (event.key === "ArrowLeft" && !isControl) {
+        stopAnimation();
+        N = Math.max(1, N - 1);
+        draw();
+        updateInterface();
+    }
+});
+
+// Initial render
+resizeCanvas();
+updateInterface();
+</script>
+</body>
+</html>

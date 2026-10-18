@@ -135,7 +135,7 @@
   <div class="controls">
     <div class="control-row">
       <label>Sides (n):</label>
-      <input type="range" id="nSlider" min="3" max="60" value="6" step="1" />
+      <input type="range" id="nSlider" min="3" max="120" value="6" step="1" />
       <span class="val-display" id="nVal">n = 6</span>
     </div>
     <div class="control-row">
@@ -149,7 +149,7 @@
     </div>
   </div>
   <script>
-    // Exact port of your POLYGON_CACHE logic (n = 3 to 60)
+    // polygon code
     const CACHE = {};
     for (let n = 3; n <= 60; n++) {
       const vertsIn = [];

@@ -1,23 +1,22 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central Limit Theorem: Visualized</title>
+<title>Central Limit Theorem</title>
 
 <style>
 :root {
-  --bg: #202124;
-  --panel: #292a2d;
-  --raised: #323337;
-  --border: #48494e;
-  --text: #e8e8ea;
-  --muted: #a5a6ad;
-  --mint: #72e0c0;
-  --magenta: #ff43d1;
-  --grid: #414247;
-  --axis: #777980;
+  --bg: #151719;
+  --panel: #202327;
+  --raised: #292d32;
+  --border: #41464d;
+  --text: #f1f0e9;
+  --muted: #b0b2b7;
+  --yellow: #f4d35e;
+  --gold: #e9a820;
+  --grid: #383d43;
+  --axis: #858b93;
 }
 
 * { box-sizing: border-box; }
@@ -27,14 +26,11 @@ body {
   padding: 26px;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 }
 
-main {
-  max-width: 1400px;
-  margin: auto;
-}
-
+main { max-width: 1400px; margin: auto; }
 header { margin-bottom: 22px; }
 
 h1 {
@@ -60,8 +56,12 @@ h1 {
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(180px, 1.25fr) minmax(155px, 1fr)
-    minmax(170px, 1fr) minmax(150px, 1fr) auto;
+  grid-template-columns:
+    minmax(170px, 1.1fr)
+    minmax(155px, 1fr)
+    minmax(170px, 1fr)
+    minmax(175px, 1fr)
+    auto;
   gap: 22px;
   align-items: end;
   margin-bottom: 20px;
@@ -84,7 +84,7 @@ h1 {
 
 input[type="range"] {
   width: 100%;
-  accent-color: var(--mint);
+  accent-color: var(--yellow);
   cursor: pointer;
 }
 
@@ -108,23 +108,24 @@ button {
 }
 
 button:hover {
-  background: #414247;
-  border-color: #777980;
+  background: #393e45;
+  border-color: #777e87;
 }
 
-button:focus-visible, select:focus-visible,
+button:focus-visible,
+select:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--mint);
+  outline: 2px solid var(--yellow);
   outline-offset: 3px;
 }
 
 button.primary {
-  background: var(--mint);
-  color: #172320;
-  border-color: var(--mint);
+  background: var(--yellow);
+  color: #211d0e;
+  border-color: var(--yellow);
 }
 
-button.primary:hover { background: #91ecd3; }
+button.primary:hover { background: #ffe37a; }
 
 .actions {
   display: flex;
@@ -194,12 +195,12 @@ canvas {
   width: 17px;
   height: 9px;
   border-radius: 2px;
-  background: var(--mint);
+  background: var(--yellow);
 }
 
 .swatch.curve {
   height: 3px;
-  background: var(--magenta);
+  background: var(--gold);
 }
 
 .stats {
@@ -246,7 +247,7 @@ canvas {
   padding: 10px 0;
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1050px) {
   .controls { grid-template-columns: 1fr 1fr; }
   .graphs { grid-template-columns: 1fr; }
 }
@@ -267,9 +268,10 @@ canvas {
   <header>
     <h1>Central Limit Theorem: Visualized</h1>
     <div class="subtitle">
-      Explore how the distribution of sample means changes as the sample size n increases.
-      Choose a left-skewed, symmetric, or right-skewed population and watch the simulated
-      histogram and theoretical normal curve evolve together.
+      Explore how the distribution of sample means changes as the sample
+      size n increases. Compare familiar population shapes with a randomly
+      distorted population, and watch the simulated histogram and theoretical
+      normal curve evolve together.
     </div>
   </header>
 
@@ -279,21 +281,26 @@ canvas {
         <span>Sample size, n</span>
         <output id="nValue">30</output>
       </label>
-      <input id="sampleSize" type="range" min="2" max="1000"
-        step="1" value="30">
+      <input id="sampleSize" type="range"
+        min="2" max="1000" step="1" value="30">
     </div>
 
     <div class="control">
-      <label for="populationShape"><span>Population shape</span></label>
+      <label for="populationShape">
+        <span>Population shape</span>
+      </label>
       <select id="populationShape">
         <option value="left">Left-skewed</option>
         <option value="center">Center-symmetric</option>
         <option value="right" selected>Right-skewed</option>
+        <option value="random">Random distortion</option>
       </select>
     </div>
 
     <div class="control">
-      <label for="meanCount"><span>Number of sample means</span></label>
+      <label for="meanCount">
+        <span>Number of sample means</span>
+      </label>
       <select id="meanCount">
         <option value="250">250 means</option>
         <option value="500" selected>500 means</option>
@@ -304,11 +311,12 @@ canvas {
     </div>
 
     <div class="control">
-      <label for="speed">
-        <span>Animation speed</span>
-        <output id="speedValue">Normal</output>
+      <label for="binCount">
+        <span>Histogram bars</span>
+        <output id="binValue">12</output>
       </label>
-      <input id="speed" type="range" min="1" max="3" value="2">
+      <input id="binCount" type="range"
+        min="2" max="25" step="1" value="12">
     </div>
 
     <button id="playN" type="button">▶ Animate n</button>
@@ -345,7 +353,8 @@ canvas {
         <h2>Sampling Distribution of the Mean</h2>
       </div>
       <p class="graph-description">
-        Watch the mint bars and magenta theoretical curve change together.
+        Both axes remain fixed as n changes, making the curve's narrowing
+        and increasing height visible.
       </p>
       <canvas id="samplingChart"
         aria-label="Sampling distribution histogram and theoretical normal curve"></canvas>
@@ -388,12 +397,14 @@ canvas {
     </p>
     <div class="math">σ / √n</div>
     <p>
-      Use the population-shape menu to compare a reflected exponential
-      population (left-skewed), a normal population (symmetric), and the
-      original exponential population (right-skewed). Each shape has its own
-      mean and standard deviation, which are reflected in the theoretical
-      curve. Changing the shape generates a new population and fresh sample
-      means. During animation, each simulated sample grows as n increases.
+      Compare a reflected exponential population (left-skewed), a normal
+      population (symmetric), the original exponential population
+      (right-skewed), and a randomly distorted population built from a
+      randomly weighted mixture of different distribution shapes.
+      Each population has its own mean and standard deviation, which determine
+      the theoretical curve. Changing the population shape generates a new
+      population and fresh sample means. During animation, each simulated
+      sample grows as n increases.
     </p>
   </section>
 </main>
@@ -408,8 +419,8 @@ canvas {
   const nValue = $("nValue");
   const shapeSelect = $("populationShape");
   const countSelect = $("meanCount");
-  const speedSlider = $("speed");
-  const speedValue = $("speedValue");
+  const binSlider = $("binCount");
+  const binValue = $("binValue");
   const playButton = $("playN");
   const newButton = $("newSample");
   const status = $("status");
@@ -418,30 +429,25 @@ canvas {
   const sampleCanvas = $("samplingChart");
 
   const C = {
-    text: "#e8e8ea",
-    muted: "#a5a6ad",
-    axis: "#777980",
-    grid: "#414247",
-    mint: "rgba(114, 224, 192, 0.78)",
-    magenta: "#ff43d1"
+    muted: "#b0b2b7",
+    axis: "#858b93",
+    grid: "#383d43",
+    bars: "rgba(244, 211, 94, 0.84)",
+    gold: "#e9a820"
   };
 
   const POP_SIZE = 50000;
-  const POP_BINS = 55;
-  const SAMPLE_BINS = 36;
+  const SAMPLE_X_SIGMAS = 4.5;
 
   let population = [];
   let popMean = 0;
   let popSD = 0;
-  let popHistogram = null;
+  let randomMixture = null;
+  let cachedPopulationDomain = null;
 
-  // Each simulated sample has a cumulative sum. Adding one observation
-  // to each sum advances every sample mean by one unit of sample size.
   let runningSums = [];
   let sampleMeans = [];
   let runningN = 0;
-  let completedN = null;
-  let sampleHistogram = null;
 
   let animating = false;
   let frameId = null;
@@ -456,48 +462,147 @@ canvas {
     return -Math.log(Math.max(1e-12, 1 - Math.random()));
   }
 
-  // Box–Muller transform: a normal observation centered at 4.
-  function randNormal() {
+  function randStandardNormal() {
     const u1 = Math.max(1e-12, Math.random());
     const u2 = Math.random();
-    return 4 + Math.sqrt(-2 * Math.log(u1)) *
+    return Math.sqrt(-2 * Math.log(u1)) *
       Math.cos(2 * Math.PI * u2);
+  }
+
+  function randNormal() {
+    return 4 + randStandardNormal();
+  }
+
+  function randUniform(a, b) {
+    return a + Math.random() * (b - a);
+  }
+
+  // Randomly weighted mixture of four distribution families.
+  // A new mixture is selected whenever a random population is generated.
+  function makeRandomMixture() {
+    const families = [
+      "normal", "exponential", "uniform", "reflected"
+    ];
+
+    const components = Array.from({ length: 4 }, () => ({
+      family: families[Math.floor(Math.random() * families.length)],
+      weight: 0.15 + Math.random(),
+      location: randUniform(-2.5, 5.5),
+      scale: randUniform(0.35, 2.0)
+    }));
+
+    const total = components.reduce((sum, c) => sum + c.weight, 0);
+    components.forEach(c => c.weight /= total);
+
+    return components;
+  }
+
+  function drawRandomMixture() {
+    let r = Math.random();
+    let chosen = randomMixture[randomMixture.length - 1];
+
+    for (const component of randomMixture) {
+      r -= component.weight;
+      if (r <= 0) {
+        chosen = component;
+        break;
+      }
+    }
+
+    switch (chosen.family) {
+      case "normal":
+        return chosen.location +
+          chosen.scale * randStandardNormal();
+
+      case "uniform":
+        return randUniform(
+          chosen.location - chosen.scale,
+          chosen.location + chosen.scale
+        );
+
+      case "reflected":
+        return chosen.location - chosen.scale * randExp();
+
+      default:
+        return chosen.location + chosen.scale * randExp();
+    }
   }
 
   function drawPopulationObservation() {
     switch (shapeSelect.value) {
       case "left":
-        // Reflect an exponential distribution to create a left tail.
         return 8 - randExp();
+
       case "center":
-        // A symmetric, bell-shaped population.
         return randNormal();
+
+      case "random":
+        return drawRandomMixture();
+
       case "right":
       default:
-        // Preserve the original right-skewed exponential population.
         return randExp();
     }
-  }
-
-  function populationDomain() {
-    if (shapeSelect.value === "left") return { min: -4, max: 8 };
-    if (shapeSelect.value === "center") return { min: 0, max: 8 };
-    return { min: 0, max: 8 };
   }
 
   function stats(values) {
     let sum = 0;
     for (const x of values) sum += x;
+
     const mean = sum / values.length;
 
-    let sq = 0;
-    for (const x of values) sq += (x - mean) ** 2;
+    let squaredDifferences = 0;
+    for (const x of values) {
+      squaredDifferences += (x - mean) ** 2;
+    }
 
-    return { mean, sd: Math.sqrt(sq / values.length) };
+    return {
+      mean,
+      sd: Math.sqrt(squaredDifferences / values.length)
+    };
   }
 
   function fmt(x) {
     return Number.isFinite(x) ? x.toFixed(4) : "—";
+  }
+
+  function getBinCount() {
+    return Number(binSlider.value);
+  }
+
+  function populationDomain() {
+    if (cachedPopulationDomain) return cachedPopulationDomain;
+
+    if (shapeSelect.value === "left") {
+      return { min: -4, max: 8 };
+    }
+
+    if (shapeSelect.value === "center") {
+      return { min: 0, max: 8 };
+    }
+
+    if (shapeSelect.value === "right") {
+      return { min: 0, max: 8 };
+    }
+
+    return { min: -5, max: 10 };
+  }
+
+  function calculatePopulationDomain() {
+    if (shapeSelect.value !== "random") {
+      cachedPopulationDomain = null;
+      return;
+    }
+
+    const sorted = [...population].sort((a, b) => a - b);
+    const lo = sorted[Math.floor(sorted.length * 0.005)];
+    const hi = sorted[Math.floor(sorted.length * 0.995)];
+    const pad = Math.max((hi - lo) * 0.06, 0.2);
+
+    cachedPopulationDomain = {
+      min: lo - pad,
+      max: hi + pad
+    };
   }
 
   function canvasContext(canvas) {
@@ -521,11 +626,15 @@ canvas {
     const counts = new Array(bins).fill(0);
     const width = (max - min) / bins;
 
-    if (!(width > 0)) return { counts, min, max, width: 1 };
+    if (!(width > 0)) {
+      return { counts, min, max, width: 1 };
+    }
 
-    for (const v of values) {
-      let i = Math.floor((v - min) / width);
+    for (const value of values) {
+      let i = Math.floor((value - min) / width);
+
       if (i === bins) i--;
+
       if (i >= 0 && i < bins) counts[i]++;
     }
 
@@ -533,7 +642,11 @@ canvas {
   }
 
   function axes(ctx, w, h, domain, maxY, xLabel, yLabel) {
-    const left = 55, right = 15, top = 17, bottom = 43;
+    const left = 57;
+    const right = 15;
+    const top = 17;
+    const bottom = 43;
+
     const pw = Math.max(1, w - left - right);
     const ph = Math.max(1, h - top - bottom);
 
@@ -553,18 +666,20 @@ canvas {
       ctx.fillStyle = C.muted;
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";
-      ctx.fillText((maxY * i / 4).toFixed(maxY < 10 ? 1 : 0),
-        left - 8, y);
+
+      const value = maxY * i / 4;
+      const decimals = maxY < 20 ? 1 : 0;
+      ctx.fillText(value.toFixed(decimals), left - 8, y);
     }
 
     for (let i = 0; i <= 4; i++) {
       const x = left + i / 4 * pw;
-      const v = domain.min + i / 4 * (domain.max - domain.min);
+      const value = domain.min + i / 4 * (domain.max - domain.min);
 
       ctx.fillStyle = C.muted;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
-      ctx.fillText(v.toFixed(2), x, top + ph + 9);
+      ctx.fillText(value.toFixed(2), x, top + ph + 9);
     }
 
     ctx.strokeStyle = C.axis;
@@ -590,10 +705,11 @@ canvas {
 
   function drawBars(ctx, plot, hist, maxY) {
     const bw = plot.pw / hist.counts.length;
-    ctx.fillStyle = C.mint;
+    ctx.fillStyle = C.bars;
 
     for (let i = 0; i < hist.counts.length; i++) {
       const bh = hist.counts[i] / maxY * plot.ph;
+
       ctx.fillRect(
         plot.left + i * bw + 0.5,
         plot.top + plot.ph - bh,
@@ -608,20 +724,53 @@ canvas {
 
     const { ctx, w, h } = canvasContext(popCanvas);
     const domain = populationDomain();
-    const hist = popHistogram ||
-      histogram(population, POP_BINS, domain.min, domain.max);
-    const maxY = Math.max(1, ...hist.counts) * 1.12;
 
-    const plot = axes(ctx, w, h, domain, maxY,
-      "Observation value", "Count");
+    const hist = histogram(
+      population, getBinCount(), domain.min, domain.max
+    );
+
+    const maxY = Math.max(1, ...hist.counts) * 1.12;
+    const plot = axes(
+      ctx, w, h, domain, maxY, "Observation value", "Count"
+    );
 
     drawBars(ctx, plot, hist, maxY);
   }
 
-  function sampleDomain(n) {
-    const se = popSD / Math.sqrt(n);
-    const half = Math.max(4 * se, 0.06);
-    return { min: popMean - half, max: popMean + half };
+  // FIXED HORIZONTAL SCALE:
+  // The sample-mean x-axis is defined by the population SD at n = 2.
+  // It does not change as n increases.
+  function sampleDomain() {
+    const half = Math.max(
+      SAMPLE_X_SIGMAS * popSD / Math.sqrt(2),
+      0.15
+    );
+
+    return {
+      min: popMean - half,
+      max: popMean + half
+    };
+  }
+
+  // FIXED VERTICAL SCALE:
+  // Set the y-axis using the theoretical curve's peak at n = 1000.
+  // This ensures the curve is not clipped at larger sample sizes.
+  // At smaller n, the curve is shorter; as n increases, it gets taller.
+  function fixedSampleYMax() {
+    const nMax = 1000;
+    const se = popSD / Math.sqrt(nMax);
+    const peakDensity = se > 0
+      ? 1 / (se * Math.sqrt(2 * Math.PI))
+      : 1;
+
+    const domain = sampleDomain();
+    const binWidth =
+      (domain.max - domain.min) / getBinCount();
+
+    const peakInCountUnits =
+      peakDensity * Number(countSelect.value) * binWidth;
+
+    return Math.max(1, peakInCountUnits * 1.18);
   }
 
   function normalDensity(x, n) {
@@ -629,7 +778,9 @@ canvas {
     if (!(se > 0)) return 0;
 
     const z = (x - popMean) / se;
-    return Math.exp(-0.5 * z * z) / (se * Math.sqrt(2 * Math.PI));
+
+    return Math.exp(-0.5 * z * z) /
+      (se * Math.sqrt(2 * Math.PI));
   }
 
   function drawSampling() {
@@ -637,58 +788,65 @@ canvas {
 
     const n = Number(slider.value);
     const { ctx, w, h } = canvasContext(sampleCanvas);
-    const domain = sampleDomain(n);
-    const binWidth = (domain.max - domain.min) / SAMPLE_BINS;
 
-    const hist = histogram(sampleMeans, SAMPLE_BINS, domain.min, domain.max);
+    const domain = sampleDomain();
+    const bins = getBinCount();
 
-    let maxY = 1;
-    for (const c of hist.counts) maxY = Math.max(maxY, c);
+    const hist = histogram(
+      sampleMeans, bins, domain.min, domain.max
+    );
 
-    // Express the theoretical density in histogram-count units.
-    // This lets the curve and bars share the same vertical axis.
-    const curve = [];
-    const points = 401;
-    const total = Math.max(1, sampleMeans.length);
+    const maxY = fixedSampleYMax();
 
-    for (let i = 0; i < points; i++) {
-      const x = domain.min + (domain.max - domain.min) * i / (points - 1);
-      const y = normalDensity(x, n) * total * binWidth;
-      curve.push({ x, y });
-      maxY = Math.max(maxY, y);
-    }
+    const plot = axes(
+      ctx, w, h, domain, maxY, "Sample mean", "Count"
+    );
 
-    maxY = Math.max(1, maxY * 1.12);
-
-    const plot = axes(ctx, w, h, domain, maxY, "Sample mean", "Count");
     drawBars(ctx, plot, hist, maxY);
 
-    ctx.beginPath();
-    ctx.strokeStyle = C.magenta;
-    ctx.lineWidth = 2.6;
+    const points = 401;
+    const binWidth =
+      (domain.max - domain.min) / bins;
 
-    curve.forEach((p, i) => {
+    ctx.beginPath();
+    ctx.strokeStyle = C.gold;
+    ctx.lineWidth = 2.8;
+
+    for (let i = 0; i < points; i++) {
+      const xVal = domain.min +
+        (domain.max - domain.min) * i / (points - 1);
+
+      const yVal = normalDensity(xVal, n) *
+        Number(countSelect.value) * binWidth;
+
       const x = plot.left +
-        (p.x - domain.min) / (domain.max - domain.min) * plot.pw;
-      const y = plot.top + plot.ph - p.y / maxY * plot.ph;
+        (xVal - domain.min) /
+        (domain.max - domain.min) * plot.pw;
+
+      const y = plot.top + plot.ph -
+        Math.min(yVal, maxY) / maxY * plot.ph;
 
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
-    });
+    }
 
     ctx.stroke();
   }
 
   function updateStats() {
     const n = Number(slider.value);
+
     $("populationMean").textContent = fmt(popMean);
     $("populationSD").textContent = fmt(popSD);
-    $("standardError").textContent = fmt(popSD / Math.sqrt(n));
+    $("standardError").textContent =
+      fmt(popSD / Math.sqrt(n));
 
     if (sampleMeans.length) {
       let sum = 0;
       for (const m of sampleMeans) sum += m;
-      $("meanOfMeans").textContent = fmt(sum / sampleMeans.length);
+
+      $("meanOfMeans").textContent =
+        fmt(sum / sampleMeans.length);
     } else {
       $("meanOfMeans").textContent = "—";
     }
@@ -703,12 +861,18 @@ canvas {
   function updateCurve() {
     nValue.value = slider.value;
     nValue.textContent = slider.value;
+
     drawSampling();
     updateStats();
   }
 
   function generatePopulation() {
+    randomMixture = shapeSelect.value === "random"
+      ? makeRandomMixture()
+      : null;
+
     population = new Array(POP_SIZE);
+
     for (let i = 0; i < POP_SIZE; i++) {
       population[i] = drawPopulationObservation();
     }
@@ -717,14 +881,11 @@ canvas {
     popMean = s.mean;
     popSD = s.sd;
 
-    const domain = populationDomain();
-    popHistogram = histogram(population, POP_BINS, domain.min, domain.max);
+    calculatePopulationDomain();
 
     runningSums = [];
     sampleMeans = [];
     runningN = 0;
-    completedN = null;
-    sampleHistogram = null;
 
     drawPopulation();
     updateStats();
@@ -747,28 +908,27 @@ canvas {
   function updateMeansFromSums() {
     const divisor = Math.max(1, runningN);
     sampleMeans = runningSums.map(sum => sum / divisor);
-    completedN = runningN;
   }
 
-  // Start a new simulation for a particular n. The work is divided
-  // into batches to avoid locking up the browser.
+  // Generate sample means in batches to keep the interface responsive.
   function simulateAtN(n, callback) {
     cancelSimulation();
 
     const token = simulationToken;
     const count = Number(countSelect.value);
     const sums = new Array(count).fill(0);
+
     let sampleIndex = 0;
 
     runningSums = [];
     sampleMeans = [];
     runningN = 0;
-    completedN = null;
 
     drawSampling();
     updateStats();
 
-    status.textContent = `Generating ${count.toLocaleString()} sample means at n = ${n}…`;
+    status.textContent =
+      `Generating ${count.toLocaleString()} sample means at n = ${n}…`;
 
     function batch() {
       if (token !== simulationToken) return;
@@ -779,7 +939,10 @@ canvas {
         let sum = 0;
 
         for (let j = 0; j < n; j++) {
-          const pick = Math.floor(Math.random() * population.length);
+          const pick = Math.floor(
+            Math.random() * population.length
+          );
+
           sum += population[pick];
         }
 
@@ -788,7 +951,10 @@ canvas {
 
       if (sampleIndex < count) {
         status.textContent =
-          `Generating sample means: ${Math.round(100 * sampleIndex / count)}%`;
+          `Generating sample means: ${Math.round(
+            100 * sampleIndex / count
+          )}%`;
+
         simulationTimer = setTimeout(batch, 0);
         return;
       }
@@ -798,6 +964,7 @@ canvas {
       updateMeansFromSums();
 
       simulationTimer = null;
+
       status.textContent =
         `Complete: ${count.toLocaleString()} sample means at n = ${n}.`;
 
@@ -809,11 +976,13 @@ canvas {
     batch();
   }
 
-  // Advance each simulated sample by drawing only its additional
-  // observations. This is the key to animating the histogram efficiently.
+  // Advance the existing samples using only their additional observations.
   function advanceSimulation(targetN) {
-    if (runningSums.length !== Number(countSelect.value) ||
-        runningN < 1 || targetN < runningN) {
+    if (
+      runningSums.length !== Number(countSelect.value) ||
+      runningN < 1 ||
+      targetN < runningN
+    ) {
       return false;
     }
 
@@ -824,8 +993,9 @@ canvas {
       let sum = runningSums[i];
 
       for (let j = 0; j < delta; j++) {
-        const pick = Math.floor(Math.random() * population.length);
-        sum += population[pick];
+        sum += population[
+          Math.floor(Math.random() * population.length)
+        ];
       }
 
       runningSums[i] = sum;
@@ -835,14 +1005,6 @@ canvas {
     updateMeansFromSums();
 
     return true;
-  }
-
-  function updateSpeedLabel() {
-    speedValue.textContent = ({
-      1: "Slow",
-      2: "Normal",
-      3: "Fast"
-    })[speedSlider.value];
   }
 
   function stopAnimation() {
@@ -857,15 +1019,13 @@ canvas {
 
     previousTime = 0;
     playButton.textContent = "▶ Animate n";
-
     status.textContent = `Paused at n = ${slider.value}.`;
   }
 
   function animationTick(time) {
     if (!animating) return;
 
-    const intervals = { 1: 65, 2: 30, 3: 12 };
-    const interval = intervals[speedSlider.value];
+    const interval = 30; // Fixed animation speed.
 
     if (!previousTime) previousTime = time;
 
@@ -873,7 +1033,12 @@ canvas {
       previousTime = time;
 
       const current = Number(slider.value);
-      const step = current < 100 ? 1 : current < 400 ? 3 : 8;
+      const step = current < 100
+        ? 1
+        : current < 400
+          ? 3
+          : 8;
+
       const next = Math.min(1000, current + step);
 
       if (!advanceSimulation(next)) {
@@ -889,24 +1054,38 @@ canvas {
       nValue.value = String(next);
       nValue.textContent = String(next);
 
-      // Both visualizations update from the same n.
-      // The histogram is recomputed from the evolving sample means.
       drawSampling();
       updateStats();
 
       status.textContent =
-        `Animating: n = ${next} · ${sampleMeans.length.toLocaleString()} sample means`;
+        `Animating: n = ${next} · ` +
+        `${sampleMeans.length.toLocaleString()} sample means`;
 
       if (next >= 1000) {
         animating = false;
         frameId = null;
         previousTime = 0;
+
         playButton.textContent = "▶ Animate n";
         status.textContent =
-          `Complete: n = 1000 · ${sampleMeans.length.toLocaleString()} sample means`;
+          `Complete: n = 1000 · ` +
+          `${sampleMeans.length.toLocaleString()} sample means`;
+
         return;
       }
     }
+
+    frameId = requestAnimationFrame(animationTick);
+  }
+
+  function beginAnimation() {
+    if (Number(slider.value) >= 1000) return;
+
+    animating = true;
+    previousTime = 0;
+
+    playButton.textContent = "Ⅱ Pause animation";
+    status.textContent = `Animating from n = ${slider.value}.`;
 
     frameId = requestAnimationFrame(animationTick);
   }
@@ -919,11 +1098,12 @@ canvas {
 
     cancelSimulation();
 
-    // Rewind to n = 2 after reaching the maximum.
+    // Restart from n = 2 after reaching the maximum.
     if (Number(slider.value) >= 1000) {
       internalSliderUpdate = true;
       slider.value = 2;
       internalSliderUpdate = false;
+
       nValue.value = "2";
       nValue.textContent = "2";
     }
@@ -931,32 +1111,27 @@ canvas {
     const n = Number(slider.value);
     const count = Number(countSelect.value);
 
-    // If the existing simulation doesn't match the current slider
-    // and selected count, prepare the matching simulation first.
-    if (runningN !== n || runningSums.length !== count) {
-      status.textContent = "Preparing the simulation for animation…";
+    if (
+      runningN !== n ||
+      runningSums.length !== count
+    ) {
+      status.textContent =
+        "Preparing the simulation for animation…";
+
+      animating = true;
+      playButton.textContent = "Ⅱ Pause animation";
+
       simulateAtN(n, () => {
         if (animating) {
           animating = false;
           beginAnimation();
         }
       });
-      animating = true;
-      playButton.textContent = "Ⅱ Pause animation";
+
       return;
     }
 
     beginAnimation();
-  }
-
-  function beginAnimation() {
-    if (Number(slider.value) >= 1000) return;
-
-    animating = true;
-    previousTime = 0;
-    playButton.textContent = "Ⅱ Pause animation";
-    status.textContent = `Animating from n = ${slider.value}.`;
-    frameId = requestAnimationFrame(animationTick);
   }
 
   function handleManualChange() {
@@ -966,8 +1141,8 @@ canvas {
 
     nValue.value = slider.value;
     nValue.textContent = slider.value;
-    updateCurve();
 
+    updateCurve();
     cancelSimulation();
 
     manualTimer = setTimeout(() => {
@@ -988,18 +1163,26 @@ canvas {
 
   countSelect.addEventListener("change", () => {
     if (animating) stopAnimation();
+
     cancelSimulation();
+    drawSampling();
     simulateAtN(Number(slider.value));
+  });
+
+  binSlider.addEventListener("input", () => {
+    binValue.value = binSlider.value;
+    binValue.textContent = binSlider.value;
+    drawAll();
   });
 
   shapeSelect.addEventListener("change", () => {
     stopAnimation();
     cancelSimulation();
+
     generatePopulation();
     simulateAtN(Number(slider.value));
   });
 
-  speedSlider.addEventListener("input", updateSpeedLabel);
   playButton.addEventListener("click", startAnimation);
   newButton.addEventListener("click", generateNewSample);
 
@@ -1023,7 +1206,9 @@ canvas {
     resizeTimer = setTimeout(drawAll, 100);
   });
 
-  updateSpeedLabel();
+  binValue.value = binSlider.value;
+  binValue.textContent = binSlider.value;
+
   generatePopulation();
   simulateAtN(Number(slider.value));
 })();

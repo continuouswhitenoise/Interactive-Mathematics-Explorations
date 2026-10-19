@@ -3,35 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Coin Flip Lab | Law of Large Numbers</title>
+<title>Law of Large Numbers: Fair Coin Flip </title>
 
 <style>
 :root {
     --bg: #111318;
-    --panel: #1b1e26;
-    --panel-light: #232733;
-    --border: #343947;
+    --panel: #1d2028;
+    --border: #353a46;
     --text: #f1f5f9;
-    --muted: #a0a9ba;
+    --muted: #a0a8b8;
     --mint: #6ee7b7;
     --gold: #fbbf24;
-    --purple: #c4b5fd;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
+    padding: 24px 14px;
     min-height: 100vh;
-    padding: 32px 16px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background:
-        radial-gradient(ellipse at 50% 0%, #24283a 0%, transparent 55%),
-        var(--bg);
+    background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                  Roboto, sans-serif;
@@ -39,869 +33,336 @@ body {
 
 .container {
     width: 100%;
-    max-width: 700px;
-    padding: 30px;
+    max-width: 500px;
+    padding: 26px;
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 24px;
-    background: rgba(27, 30, 38, 0.97);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-}
-
-header {
-    text-align: center;
-    margin-bottom: 28px;
-}
-
-.eyebrow {
-    display: inline-block;
-    color: var(--mint);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px #0003;
 }
 
 h1 {
-    margin: 0;
-    font-size: clamp(27px, 5vw, 38px);
-    letter-spacing: -1.5px;
-    line-height: 1.15;
-}
-
-.subtitle {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.7;
-    margin: 12px auto 0;
-    max-width: 470px;
-}
-
-.controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    margin: 0 0 24px;
+    text-align: center;
+    font-size: 27px;
+    letter-spacing: -.7px;
 }
 
 .form-group {
-    text-align: left;
-    min-width: 0;
+    margin-bottom: 16px;
 }
 
 label {
     display: block;
-    margin-bottom: 9px;
+    margin-bottom: 7px;
+    color: #d3d8e3;
     font-size: 13px;
-    font-weight: 700;
-    color: #d7dce7;
+    font-weight: 650;
 }
 
 input, select {
     width: 100%;
-    padding: 13px;
+    padding: 11px;
     color: var(--text);
-    background: var(--panel-light);
+    background: #14171e;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    font: inherit;
+    border-radius: 7px;
     font-size: 15px;
-    outline: none;
 }
 
 input:focus, select:focus {
+    outline: 2px solid #6ee7b755;
     border-color: var(--mint);
-    box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.1);
 }
 
-.hint {
-    color: var(--muted);
-    font-size: 11px;
-    margin-top: 7px;
-}
-
-/* COIN STAGE */
-
-.coin-stage {
-    margin: 26px 0 20px;
-    padding: 12px 0 4px;
-    text-align: center;
-    overflow: hidden;
-    perspective: 900px;
-}
+/* Simple 3D coin */
 
 .coin-viewport {
-    height: 190px;
+    height: 155px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    perspective: 850px;
+    align-items: center;
+    perspective: 900px;
+    margin: 10px 0 16px;
 }
 
 .coin {
+    width: 105px;
+    height: 105px;
     position: relative;
-    width: 126px;
-    height: 126px;
     transform-style: preserve-3d;
-    transform: rotateX(-12deg) rotateY(0deg);
-    will-change: transform;
+    transform: rotateY(0deg);
+    transition: transform 1.6s cubic-bezier(.2,.75,.25,1);
 }
 
 .face {
     position: absolute;
     inset: 0;
     border-radius: 50%;
+    border: 4px solid #b77916;
+    outline: 1px solid #fce7a2;
+    outline-offset: -8px;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 5px solid #b77916;
-    outline: 2px solid #fce7a2;
-    outline-offset: -10px;
-    color: #633b08;
-    background:
-        radial-gradient(circle at 29% 22%,
-            #fff7cb 0%, #fbdc78 18%, #f6b82f 48%,
-            #d88b0d 77%, #f6c85a 100%);
-    box-shadow:
-        inset 0 0 0 3px rgba(255,255,255,.22),
-        inset 0 -9px 13px rgba(111, 60, 0, .25),
-        0 0 0 1px #8a590e;
-    overflow: hidden;
-}
-
-.face::after {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border: 1px solid rgba(255, 249, 203, 0.65);
-    border-radius: 50%;
+    background: linear-gradient(135deg, #fff0a6, #fbbf24 48%, #c78012);
+    color: #713f12;
+    box-shadow: inset 0 0 12px #0003, 0 5px 12px #0004;
 }
 
 .tails {
     transform: rotateY(180deg);
-    background:
-        radial-gradient(circle at 28% 20%,
-            #fff0ba 0%, #eab85a 20%, #c88b26 52%,
-            #9a6014 78%, #e0a944 100%);
+    background: linear-gradient(135deg, #fce7a2, #d99b2b 55%, #a96512);
 }
 
-.coin-emoji {
-    font-size: 42px;
-    line-height: 1;
-    filter: drop-shadow(0 2px 1px rgba(86, 45, 0, .18));
-    z-index: 1;
+.emoji {
+    font-size: 35px;
+    line-height: 1.1;
 }
 
 .coin-label {
-    margin-top: 8px;
-    font-size: 12px;
-    letter-spacing: 2px;
+    margin-top: 5px;
+    font-size: 10px;
     font-weight: 900;
-    z-index: 1;
+    letter-spacing: 1.5px;
 }
-
-.coin-shadow {
-    width: 100px;
-    height: 15px;
-    margin: -2px auto 0;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    filter: blur(8px);
-    transform: scaleX(1);
-    transition: transform 0.2s;
-}
-
-.coin-caption {
-    min-height: 23px;
-    margin-top: 10px;
-    color: var(--gold);
-    font-size: 13px;
-    font-weight: 700;
-}
-
-/* BUTTONS */
 
 button {
-    font: inherit;
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: var(--mint);
+    color: #10251e;
+    font-size: 15px;
+    font-weight: 750;
     cursor: pointer;
-    border: 0;
-    border-radius: 11px;
-    font-weight: 800;
-    transition: transform .15s, background .15s, opacity .15s;
 }
 
-button:active {
-    transform: scale(.98);
-}
-
-button:disabled {
-    opacity: .55;
-    cursor: wait;
-}
-
-.primary-button {
-    width: 100%;
-    padding: 15px 20px;
-    color: #08261b;
-    background: linear-gradient(135deg, #86efac, #34d399);
-    box-shadow: 0 6px 22px rgba(52, 211, 153, .13);
-}
-
-.primary-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
-    transform: translateY(-1px);
-}
-
-.secondary-button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    color: #d6d9e4;
-    background: var(--panel-light);
-    border: 1px solid var(--border);
-}
-
-.secondary-button:hover {
-    background: #2c3240;
-}
+button:hover { background: #a7f3d0; }
+button:disabled { opacity: .6; cursor: wait; }
 
 .results {
     display: none;
-    margin-top: 26px;
-    text-align: left;
-}
-
-.section-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
 }
 
 h2 {
-    margin: 0;
-    font-size: 19px;
-    letter-spacing: -.4px;
+    margin: 0 0 10px;
+    font-size: 18px;
 }
 
-.status {
-    color: var(--mint);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.stat-card {
-    padding: 16px 12px;
-    border-radius: 13px;
-    background: var(--panel-light);
-    border: 1px solid var(--border);
-    min-width: 0;
-}
-
-.stat-label {
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.5;
-    min-height: 31px;
-}
-
-.stat-value {
-    margin-top: 8px;
-    font-size: clamp(19px, 4vw, 25px);
-    font-weight: 850;
-    letter-spacing: -.8px;
-    overflow-wrap: anywhere;
-}
-
-.stat-value.mint {
-    color: var(--mint);
-}
-
-.stat-value.gold {
-    color: var(--gold);
-}
-
-.stat-value.purple {
-    color: var(--purple);
-}
-
-.bar-section {
-    margin-top: 22px;
-    padding: 17px;
-    background: #171a21;
-    border: 1px solid var(--border);
-    border-radius: 13px;
-}
-
-.bar-title {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    color: #e2e8f0;
-    font-size: 12px;
-    margin-bottom: 13px;
-}
-
-.bar-track {
-    height: 12px;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #353b49;
-}
-
-.bar-fill {
-    height: 100%;
-    width: 50%;
-    border-radius: 20px;
-    background: linear-gradient(90deg, #34d399, #a7f3d0);
-    transition: width .35s ease;
-}
-
-.deviation {
-    margin-top: 12px;
-    font-size: 12px;
-    line-height: 1.6;
-    color: var(--muted);
-}
-
-.law-card {
-    margin-top: 24px;
-    padding: 23px;
-    background: linear-gradient(145deg, #24253a, #1c202b);
-    border: 1px solid #393b54;
-    border-radius: 16px;
+th, td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border);
     text-align: left;
 }
 
-.law-tag {
-    color: var(--purple);
-    font-size: 10px;
-    font-weight: 850;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+th {
+    color: var(--muted);
+    font-weight: 600;
 }
 
-.law-card h2 {
-    margin-top: 9px;
-    font-size: 21px;
+td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
-.law-card p {
-    color: #c5cada;
+.highlight { color: var(--mint); font-weight: 750; }
+.gold { color: var(--gold); font-weight: 750; }
+
+.law {
+    margin-top: 22px;
+    padding: 16px;
+    background: #171a22;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.law h2 {
+    color: var(--mint);
+    font-size: 16px;
+}
+
+.law p {
+    margin: 8px 0 0;
+    color: #c1c8d6;
     font-size: 13px;
-    line-height: 1.85;
-    margin: 12px 0 0;
+    line-height: 1.7;
 }
 
 .formula {
-    margin: 17px 0;
-    padding: 15px;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, .22);
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 7px;
+    background: #232733;
     text-align: center;
-    color: #e9ddff;
-    font-size: 19px;
-    font-weight: 750;
-    letter-spacing: .2px;
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: 700;
 }
 
-.takeaway {
-    padding-left: 12px;
-    border-left: 3px solid var(--mint);
-}
-
-.important {
-    color: #f9d68b;
-    font-weight: 750;
-}
-
-footer {
-    text-align: center;
-    color: #747e90;
-    font-size: 11px;
-    margin-top: 24px;
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 15px 10px;
-    }
-
-    .container {
-        padding: 21px 16px;
-        border-radius: 18px;
-    }
-
-    .controls {
-        grid-template-columns: 1fr;
-        gap: 13px;
-    }
-
-    .stats-grid {
-        gap: 7px;
-    }
-
-    .stat-card {
-        padding: 12px 9px;
-    }
-
-    .stat-label {
-        font-size: 10px;
-    }
-
-    .law-card {
-        padding: 18px;
-    }
+@media (max-width: 380px) {
+    .container { padding: 19px; }
+    h1 { font-size: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        transition-duration: .01ms !important;
-    }
+    .coin { transition-duration: .01ms; }
 }
 </style>
 </head>
 
 <body>
-<main class="container">
+<div class="container">
 
-    <header>
-        <div class="eyebrow">Probability Laboratory</div>
-        <h1>The Great Coin Flip</h1>
-        <p class="subtitle">
-            Flip a virtual coin, watch it tumble through 3D space,
-            and discover how probability behaves over many trials.
-        </p>
-    </header>
+    <h1>Law of Large Numbers: Fair Coin Flip</h1>
 
-    <section class="controls">
-        <div class="form-group">
-            <label for="trials">Number of flips</label>
-            <input type="number" id="trials"
-                   value="1000" min="1" max="1000000"
-                   step="1">
-            <div class="hint">Choose from 1 to 1,000,000 trials.</div>
-        </div>
+    <div class="form-group">
+        <label for="trials">Number of Flips (Trials)</label>
+        <input type="number" id="trials" value="10"
+               min="1" max="1000000" step="1">
+    </div>
 
-        <div class="form-group">
-            <label for="targetEvent">Track this outcome</label>
-            <select id="targetEvent">
-                <option value="heads">Heads 😊</option>
-                <option value="tails">Tails 😎</option>
-            </select>
-            <div class="hint">Each flip has a 50% chance of either side.</div>
-        </div>
-    </section>
+    <div class="form-group">
+        <label for="targetEvent">Event to Track</label>
+        <select id="targetEvent">
+            <option value="heads">Heads 😊</option>
+            <option value="tails">Tails 😎</option>
+        </select>
+    </div>
 
-    <section class="coin-stage" aria-label="Animated coin">
-        <div class="coin-viewport">
-            <div class="coin" id="visualCoin">
-                <div class="face heads">
-                    <div class="coin-emoji">😊</div>
-                    <div class="coin-label">HEADS</div>
-                </div>
-                <div class="face tails">
-                    <div class="coin-emoji">😎</div>
-                    <div class="coin-label">TAILS</div>
-                </div>
+    <div class="coin-viewport">
+        <div class="coin" id="coin">
+            <div class="face heads">
+                <div class="emoji">😊</div>
+                <div class="coin-label">HEADS</div>
+            </div>
+            <div class="face tails">
+                <div class="emoji">😎</div>
+                <div class="coin-label">TAILS</div>
             </div>
         </div>
-        <div class="coin-shadow" id="coinShadow"></div>
-        <div class="coin-caption" id="coinCaption" aria-live="polite">
-            Ready when you are. Let's get flipping!
-        </div>
-    </section>
+    </div>
 
-    <button class="primary-button" id="flipButton"
-            onclick="runSimulation()">
-        🪙 Flip the Coin!
+    <button id="flipButton" onclick="runSimulation()">
+        Flip Coin
     </button>
 
-    <button class="secondary-button" onclick="resetSimulation()">
-        ↺ Reset Experiment
-    </button>
+    <div class="results" id="results">
+        <h2>Simulation Results</h2>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Total Flips</td><td id="resTrials">—</td></tr>
+            <tr><td>Successful Outcomes</td><td id="resSuccess">—</td></tr>
+            <tr><td>Experimental Probability</td><td id="resExp" class="highlight">—</td></tr>
+            <tr><td>Theoretical Probability</td><td class="gold">50.00%</td></tr>
+        </table>
+    </div>
 
-    <section class="results" id="resultsBox" aria-live="polite">
-        <div class="section-heading">
-            <h2>Your results</h2>
-            <span class="status">Experiment complete</span>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total flips</div>
-                <div class="stat-value" id="resTrials">—</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-label">Target outcomes</div>
-                <div class="stat-value mint" id="resSuccess">—</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-label">Experimental probability</div>
-                <div class="stat-value gold" id="resExp">—</div>
-            </div>
-        </div>
-
-        <div class="bar-section">
-            <div class="bar-title">
-                <span>Experimental probability</span>
-                <strong id="barPercent">50.00%</strong>
-            </div>
-            <div class="bar-track">
-                <div class="bar-fill" id="probBar"></div>
-            </div>
-            <div class="bar-title" style="margin-top:14px;margin-bottom:0">
-                <span>Theoretical probability</span>
-                <strong>50.00%</strong>
-            </div>
-            <div class="deviation" id="deviationText"></div>
-        </div>
-
-        <div class="bar-section">
-            <div class="section-heading">
-                <h2>Heads vs. tails</h2>
-            </div>
-            <div class="bar-title">
-                <span>😊 Heads</span>
-                <strong id="headsResult">—</strong>
-            </div>
-            <div class="bar-track">
-                <div class="bar-fill" id="headsBar"></div>
-            </div>
-            <div class="bar-title" style="margin-top:14px">
-                <span>😎 Tails</span>
-                <strong id="tailsResult">—</strong>
-            </div>
-            <div class="bar-track">
-                <div class="bar-fill" id="tailsBar"
-                     style="background:linear-gradient(90deg,#a78bfa,#ddd6fe)">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="law-card">
-        <div class="law-tag">The big idea</div>
+    <div class="law">
         <h2>The Law of Large Numbers</h2>
-
         <p>
-            Imagine flipping a fair coin just <strong>10 times</strong>.
-            You might get 7 heads and 3 tails. That's not particularly
-            surprising! Randomness can produce lopsided results in small
-            samples, even when the coin is perfectly fair.
+            Flip a fair coin a few times and your results might be uneven.
+            Flip it thousands of times, and the proportion of heads will
+            typically get closer to 50%.
         </p>
-
-        <p>
-            Now imagine flipping that same coin <strong>10,000 times</strong>.
-            You probably won't get exactly 5,000 heads, but your proportion
-            of heads will typically be much closer to 50%. As the number
-            of independent flips increases, the experimental proportion
-            tends to settle near the true probability of 0.5.
-        </p>
-
         <div class="formula">
-            Experimental probability =
-            <span style="white-space:nowrap">Number of successes ÷ Number of trials</span>
+            Experimental Probability = Successes ÷ Trials
         </div>
-
         <p>
-            In symbols, if \(X_n\) is the number of heads in \(n\) flips,
-            the Law of Large Numbers tells us that
+            As independent trials increase, experimental probability
+            converges to the true probability. Randomness doesn't
+            guarantee an exact 50–50 split; it makes the proportion
+            increasingly reliable over many flips.
         </p>
+    </div>
 
-        <div class="formula">
-            X<sub>n</sub> / n → 0.5
-        </div>
-
-        <p>
-            as the number of flips \(n\) grows, with probability 1 for
-            an infinite sequence of independent fair-coin flips.
-        </p>
-
-        <p class="takeaway">
-            <span class="important">Here's the key:</span>
-            The law does not promise that heads and tails will alternate,
-            that the next flip will be predictable, or that the counts
-            must be exactly equal. It says that the <em>relative frequency</em>
-            of heads tends to approach 50% over many trials.
-        </p>
-
-        <p>
-            And there's a subtle twist: the absolute difference between
-            the number of heads and tails can grow even while the
-            percentage difference shrinks. The law is about proportions,
-            not perfect balance!
-        </p>
-    </section>
-
-    <footer>
-        A fair coin is modeled with independent flips and
-        P(Heads) = P(Tails) = 0.5.
-    </footer>
-
-</main>
+</div>
 
 <script>
-const coin = document.getElementById("visualCoin");
-const caption = document.getElementById("coinCaption");
-const shadow = document.getElementById("coinShadow");
-const flipButton = document.getElementById("flipButton");
-
-let currentY = 0;
-let currentX = -12;
-let currentZ = 0;
+let currentRotation = 0;
 let isRunning = false;
-let animationId = null;
-
-const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-);
-
-function updateCoinTransform() {
-    coin.style.transform =
-        `rotateX(${currentX}deg) rotateZ(${currentZ}deg) rotateY(${currentY}deg)`;
-}
 
 function runSimulation() {
     if (isRunning) return;
 
-    const rawTrials = document.getElementById("trials").value;
-    const totalTrials = Number(rawTrials);
-    const target = document.getElementById("targetEvent").value;
+    const input = document.getElementById("trials");
+    const totalTrials = Number(input.value);
+    const target = document.getElementById("targetEvent");
 
     if (
-        rawTrials.trim() === "" ||
+        input.value.trim() === "" ||
         !Number.isSafeInteger(totalTrials) ||
         totalTrials < 1 ||
         totalTrials > 1000000
     ) {
-        alert("Please enter a whole number of flips between 1 and 1,000,000.");
+        alert("Enter a whole number between 1 and 1,000,000.");
         return;
     }
 
     isRunning = true;
-    flipButton.disabled = true;
-    flipButton.textContent = "🪙 The coin is airborne...";
-    document.getElementById("resultsBox").style.display = "none";
+    const button = document.getElementById("flipButton");
+    button.disabled = true;
+    button.textContent = "Flipping...";
 
-    // Simulate every flip independently.
     let heads = 0;
     let tails = 0;
 
     for (let i = 0; i < totalTrials; i++) {
-        if (Math.random() < 0.5) {
-            heads++;
-        } else {
-            tails++;
-        }
+        if (Math.random() < 0.5) heads++;
+        else tails++;
     }
 
-    // The displayed coin represents one additional, independent flip.
     const finalFlip = Math.random() < 0.5 ? "heads" : "tails";
+    const targetAngle = finalFlip === "heads" ? 0 : 180;
 
-    // The last face is determined by the final orientation.
-    // Whole turns preserve heads; an odd half-turn lands on tails.
-    const extraY = 1440 + Math.floor(Math.random() * 4) * 360;
-    const landingY = finalFlip === "heads" ? 0 : 180;
+    // Preserve continuous rotation while adding three full spins.
+    const normalized = ((currentRotation % 360) + 360) % 360;
+    const delta = ((targetAngle - normalized + 360) % 360) + 1080;
+    currentRotation += delta;
 
-    const startY = currentY;
-    const endY =
-        Math.ceil(startY / 360) * 360 + extraY + landingY;
+    const coin = document.getElementById("coin");
+    coin.style.transform = `rotateY(${currentRotation}deg)`;
 
-    // Funny, unpredictable tumbling angles.
-    const startX = currentX;
-    const startZ = currentZ;
-    const endX = 720 + Math.floor(Math.random() * 4) * 360;
-    const endZ = (Math.random() < 0.5 ? -1 : 1) *
-                 (540 + Math.floor(Math.random() * 3) * 360);
+    const successes = target.value === "heads" ? heads : tails;
+    const experimental = successes / totalTrials;
 
-    caption.textContent = "Wheeeee! 🌀";
-    shadow.style.transform = "scaleX(0.45)";
-    shadow.style.opacity = "0.55";
+    document.getElementById("resTrials").textContent =
+        totalTrials.toLocaleString();
 
-    const duration = reducedMotion.matches ? 50 : 2200;
-    const startTime = performance.now();
+    document.getElementById("resSuccess").textContent =
+        successes.toLocaleString();
 
-    function easeOut(t) {
-        // Smooth, playful landing with a little overshoot.
-        const c1 = 1.70158;
-        const c3 = c1 + 1;
-        return 1 + c3 * Math.pow(t - 1, 3) +
-               c1 * Math.pow(t - 1, 2);
-    }
+    document.getElementById("resExp").textContent =
+        (experimental * 100).toFixed(2) + "%";
 
-    function animate(now) {
-        const progress = Math.min((now - startTime) / duration, 1);
+    document.getElementById("results").style.display = "block";
 
-        // Use a bounded easing curve for a smooth finish.
-        const eased = progress === 1 ? 1 :
-                      1 - Math.pow(1 - progress, 3);
-
-        currentY = startY + (endY - startY) * eased;
-        currentX = startX + (endX - startX) * eased;
-        currentZ = startZ + (endZ - startZ) * eased;
-
-        // Add a small airborne wobble that disappears on landing.
-        const wobble = progress < 1
-            ? Math.sin(progress * Math.PI * 12) *
-              11 * (1 - progress)
-            : 0;
-
-        coin.style.transform =
-            `rotateX(${currentX + wobble}deg) ` +
-            `rotateZ(${currentZ + wobble * 0.6}deg) ` +
-            `rotateY(${currentY}deg)`;
-
-        shadow.style.transform =
-            `scaleX(${0.45 + 0.55 * progress})`;
-        shadow.style.opacity = String(0.55 + 0.45 * progress);
-
-        if (progress < 1) {
-            animationId = requestAnimationFrame(animate);
-        } else {
-            currentY = endY;
-            currentX = 0;
-            currentZ = 0;
-            updateCoinTransform();
-
-            // Calculate the results for the selected event.
-            const successes = target === "heads" ? heads : tails;
-            const experimental = successes / totalTrials;
-            const theoretical = 0.5;
-            const percentage = experimental * 100;
-            const deviation = Math.abs(percentage - 50);
-
-            document.getElementById("resTrials").textContent =
-                totalTrials.toLocaleString();
-
-            document.getElementById("resSuccess").textContent =
-                successes.toLocaleString();
-
-            document.getElementById("resExp").textContent =
-                percentage.toFixed(2) + "%";
-
-            document.getElementById("barPercent").textContent =
-                percentage.toFixed(2) + "%";
-
-            document.getElementById("probBar").style.width =
-                percentage + "%";
-
-            document.getElementById("headsResult").textContent =
-                `${heads.toLocaleString()} (${(heads / totalTrials * 100).toFixed(2)}%)`;
-
-            document.getElementById("tailsResult").textContent =
-                `${tails.toLocaleString()} (${(tails / totalTrials * 100).toFixed(2)}%)`;
-
-            document.getElementById("headsBar").style.width =
-                (heads / totalTrials * 100) + "%";
-
-            document.getElementById("tailsBar").style.width =
-                (tails / totalTrials * 100) + "%";
-
-            document.getElementById("deviationText").textContent =
-                `Your experimental probability is ${deviation.toFixed(2)} percentage points ` +
-                `away from the theoretical 50%. ` +
-                `Theoretical probability: ${(theoretical * 100).toFixed(2)}%.`;
-
-            document.getElementById("resultsBox").style.display = "block";
-
-            caption.textContent = finalFlip === "heads"
-                ? "✨ HEADS! The coin sticks the landing."
-                : "😎 TAILS! A spectacular little tumble.";
-
-            flipButton.disabled = false;
-            flipButton.textContent = "🪙 Flip Again!";
-            isRunning = false;
-            animationId = null;
-        }
-    }
-
-    if (reducedMotion.matches) {
-        // Still display the result immediately when motion is reduced.
-        currentY = endY;
-        currentX = 0;
-        currentZ = 0;
-        updateCoinTransform();
-
-        const successes = target === "heads" ? heads : tails;
-        const experimental = successes / totalTrials;
-        const percentage = experimental * 100;
-        const deviation = Math.abs(percentage - 50);
-
-        document.getElementById("resTrials").textContent =
-            totalTrials.toLocaleString();
-        document.getElementById("resSuccess").textContent =
-            successes.toLocaleString();
-        document.getElementById("resExp").textContent =
-            percentage.toFixed(2) + "%";
-        document.getElementById("barPercent").textContent =
-            percentage.toFixed(2) + "%";
-        document.getElementById("probBar").style.width =
-            percentage + "%";
-        document.getElementById("headsResult").textContent =
-            `${heads.toLocaleString()} (${(heads / totalTrials * 100).toFixed(2)}%)`;
-        document.getElementById("tailsResult").textContent =
-            `${tails.toLocaleString()} (${(tails / totalTrials * 100).toFixed(2)}%)`;
-        document.getElementById("headsBar").style.width =
-            (heads / totalTrials * 100) + "%";
-        document.getElementById("tailsBar").style.width =
-            (tails / totalTrials * 100) + "%";
-        document.getElementById("deviationText").textContent =
-            `Your experimental probability is ${deviation.toFixed(2)} percentage points away from 50%. Theoretical probability: 50.00%.`;
-
-        document.getElementById("resultsBox").style.display = "block";
-        caption.textContent = finalFlip === "heads"
-            ? "✨ HEADS! The coin sticks the landing."
-            : "😎 TAILS! A spectacular little tumble.";
-
-        flipButton.disabled = false;
-        flipButton.textContent = "🪙 Flip Again!";
+    const finish = () => {
+        button.disabled = false;
+        button.textContent = "Flip Again";
         isRunning = false;
-        return;
-    }
+        coin.removeEventListener("transitionend", finish);
+    };
 
-    animationId = requestAnimationFrame(animate);
-}
+    coin.addEventListener("transitionend", finish, { once: true });
 
-function resetSimulation() {
-    if (animationId !== null) {
-        cancelAnimationFrame(animationId);
-    }
-
-    animationId = null;
-    isRunning = false;
-    currentY = 0;
-    currentX = -12;
-    currentZ = 0;
-
-    coin.style.transition = "transform .35s ease";
-    updateCoinTransform();
-
-    requestAnimationFrame(() => {
-        coin.style.transition = "";
-    });
-
-    shadow.style.transform = "scaleX(1)";
-    shadow.style.opacity = "1";
-    caption.textContent = "Ready when you are. Let's get flipping!";
-
-    document.getElementById("resultsBox").style.display = "none";
-
-    flipButton.disabled = false;
-    flipButton.textContent = "🪙 Flip the Coin!";
+    // Fallback for reduced-motion settings or missing transition events.
+    setTimeout(() => {
+        if (isRunning) finish();
+    }, 1800);
 }
 </script>
 </body>

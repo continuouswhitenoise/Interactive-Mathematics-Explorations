@@ -191,6 +191,8 @@ canvas {
   display: block;
   width: 100%;
   height: 310px;
+  background: #030405;
+  border-radius: 6px;
 }
 
 .graph-control {
@@ -291,7 +293,8 @@ canvas {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-top: 6px;
+  margin-top: 0;
+  margin-bottom: 20px;
   padding: 10px 14px;
   border: 1px solid #d7ad00;
   border-radius: 9px;
@@ -313,19 +316,36 @@ canvas {
 .lego-toggle .lego-icon { font-size: 1.15rem; }
 
 .lego-story {
-  margin-top: 14px;
+  margin-top: 0;
+  margin-bottom: 20px;
   padding: 18px 20px;
   border: 1px solid #514522;
   border-left: 4px solid #e5bd22;
   border-radius: 10px;
   background: #1c1d1a;
+  line-height: 1.7;
+  color: var(--muted);
 }
 
 .lego-story[hidden] { display: none; }
-.lego-story h3 { color: #ffe36b; margin: 0 0 8px; font-size: 1.05rem; }
-.lego-story h4 { color: var(--text); margin: 16px 0 5px; font-size: .96rem; }
+
+.lego-story h2 {
+  color: var(--text);
+  font-size: 1.35rem;
+  margin: 0 0 12px;
+}
+
+.lego-story h3 {
+  color: #ffe36b;
+  margin: 20px 0 8px;
+  font-size: 1.05rem;
+}
+
+.lego-story h3:first-of-type { margin-top: 20px; }
+
 .lego-story p { margin: 7px 0; }
-.lego-story .lego-kicker {
+
+.lego-story .story-kicker {
   color: #d7bd65;
   font-size: .75rem;
   font-weight: 800;
@@ -333,11 +353,35 @@ canvas {
   text-transform: uppercase;
   margin-bottom: 7px;
 }
-.lego-story .math {
-  margin: 10px 0;
+
+.lego-equation {
+  margin: 16px 0;
+  padding: 12px 16px;
   border-radius: 8px;
   background: #292719;
   color: #fff0a6;
+}
+
+.lego-equation .equation-label {
+  display: block;
+  color: #d7bd65;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.lego-story .math {
+  margin: 8px 0;
+  color: #fff0a6;
+  font-size: 1.4rem;
+}
+
+.lego-story .story-takeaway {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #514522;
 }
 
 .math {
@@ -360,6 +404,7 @@ canvas {
   .actions button { flex: 1; }
   .stats { grid-template-columns: 1fr 1fr; }
   canvas { height: 270px; }
+  .lego-story { padding: 15px; }
 }
 </style>
 </head>
@@ -373,6 +418,98 @@ canvas {
       size n increases.
     </div>
   </header>
+
+  <button class="lego-toggle" id="legoToggle" type="button"
+    aria-expanded="false" aria-controls="legoStory">
+    <span class="lego-icon" aria-hidden="true">▦</span>
+    <span>LEGO Analogy!</span>
+    <span id="legoToggleMark" aria-hidden="true">＋</span>
+  </button>
+
+  <section class="lego-story" id="legoStory" hidden>
+    <div class="story-kicker">The LEGO Store Analogy</div>
+    <h2>Building an intuition for the Central Limit Theorem</h2>
+
+    <p>
+      Imagine we're at a LEGO store with a massive inventory of bricks
+      in colors spanning the entire visible spectrum. To explore the
+      Central Limit Theorem, we'll use these colorful bricks as an
+      analogy for numerical observations drawn from a population.
+    </p>
+
+    <h3>1. The population distribution</h3>
+    <p>
+      Our store has an enormous inventory. Imagine assigning each brick
+      a numerical value corresponding to its position along the color
+      spectrum. Some ranges of color might be much more common than
+      others.
+    </p>
+    <p>
+      The <strong>population distribution</strong> on the left shows
+      how these values are distributed throughout the inventory.
+      Each bar represents a range of values, and its height tells us
+      how many observations fall within that range.
+    </p>
+
+    <h3>2. Sampling and the sample mean</h3>
+    <p>
+      Now let's reach into the inventory and select <strong>n bricks</strong>.
+      The sample size, n, tells us how many bricks we select in each
+      sample. We calculate the average numerical value of those bricks.
+      This average is called the <strong>sample mean</strong>.
+    </p>
+    <p>
+      We put the bricks back, select another sample of n bricks, and
+      calculate another mean. Repeating this process gives us many
+      sample means.
+    </p>
+
+    <h3>3. The sampling distribution of the mean</h3>
+    <p>
+      The histogram on the right groups these sample means into bins.
+      Each bar counts how many sample means fall within a particular
+      interval. The rainbow colors help us see where those means fall
+      along the numerical axis.
+    </p>
+    <p>
+      A tall bar means that many samples produced means in that interval.
+      A short bar means fewer samples did. The number of histogram bins
+      controls the resolution of our view; it does not determine the
+      sample size.
+    </p>
+
+    <h3>4. What happens as n increases?</h3>
+    <p>
+      When we average only a few bricks, the sample mean can vary
+      considerably from sample to sample. When we average many bricks,
+      unusually high and low values tend to balance each other out.
+      The sample means therefore tend to cluster more tightly around
+      the population mean.
+    </p>
+    <p>
+      Under the usual conditions of the Central Limit Theorem, the
+      sampling distribution becomes increasingly well approximated
+      by a normal distribution as n grows.
+    </p>
+
+    <div class="lego-equation">
+      <span class="equation-label">The theoretical standard error</span>
+      <div class="math">σ / √n</div>
+      <p>
+        As n increases, the standard error decreases. The theoretical
+        normal curve becomes narrower and taller, while the simulated
+        sample means tend to concentrate near the population mean.
+      </p>
+    </div>
+
+    <p class="story-takeaway">
+      <strong>The big idea:</strong> We start with individual observations
+      in a population, repeatedly take samples, and study the distribution
+      of their means. The Central Limit Theorem explains why those means
+      tend to form an approximately normal distribution as the sample
+      size grows.
+    </p>
+  </section>
 
   <section class="panel controls" aria-label="Simulation controls">
     <div class="control">
@@ -508,63 +645,6 @@ canvas {
       population and fresh sample means. During animation, each simulated
       sample grows as n increases.
     </p>
-
-    <button class="lego-toggle" id="legoToggle" type="button"
-      aria-expanded="false" aria-controls="legoStory">
-      <span class="lego-icon" aria-hidden="true">▦</span>
-      <span>LEGO Analogy!</span>
-      <span id="legoToggleMark" aria-hidden="true">＋</span>
-    </button>
-
-    <div class="lego-story" id="legoStory" hidden>
-      <div class="lego-kicker">Build the intuition</div>
-      <h3>Imagine a giant collection of LEGO bricks</h3>
-      <p>
-        Suppose each brick's color corresponds to a numerical value. The
-        <strong>population distribution</strong> on the left shows how those
-        values are spread across the entire collection: some values occur
-        often, others rarely.
-      </p>
-
-      <h4>1. Take a handful and calculate its average</h4>
-      <p>
-        Pick <strong>n bricks</strong> at random and calculate the average of
-        their numerical values. That average is a <strong>sample mean</strong>.
-        Put the bricks back, take a new handful of the same size, and calculate
-        another sample mean.
-      </p>
-
-      <h4>2. Collect lots of sample means</h4>
-      <p>
-        Repeat this process many times. The <strong>sampling distribution of
-        the sample mean</strong> is the distribution of all those averages.
-        That's what the histogram on the right displays—not the individual
-        bricks, but the averages of many handfuls. A taller bar means more
-        sample means landed in that interval.
-      </p>
-
-      <h4>3. Increase the sample size n</h4>
-      <p>
-        Now imagine averaging a much larger handful each time. Individual
-        handfuls can differ, but their averages tend to cluster more tightly
-        around the <strong>population mean μ</strong>. The standard error
-        describes the spread of sample means:
-      </p>
-      <div class="math">SE( X̄ ) = σ / √n</div>
-      <p>
-        Here σ is the population standard deviation and n is the number of
-        observations in each sample. As n increases, the standard error
-        decreases in proportion to 1/√n—not 1/n. Under the usual conditions,
-        the Central Limit Theorem tells us that the sampling distribution
-        becomes approximately normal as the sample size grows.
-      </p>
-      <p>
-        <strong>Keep the controls straight:</strong> sample size n is how many
-        bricks go into each average; the number of sample means is how many
-        handfuls you repeat; and the number of histogram bins controls how
-        finely the results are grouped visually.
-      </p>
-    </div>
   </section>
 </main>
 
@@ -834,6 +914,11 @@ canvas {
     const ph = Math.max(1, h - top - bottom);
 
     ctx.clearRect(0, 0, w, h);
+
+    // Near-black plotting background.
+    ctx.fillStyle = "#030405";
+    ctx.fillRect(0, 0, w, h);
+
     ctx.font = "11px system-ui, sans-serif";
     ctx.lineWidth = 1;
 

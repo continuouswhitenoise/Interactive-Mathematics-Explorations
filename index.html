@@ -34,11 +34,23 @@
       font-weight: 800;
     }
 
+    .category {
+      margin-top: 2.5rem;
+    }
+
+    .category-title {
+      color: #f6e7a1;
+      font-size: 1.65rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #3b414a;
+    }
+
     .projects {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1.5rem;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .project {
@@ -119,103 +131,122 @@
       <strong class="author-name">Edwin Garcia Cuevas</strong>.
     </p>
 
-    <div class="projects">
+    <!-- CALCULUS -->
+    <section class="category">
+      <h2 class="category-title">Calculus</h2>
 
-      <section class="project">
-        <img
-          src="./images/riemann-sums.gif"
-          alt="Riemann sum rectangles approximating the area under a curve"
-        >
+      <div class="projects">
 
-        <h2>Riemann Sums</h2>
+        <section class="project">
+          <img
+            src="./images/riemann-sums.gif"
+            alt="Riemann sum rectangles approximating the area under a curve"
+          >
 
-        <p>
-          Visualize how partitions and sample points
-          produce approximations to definite integrals.
-        </p>
+          <h2>Riemann Sums</h2>
 
-        <a href="./riemann-sums/">Open simulation →</a>
-      </section>
+          <p>
+            Visualize how partitions and sample points
+            produce approximations to definite integrals.
+          </p>
 
-      <section class="project">
-        <img
-          src="./images/polygon-pi.gif"
-          alt="Inscribed and circumscribed regular polygons approximating a circle"
-        >
+          <a href="./riemann-sums/">Open simulation →</a>
+        </section>
 
-        <h2>Approximating π with Polygons</h2>
+        <section class="project">
+          <img
+            src="./images/polygon-pi.gif"
+            alt="Inscribed and circumscribed regular polygons approximating a circle"
+          >
 
-        <p>
-          Compare inscribed and circumscribed regular
-          polygons as the number of sides increases.
-        </p>
+          <h2>Approximating π with Polygons</h2>
 
-        <a href="./polygon-pi/">Open simulation →</a>
-      </section>
+          <p>
+            Compare inscribed and circumscribed regular
+            polygons as the number of sides increases.
+          </p>
 
-      <section class="project">
-        <img
-          src="./images/line-integrals-work-flux.gif"
-          alt="Tangential and normal components of a vector field"
-        >
+          <a href="./polygon-pi/">Open simulation →</a>
+        </section>
 
-        <h2>2D Work and Flux Integrals</h2>
+        <section class="project">
+          <img
+            src="./images/line-integrals-work-flux.gif"
+            alt="Tangential and normal components of a vector field"
+          >
 
-        <p>
-          Graph a 2D vector field and a curve.
-          See how the field affects the work along the curve
-          and the flux across it!
-        </p>
+          <h2>2D Work and Flux Integrals</h2>
 
-        <a href="./vector-field/">Open simulation →</a>
-      </section>
+          <p>
+            Graph a 2D vector field and a curve.
+            See how the field affects the work along the curve
+            and the flux across it!
+          </p>
 
-      <section class="project">
-        <img
-          src="./images/double-integrals.gif"
-          alt="Double integrals"
-        >
+          <a href="./vector-field/">Open simulation →</a>
+        </section>
 
-        <h2>Double Integrals: Iterated Integrals Visualizer</h2>
+        <section class="project">
+          <img
+            src="./images/double-integrals.gif"
+            alt="Double integrals"
+          >
 
-        <p>
-          Visualize how to construct iterated integrals over special regions to evaluate double integrals.
-        </p>
+          <h2>Double Integrals: Iterated Integrals Visualizer</h2>
 
-        <a href="./double-integrals/">Open simulation →</a>
-      </section>
-      
-      <section class="project">
-        <img
-          src="./images/fair-coin-toss.gif"
-          alt="Law of Large Numbers Simulation"
-        >
+          <p>
+            Visualize how to construct iterated integrals over
+            special regions to evaluate double integrals.
+          </p>
 
-        <h2>Law of Large Numbers: Fair Coin Flip</h2>
+          <a href="./double-integrals/">Open simulation →</a>
+        </section>
 
-        <p>
-          Explore how the experimental average approaches the expected value as the number of independent trials increases.
-        </p>
+      </div>
+    </section>
 
-        <a href="./Law-of-large-numbers-stats/">Open simulation →</a>
-      </section>
+    <!-- STATISTICS -->
+    <section class="category">
+      <h2 class="category-title">Statistics</h2>
 
-      <section class="project">
-        <img
-          src="./images/CLT.gif"
-          alt="CLT Simulation"
-        >
+      <div class="projects">
 
-        <h2>Central Limit Theorem (CTL)</h2>
+        <section class="project">
+          <img
+            src="./images/fair-coin-toss.gif"
+            alt="Law of Large Numbers simulation using fair coin flips"
+          >
 
-        <p>
-          See how the distribution of sample means approaches a normal distribution as sample size increases.
-        </p>
+          <h2>Law of Large Numbers: Fair Coin Flip</h2>
 
-        <a href="./stats/">Open simulation →</a>
-      </section>
-      
-    </div>
+          <p>
+            Explore how the experimental average approaches
+            the expected value as the number of independent
+            trials increases.
+          </p>
+
+          <a href="./Law-of-large-numbers-stats/">Open simulation →</a>
+        </section>
+
+        <section class="project">
+          <img
+            src="./images/CLT.gif"
+            alt="Central Limit Theorem simulation"
+          >
+
+          <h2>Central Limit Theorem (CLT)</h2>
+
+          <p>
+            See how the distribution of sample means approaches
+            a normal distribution as sample size increases.
+          </p>
+
+          <a href="./stats/">Open simulation →</a>
+        </section>
+
+      </div>
+    </section>
+
   </main>
 </body>
 </html>

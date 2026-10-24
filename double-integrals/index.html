@@ -1847,7 +1847,7 @@ function animate(){
     });
     // Three blinks, then return to the normal solid appearance and stay there.
     if(elapsed>=3*blinkPeriod){
-      integralGlow=false;
+      integralGlow=true;
       integralGroup.traverse(object=>{
         if(object.isMesh && object.material && object.material.emissive){
           object.material.emissiveIntensity=0;

@@ -724,7 +724,7 @@ main { width:100%; max-width:none; height:100dvh; margin:0; padding:0; display:b
   100% { filter:blur(0); }
 }
 @media (prefers-reduced-motion: reduce) { #sceneWrap.tutorial-scene-blur { animation:none; } }
-/* A soft directional wipe gives each tutorial step a clear, polished transition. */
+/* Soft directional wipe gives each tutorial step a clear, polished transition. */
 .tutorial-card.step-forward .tutorial-step-content { animation:tutorialSweepForward .42s cubic-bezier(.22,.75,.25,1) both; }
 .tutorial-card.step-back .tutorial-step-content { animation:tutorialSweepBack .42s cubic-bezier(.22,.75,.25,1) both; }
 @keyframes tutorialSweepForward { from { opacity:.25; clip-path:inset(0 100% 0 0); transform:translateX(12px); } to { opacity:1; clip-path:inset(0 0 0 0); transform:translateX(0); } }

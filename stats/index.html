@@ -1057,7 +1057,7 @@ canvas {
     }
 
     const start = performance.now();
-    const approachMs = 600;
+    const approachMs = 550;
     const burstMs = approachMs;
     const particles = [];
     let exploded = false;
@@ -1082,7 +1082,7 @@ canvas {
       } else {
         if (!exploded) {
           exploded = true;
-          // Restore the original explosive sprite animation and its 1,500 pieces.
+          // Restore the original explosive sprite animation and its 1,000 pieces.
           for (let i = 0; i < 1000; i++) {
             const a = Math.random() * Math.PI * 2;
             const speed = 2.8 + Math.random() * Math.min(13, Math.max(W, H) * .009);

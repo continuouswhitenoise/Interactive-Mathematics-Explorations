@@ -1,4 +1,4 @@
-**WorkFlux — Copyright and Permissions Notice**
+WorkFlux — Copyright and Permissions Notice
 
 Copyright © 2026 Edwin Garcia Cuevas. All rights reserved.
 
@@ -8,6 +8,6 @@ No license is granted to copy, modify, redistribute, sublicense, or incorporate 
 
 To request permission, contact the copyright holder through the contact method listed in the project's official repository or website.
 
-Third-party libraries and materials are not covered by this notice and remain subject to their respective licenses. See `THIRD_PARTY_DEPENDENCIES.md`.
+Third-party libraries and materials are not covered by this notice and remain subject to their respective licenses. See THIRD_PARTY_DEPENDENCIES.md.
 
 This notice describes the project's intended permissions; it is not a substitute for legal advice.

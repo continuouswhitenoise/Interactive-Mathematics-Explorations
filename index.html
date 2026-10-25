@@ -7,15 +7,15 @@
 
   <style>
     :root {
-      --page-bg: #071426;
-      --card-bg: #0d1d33;
-      --card-border: #233b59;
+      --page-bg: #18191c;
+      --card-bg: #222428;
+      --card-border: #383a40;
       --accent: #65d9ff;
       --heading: #f6e7a1;
-      --text: #d5e2f0;
-      --muted: #9aafc7;
-      --shadow: rgba(0, 0, 0, 0.3);
-      --shadow-blue: rgba(30, 105, 190, 0.12);
+      --text: #d9dce3;
+      --muted: #a1a5af;
+      --shadow: rgba(0, 0, 0, 0.45);
+      --shadow-glow: rgba(135, 145, 165, 0.10);
     }
 
     * {
@@ -80,8 +80,9 @@
       border-radius: 12px;
       background: var(--card-bg);
       box-shadow:
-        0 5px 14px var(--shadow),
-        0 0 18px var(--shadow-blue);
+        0 6px 16px var(--shadow),
+        0 0 20px var(--shadow-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
       transition:
         transform 180ms ease,
         box-shadow 180ms ease,
@@ -90,10 +91,11 @@
 
     .project:hover {
       transform: translateY(-3px);
-      border-color: #365b83;
+      border-color: #555963;
       box-shadow:
-        0 9px 22px rgba(0, 0, 0, 0.38),
-        0 0 22px rgba(55, 135, 220, 0.16);
+        0 10px 26px rgba(0, 0, 0, 0.55),
+        0 0 24px rgba(155, 165, 190, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
     .project img {
@@ -103,7 +105,7 @@
       object-fit: cover;
       border-radius: 8px;
       margin-bottom: 0.9rem;
-      border: 1px solid #203650;
+      border: 1px solid #3a3c42;
     }
 
     .project h2 {
@@ -171,7 +173,6 @@
       }
     }
 
-    /* Respect reduced-motion preferences */
     @media (prefers-reduced-motion: reduce) {
       .project {
         transition: none;
@@ -203,20 +204,16 @@
       <h2 class="category-title">Calculus Simulations</h2>
 
       <div class="projects">
-
         <section class="project">
           <img
             src="./images/riemann-sums.gif"
             alt="Riemann sum rectangles approximating the area under a curve"
           >
-
           <h2>Riemann Sums</h2>
-
           <p>
             Visualize how partitions and sample points
             produce approximations to definite integrals.
           </p>
-
           <a href="./riemann-sums/">Open simulation →</a>
         </section>
 
@@ -225,14 +222,11 @@
             src="./images/polygon-pi.gif"
             alt="Inscribed and circumscribed regular polygons approximating a circle"
           >
-
           <h2>Approximating π with Polygons</h2>
-
           <p>
             Compare inscribed and circumscribed regular
             polygons as the number of sides increases.
           </p>
-
           <a href="./polygon-pi/">Open simulation →</a>
         </section>
 
@@ -241,15 +235,12 @@
             src="./images/line-integrals-work-flux.gif"
             alt="Tangential and normal components of a vector field"
           >
-
           <h2>2D Work and Flux Integrals</h2>
-
           <p>
             Graph a 2D vector field and a curve.
             See how the field affects the work along the curve
             and the flux across it!
           </p>
-
           <a href="./WorkFlux/">Open simulation →</a>
         </section>
 
@@ -258,17 +249,13 @@
             src="./images/double-integrals.gif"
             alt="Double integrals"
           >
-
           <h2>Double Integrals: Iterated Integrals Visualizer</h2>
-
           <p>
             Visualize how to construct iterated integrals over
             special regions to evaluate double integrals.
           </p>
-
           <a href="./double-integrals/">Open simulation →</a>
         </section>
-
       </div>
     </section>
 
@@ -277,21 +264,17 @@
       <h2 class="category-title">Statistics Simulations</h2>
 
       <div class="projects">
-
         <section class="project">
           <img
             src="./images/fair-coin-toss.gif"
             alt="Law of Large Numbers simulation using fair coin flips"
           >
-
           <h2>Law of Large Numbers: Fair Coin Flip</h2>
-
           <p>
             Explore how the experimental average approaches
             the expected value as the number of independent
             trials increases.
           </p>
-
           <a href="./Law-of-large-numbers-stats/">Open simulation →</a>
         </section>
 
@@ -300,20 +283,15 @@
             src="./images/CLT.gif"
             alt="Central Limit Theorem simulation"
           >
-
           <h2>Central Limit Theorem (CLT)</h2>
-
           <p>
             See how the distribution of sample means approaches
             a normal distribution as sample size increases.
           </p>
-
           <a href="./stats/">Open simulation →</a>
         </section>
-
       </div>
     </section>
-
   </main>
 </body>
 </html>

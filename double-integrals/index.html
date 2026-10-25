@@ -885,7 +885,7 @@ main { width:100%; max-width:none; height:100dvh; margin:0; padding:0; display:b
       <section class="frame-disclosure integral-disclosure" id="integralDisclosure" aria-label="Double Integral Results">
         <div class="compact-total">
           <span class="equation-label">Double Integral Result</span>
-          <strong class="metric-value" id="metricTotal">--.---</strong>
+          <strong class="metric-value" id="metricTotal">---.---</strong>
         </div>
         <p class="explanation" id="computeExplanation" hidden></p>
         <div hidden><div id="sliceIntegralFormula"></div><div id="totalIntegralFormula"></div></div>
@@ -1392,7 +1392,7 @@ function readModel(){
 }
 function applyModel(){
   stopIntegralAnimation();clearGroup(integralGroup);integralGroup.visible=true;
-  $("metricTotal").textContent="--.---";
+  $("metricTotal").textContent="---.---";
   $("computeExplanation").textContent="Watch the velvet-red slice sweep across the region, building the signed volume above or below the xy-plane.";
   $("status").textContent="";
   try{

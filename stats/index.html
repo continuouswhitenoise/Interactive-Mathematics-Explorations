@@ -645,10 +645,6 @@ canvas {
 <main>
   <header>
     <h1>Central Limit Theorem</h1>
-    <div class="subtitle">
-      Explore how the distribution of sample means changes as the sample
-      size n increases.
-    </div>
   </header>
 
   <details class="control-drawer">
@@ -710,7 +706,7 @@ canvas {
         <h2>Population Distribution</h2>
       </div>
       <p class="graph-description">
-        Choose a population shape above to compare its overall form and spread.
+        Categorize n elements into bins
       </p>
       <canvas id="populationChart"
         aria-label="Histogram of the population"></canvas>
@@ -811,29 +807,29 @@ canvas {
         spectrum.
       </p>
       <p>
-        The <strong>population distribution</strong> on the left shows
+        The <strong>population distribution</strong> graph on the left shows
         how these values are distributed throughout the inventory.
-        Each bar represents a range of values, and its height tells us
+        Each bar (or bin) represents a range of values, and its height tells us
         how many observations fall within that range.
       </p>
 
       <h4>2. Sampling and the sample mean</h4>
       <p>
         Now let's reach into the inventory and select n bricks.
-        This is out sample size. We calculate the average numerical value of those bricks.
+        This is our sample size. We calculate the average numerical value of those bricks.
         That is, sum the numerical values for all n bricks and divide by the samples size.
-        This average is called the <strong>sample mean</strong>. Think of it as an average.
+        This average is called the <strong>sample mean</strong>.
       </p>
       <p>
         No, let's put the bricks back, select another sample of n bricks, and
         calculate another mean. Repeating this process gives us many
-        sample means.
+        sample means!
       </p>
 
       <h4>3. The sampling distribution of the mean</h4>
       <p>
         The histogram on the right groups these sample means into its own bins.
-        Each bar counts how many sample means fall within a particular
+        Each bar now counts how many sample means fall within a particular sample mean interval
         interval. The rainbow colors help us see where those means fall
         along the numerical axis.
       </p>
@@ -849,10 +845,10 @@ canvas {
         considerably from sample to sample. When we average many bricks,
         unusually high and low values tend to balance each other out.
         The sample means therefore tend to cluster more tightly around
-        the population mean.
+        the population mean for large n.
       </p>
       <p>
-        Under the usual conditions of the Central Limit Theorem, the
+        Under the conditions of the Central Limit Theorem, the
         sampling distribution becomes increasingly well approximated
         by a normal distribution as n grows.
       </p>
@@ -870,7 +866,7 @@ canvas {
       <p class="story-takeaway">
         <strong>The big idea:</strong> We start with individual observations
         in a population, repeatedly take samples, and study the distribution
-        of their means. The Central Limit Theorem explains why those means
+        of their means (that's the graph on the right)! The Central Limit Theorem explains why those means
         tend to form an approximately normal distribution as the sample
         size grows.
       </p>

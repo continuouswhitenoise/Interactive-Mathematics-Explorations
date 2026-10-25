@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central Limit Theorem — Full-Screen Lab v6</title>
+
+<style>
+:root {
+  --bg: #151719;
+  --panel: #202327;
+  --raised: #292d32;
+  --border: #41464d;
+  --text: #f1f0e9;
+  --muted: #b0b2b7;
+  --yellow: #f4d35e;
+  --gold: #e9a820;
+  --grid: #383d43;
+  --axis: #858b93;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 26px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+main { max-width: 1400px; margin: auto; }
+header { margin-bottom: 22px; }
+
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  font-weight: 680;
+  letter-spacing: -0.04em;
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 850px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns:
+    minmax(170px, 1.1fr)
+    minmax(155px, 1fr)
+    minmax(190px, 1fr)
+    auto;
+  gap: 22px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.control label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: .91rem;
+}
+
+.sample-size-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sample-size-row label { margin: 0; }
+input[type="number"].sample-size-input {
+  width: 86px;
+  min-width: 72px;
+  min-height: 36px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.control output {
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.input-help {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: .76rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--yellow);
+  cursor: pointer;
+}
+
+select, input[type="number"], button {
+  min-height: 43px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--raised);
+  color: var(--text);
+  font: inherit;
+}
+
+select { width: 100%; cursor: pointer; }
+
+input[type="number"] {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--raised);
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  cursor: pointer;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+button:hover {
+  background: #393e45;
+  border-color: #777e87;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+button.primary {
+  background: var(--yellow);
+  color: #211d0e;
+  border-color: var(--yellow);
+}
+
+button.primary:hover { background: #ffe37a; }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.status {
+  color: var(--muted);
+  font-size: .9rem;
+  margin-left: 3px;
+  line-height: 1.5;
+}
+
+.graphs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.graph-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 1.12rem;
+  margin: 0;
+  font-weight: 650;
+}
+
+.curve-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: .9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.curve-toggle input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.curve-toggle:focus-within {
+  outline: 2px solid var(--yellow);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.graph-description {
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.5;
+  margin: 7px 0 10px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 310px;
+  background: #11151B;
+  border-radius: 8px;
+}
+
+.graph-control {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.graph-control label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+.graph-control output {
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: .84rem;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.swatch {
+  width: 17px;
+  height: 9px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    #8b35c9 0%,
+    #414de0 17%,
+    #28a8d8 34%,
+    #35a85b 51%,
+    #d6d52f 68%,
+    #f39a27 84%,
+    #d94040 100%
+  );
+}
+
+.swatch.curve {
+  height: 3px;
+  background: #ffffff;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.stat {
+  padding: 15px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  min-width: 0;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: .82rem;
+  margin-bottom: 7px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.lego-section {
+  margin-top: 22px;
+}
+
+.lego-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border: 1px solid #d7ad00;
+  border-radius: 9px;
+  background: #302a14;
+  color: #ffe36b;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.lego-toggle:hover {
+  background: #403719;
+  border-color: #ffe36b;
+}
+
+.lego-toggle:active { transform: translateY(1px); }
+.lego-toggle:focus-visible { outline: 2px solid #ffe36b; outline-offset: 3px; }
+.lego-toggle .lego-icon { font-size: 1.15rem; }
+
+.lego-story {
+  margin-top: 14px;
+  padding: 18px 20px;
+  border: 1px solid #514522;
+  border-left: 4px solid #e5bd22;
+  border-radius: 10px;
+  background: #1c1d1a;
+}
+
+.lego-story[hidden] { display: none; }
+.lego-story h3 { color: #ffe36b; margin: 0 0 8px; font-size: 1.05rem; }
+.lego-story h4 { color: var(--text); margin: 16px 0 5px; font-size: .96rem; }
+.lego-story p { margin: 7px 0; }
+.lego-equation {
+  margin: 16px 0;
+  padding: 12px 15px;
+  border: 1px solid #514522;
+  border-radius: 8px;
+  background: #292719;
+}
+.lego-equation .equation-label {
+  display: block;
+  color: #d7bd65;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.lego-equation .math { color: #fff0a6; padding: 7px 0; }
+.story-takeaway { margin-top: 16px !important; }
+.lego-story .lego-kicker {
+  color: #d7bd65;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.lego-story .math {
+  margin: 10px 0;
+  border-radius: 8px;
+  background: #292719;
+  color: #fff0a6;
+}
+
+.math {
+  color: var(--text);
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  padding: 10px 0;
+}
+
+@media (max-width: 1050px) {
+  .controls { grid-template-columns: 1fr 1fr; }
+  .graphs { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  body { padding: 14px; }
+  .panel { padding: 14px; }
+  .controls { grid-template-columns: 1fr; gap: 18px; }
+  .actions button { flex: 1; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  canvas { height: 270px; }
+}
+
+
+/* v5 full-screen laboratory layout */
+:root {
+  --bg: #0c1016;
+  --panel: #151b24;
+  --raised: #202936;
+  --border: #303c4b;
+  --text: #f3f6fb;
+  --muted: #a6b2c2;
+  --yellow: #f4d35e;
+  --gold: #e9a820;
+  --grid: #293443;
+  --axis: #8795a8;
+}
+
+html { min-height: 100%; background: var(--bg); }
+body {
+  min-height: 100vh;
+  padding: 12px clamp(12px, 1.8vw, 28px) 24px;
+  background:
+    radial-gradient(ellipse at 50% -22%, rgba(50, 76, 105, .22), transparent 55%),
+    var(--bg);
+}
+main { width: 100%; max-width: none; margin: 0 auto; }
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 2px 10px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  letter-spacing: -.035em;
+}
+.subtitle { max-width: 560px; font-size: .88rem; text-align: right; }
+
+.control-drawer {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(21, 27, 36, .96);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .16);
+}
+.control-drawer > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 15px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.control-drawer > summary::-webkit-details-marker { display: none; }
+.drawer-summary-main { display: inline-flex; align-items: center; gap: 10px; font-weight: 750; }
+.drawer-icon { color: var(--yellow); font-size: 1.15rem; }
+.drawer-summary-hint { display: inline-flex; align-items: center; gap: 12px; color: var(--muted); font-size: .82rem; }
+.drawer-chevron { color: var(--yellow); font-size: 1.2rem; transition: transform .16s ease; }
+.control-drawer[open] > summary { border-bottom: 1px solid var(--border); }
+.control-drawer[open] .drawer-chevron { transform: rotate(180deg); }
+.control-drawer > .controls {
+  margin: 0;
+  padding: 16px 16px 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  grid-template-columns: minmax(170px, 1.05fr) minmax(150px, .9fr) minmax(170px, 1fr) auto;
+  gap: 18px;
+}
+.control-drawer .actions { margin: 0; padding: 4px 16px 15px; }
+
+.graphs {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 18px);
+  align-items: stretch;
+}
+.graphs > article.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(12px, 1.25vw, 20px);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(24, 32, 43, .98), rgba(17, 23, 32, .98));
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .12);
+}
+.graph-heading { margin-bottom: 2px; }
+h2 { font-size: clamp(1rem, 1.2vw, 1.2rem); }
+.graph-description { margin: 5px 0 8px; font-size: .8rem; }
+canvas {
+  height: clamp(260px, 43vh, 520px);
+  flex: 0 0 auto;
+  background: #0a0f16;
+  border: 1px solid rgba(76, 93, 114, .18);
+}
+.legend { margin-top: 8px; gap: 12px; font-size: .78rem; }
+.curve-toggle { margin-top: 10px; font-size: .82rem; }
+.graph-control { margin-top: auto; padding-top: 12px; }
+.graph-control label { margin-bottom: 7px; font-size: .82rem; }
+.stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.stat {
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: rgba(21, 27, 36, .9);
+}
+.stat-label { margin-bottom: 4px; font-size: .76rem; }
+.stat-value { font-size: clamp(1rem, 1.5vw, 1.28rem); }
+.lego-section { margin-top: 14px; }
+
+@media (min-width: 1500px) and (min-height: 850px) {
+  canvas { height: min(48vh, 590px); }
+}
+@media (max-width: 1000px) {
+  header { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .subtitle { text-align: left; }
+  .control-drawer > .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .graphs { grid-template-columns: 1fr; }
+  canvas { height: clamp(260px, 42vh, 460px); }
+}
+@media (max-width: 560px) {
+  body { padding: 10px 10px 20px; }
+  .control-drawer > summary { align-items: flex-start; }
+  .drawer-summary-hint { font-size: .72rem; text-align: right; }
+  .control-drawer > .controls { grid-template-columns: 1fr; gap: 16px; padding: 14px 12px 8px; }
+  .control-drawer .actions { padding: 4px 12px 12px; }
+  .actions button { flex: 1; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  canvas { height: 300px; }
+}
+
+
+/* v6: dimensional LEGO bricks + totally unnecessary (therefore essential) chaos */
+.lego-story-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.lego-story-heading h3 { margin: 0; }
+.lego-chaos-button {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 31px;
+  min-height: 31px;
+  height: 31px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #7d8ca2;
+  background: #253143;
+  color: #f4d35e;
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 2px 8px rgba(0,0,0,.22);
+}
+.lego-chaos-button:hover { background: #3b4b61; transform: rotate(12deg) scale(1.08); }
+.lego-chaos-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #080b12 0%, #020307 72%, #000 100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .28s ease, visibility .28s ease;
+  cursor: pointer;
+}
+.lego-chaos-overlay.active { opacity: 1; visibility: visible; }
+.lego-chaos-overlay canvas { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; }
+.lego-chaos-caption {
+  position: absolute;
+  top: max(22px, 5vh);
+  left: 18px;
+  right: 18px;
+  z-index: 1;
+  text-align: center;
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-weight: 950;
+  font-size: clamp(1.15rem, 3.5vw, 2.8rem);
+  color: #fff;
+  text-shadow: 0 3px 0 #a20c17, 0 0 28px rgba(255, 52, 64, .55);
+}
+.lego-chaos-subcaption {
+  display: block;
+  margin-top: 9px;
+  font-size: clamp(.72rem, 1.4vw, .95rem);
+  letter-spacing: .06em;
+  color: #cbd5e1;
+  font-weight: 650;
+  text-transform: none;
+  text-shadow: none;
+}
+.lego-chaos-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  min-height: 38px;
+  background: rgba(20, 27, 38, .9);
+  border-color: #66758a;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lego-chaos-overlay { transition: none; }
+}
+
+</style>
+</head>
+
+<body>
+<main>
+  <header>
+    <h1>Central Limit Theorem</h1>
+    <div class="subtitle">
+      Explore how the distribution of sample means changes as the sample
+      size n increases.
+    </div>
+  </header>
+
+  <details class="control-drawer">
+    <summary>
+      <span class="drawer-summary-main"><span class="drawer-icon" aria-hidden="true">☷</span> Simulation controls</span>
+      <span class="drawer-summary-hint">Sample size, population, bins &amp; animation <span class="drawer-chevron" aria-hidden="true">⌄</span></span>
+    </summary>
+  <section class="panel controls" aria-label="Simulation controls">
+    <div class="control">
+      <div class="sample-size-row">
+        <label for="sampleSize">Sample size, n</label>
+        <input id="sampleSizeInput" class="sample-size-input" type="number"
+          min="2" max="1500" step="1" value="30"
+          inputmode="numeric" aria-label="Sample size n (2 to 1500)">
+      </div>
+      <input id="sampleSize" type="range"
+        min="2" max="1500" step="1" value="30"
+        aria-label="Sample size n slider">
+    </div>
+
+    <div class="control">
+      <label for="populationShape">
+        <span>Population shape</span>
+      </label>
+      <select id="populationShape">
+        <option value="left">Left-skewed</option>
+        <option value="center">Center-symmetric</option>
+        <option value="right" selected>Right-skewed</option>
+        <option value="random">Random distortion</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="meanCount">
+        <span>Number of sample means</span>
+      </label>
+      <input id="meanCount" type="number"
+        min="1" max="10000" step="1" value="1000"
+        inputmode="numeric" aria-describedby="meanCountHelp">
+      <small id="meanCountHelp" class="input-help">Enter 1–10,000 samples.</small>
+    </div>
+
+    <button id="playN" type="button">▶ Animate n</button>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="newSample" type="button">
+      Generate New Random Sample
+    </button>
+    <span class="status" id="status" role="status" aria-live="polite">
+      Ready. Press Space to animate n.
+    </span>
+  </div>
+  </details>
+
+  <section class="graphs" aria-label="Population and sampling distribution graphs">
+    <article class="panel">
+      <div class="graph-heading">
+        <h2>Population Distribution</h2>
+      </div>
+      <p class="graph-description">
+        Choose a population shape above to compare its overall form and spread.
+      </p>
+      <canvas id="populationChart"
+        aria-label="Histogram of the population"></canvas>
+      <div class="legend">
+        <span class="legend-item">
+          <span class="swatch"></span> Population observations
+        </span>
+      </div>
+      <label class="curve-toggle" for="animateLego">
+        <input id="animateLego" type="checkbox" checked>
+        <span>Animate LEGO observations</span>
+      </label>
+      <div class="graph-control">
+        <label for="populationBinCount">
+          <span>Population histogram bars</span>
+          <output id="populationBinValue">12</output>
+        </label>
+        <input id="populationBinCount" type="range"
+          min="2" max="125" step="1" value="12">
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="graph-heading">
+        <h2>Sampling Distribution of the Mean</h2>
+      </div>
+      <p class="graph-description">
+        What the histogram and curve change as the sample size increases.
+      </p>
+      <canvas id="samplingChart"
+        aria-label="Sampling distribution histogram and theoretical normal curve"></canvas>
+      <div class="legend">
+        <span class="legend-item">
+          <span class="swatch"></span> Simulated sample means
+        </span>
+        <span class="legend-item" id="samplingCurveLegend">
+          <span class="swatch curve"></span> Theoretical normal curve
+        </span>
+      </div>
+
+      <label class="curve-toggle" for="showNormalCurve">
+        <input id="showNormalCurve" type="checkbox" checked>
+        <span>Show theoretical normal curve</span>
+      </label>
+      <div class="graph-control">
+        <label for="samplingBinCount">
+          <span>Sampling-distribution histogram bars</span>
+          <output id="samplingBinValue">12</output>
+        </label>
+        <input id="samplingBinCount" type="range"
+          min="2" max="125" step="1" value="12">
+      </div>
+    </article>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">Population mean (μ)</div>
+      <div class="stat-value" id="populationMean">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Population SD (σ)</div>
+      <div class="stat-value" id="populationSD">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Theoretical standard error</div>
+      <div class="stat-value" id="standardError">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Simulated mean of means</div>
+      <div class="stat-value" id="meanOfMeans">—</div>
+    </div>
+  </section>
+
+
+
+  <section class="lego-section" aria-label="LEGO analogy explanation">
+    <button class="lego-toggle" id="legoToggle" type="button"
+      aria-expanded="false" aria-controls="legoStory">
+      <span class="lego-icon" aria-hidden="true">▦</span>
+      <span>LEGO Analogy!</span>
+      <span id="legoToggleMark" aria-hidden="true">＋</span>
+    </button>
+
+    <div class="lego-story" id="legoStory" hidden>
+      <div class="lego-story-heading">
+        <h3>LEGO Store Analogy</h3>
+        <button class="lego-chaos-button" id="legoChaosButton" type="button"
+          aria-label="Launch the totally unnecessary LEGO disaster" title="Definitely do not press this">?</button>
+      </div>
+
+      <h4>1. The population distribution</h4>
+      <p>
+        Imagine we're at a LEGO store with a massive inventory of bricks
+        in colors spanning the entire visible spectrum.Our store has an 
+        enormous inventory. Imagine assigning each brick
+        a numerical value corresponding to its position along the color
+        spectrum.
+      </p>
+      <p>
+        The <strong>population distribution</strong> on the left shows
+        how these values are distributed throughout the inventory.
+        Each bar represents a range of values, and its height tells us
+        how many observations fall within that range.
+      </p>
+
+      <h4>2. Sampling and the sample mean</h4>
+      <p>
+        Now let's reach into the inventory and select n bricks.
+        This is out sample size. We calculate the average numerical value of those bricks.
+        That is, sum the numerical values for all n bricks and divide by the samples size.
+        This average is called the <strong>sample mean</strong>. Think of it as an average.
+      </p>
+      <p>
+        No, let's put the bricks back, select another sample of n bricks, and
+        calculate another mean. Repeating this process gives us many
+        sample means.
+      </p>
+
+      <h4>3. The sampling distribution of the mean</h4>
+      <p>
+        The histogram on the right groups these sample means into its own bins.
+        Each bar counts how many sample means fall within a particular
+        interval. The rainbow colors help us see where those means fall
+        along the numerical axis.
+      </p>
+      <p>
+        A tall bar means that many samples produced means in that interval.
+        A short bar means fewer did. The number of histogram bins controls
+        the resolution of our view; it does not determine the sample size.
+      </p>
+
+      <h4>4. What happens as n increases?</h4>
+      <p>
+        When we average only a few bricks, the sample mean can vary
+        considerably from sample to sample. When we average many bricks,
+        unusually high and low values tend to balance each other out.
+        The sample means therefore tend to cluster more tightly around
+        the population mean.
+      </p>
+      <p>
+        Under the usual conditions of the Central Limit Theorem, the
+        sampling distribution becomes increasingly well approximated
+        by a normal distribution as n grows.
+      </p>
+
+      <div class="lego-equation">
+        <span class="equation-label">The theoretical standard error</span>
+        <div class="math">σ / √n</div>
+        <p>
+          As n increases, the standard error decreases. The theoretical
+          normal curve becomes narrower and taller, while the simulated
+          sample means tend to concentrate near the population mean.
+        </p>
+      </div>
+
+      <p class="story-takeaway">
+        <strong>The big idea:</strong> We start with individual observations
+        in a population, repeatedly take samples, and study the distribution
+        of their means. The Central Limit Theorem explains why those means
+        tend to form an approximately normal distribution as the sample
+        size grows.
+      </p>
+    </div>
+  </section>
+</main>
+
+<div class="lego-chaos-overlay" id="legoChaosOverlay" aria-hidden="true" role="dialog" aria-label="LEGO disaster cinematic">
+  <div class="lego-chaos-caption">LEGO CONTAINMENT FAILURE
+    <span class="lego-chaos-subcaption">For educational purposes. Mostly.</span>
+  </div>
+  <button class="lego-chaos-close" id="legoChaosClose" type="button" aria-label="Close LEGO animation">✕ Close chaos</button>
+  <canvas id="legoChaosCanvas" aria-hidden="true"></canvas>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  const slider = $("sampleSize");
+  const sampleSizeInput = $("sampleSizeInput");
+  const shapeSelect = $("populationShape");
+  const countInput = $("meanCount");
+  const populationBinSlider = $("populationBinCount");
+  const populationBinValue = $("populationBinValue");
+  const samplingBinSlider = $("samplingBinCount");
+  const samplingBinValue = $("samplingBinValue");
+  const showNormalCurve = $("showNormalCurve");
+  const animateLego = $("animateLego");
+  const playButton = $("playN");
+  const newButton = $("newSample");
+  const status = $("status");
+  const legoToggle = $("legoToggle");
+  const legoStory = $("legoStory");
+  const legoToggleMark = $("legoToggleMark");
+
+  legoToggle.addEventListener("click", () => {
+    const isExpanded = legoToggle.getAttribute("aria-expanded") === "true";
+    legoToggle.setAttribute("aria-expanded", String(!isExpanded));
+    legoStory.hidden = isExpanded;
+    legoToggleMark.textContent = isExpanded ? "＋" : "−";
+  });
+
+  // Hidden LEGO chaos button: one giant red brick, one spectacular crash.
+  const legoChaosButton = $("legoChaosButton");
+  const legoChaosOverlay = $("legoChaosOverlay");
+  const legoChaosCanvas = $("legoChaosCanvas");
+  const legoChaosClose = $("legoChaosClose");
+  let chaosFrame = null;
+  let chaosTimeout = null;
+  let chaosResizeHandler = null;
+
+  // A tiny software 3-D renderer: real cuboid faces, top studs, perspective,
+  // and independent X/Y/Z rotations. This replaces the flat confetti sprites.
+  function drawBrick3D(ctx, W, H, x, y, z, w, h, d, rx, ry, rz, color, camera = 850, showStuds = true) {
+    const c = color;
+    const shade = (hex, factor) => {
+      const n = parseInt(hex.slice(1), 16);
+      const r = Math.max(0, Math.min(255, ((n >> 16) & 255) * factor));
+      const g = Math.max(0, Math.min(255, ((n >> 8) & 255) * factor));
+      const b = Math.max(0, Math.min(255, (n & 255) * factor));
+      return `rgb(${r|0},${g|0},${b|0})`;
+    };
+    const crx=Math.cos(rx), srx=Math.sin(rx), cry=Math.cos(ry), sry=Math.sin(ry), crz=Math.cos(rz), srz=Math.sin(rz);
+    function project(px, py, pz) {
+      let yy=py*crx-pz*srx, zz=py*srx+pz*crx;
+      let xx=px*cry+zz*sry; zz=-px*sry+zz*cry;
+      const xxx=xx*crz-yy*srz, yyy=xx*srz+yy*crz;
+      const depth=z+zz, denom=Math.max(90,camera-depth), f=camera/denom;
+      return { x:W/2+(x+xxx)*f, y:H/2+(y+yyy)*f, depth, f };
+    }
+    const verts=[
+      [-w/2,-h/2,-d/2],[w/2,-h/2,-d/2],[w/2,h/2,-d/2],[-w/2,h/2,-d/2],
+      [-w/2,-h/2,d/2],[w/2,-h/2,d/2],[w/2,h/2,d/2],[-w/2,h/2,d/2]
+    ].map(v=>project(...v));
+    const faces=[
+      {i:[0,1,2,3],light:1.18}, {i:[4,5,6,7],light:.66},
+      {i:[0,1,5,4],light:1.04}, {i:[3,2,6,7],light:.78},
+      {i:[0,3,7,4],light:.86}, {i:[1,2,6,5],light:.58}
+    ];
+    // Draw far faces first, giving the block visible thickness and solid edges.
+    faces.sort((a,b)=>a.i.reduce((n,i)=>n+verts[i].depth,0)-b.i.reduce((n,i)=>n+verts[i].depth,0));
+    ctx.save();
+    for(const face of faces){
+      ctx.beginPath(); face.i.forEach((idx,j)=>{const q=verts[idx]; if(j===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);}); ctx.closePath();
+      ctx.fillStyle=shade(c,face.light); ctx.fill();
+      ctx.strokeStyle='rgba(20,12,18,.55)'; ctx.lineWidth=Math.max(.65,1.1*(verts[face.i[0]].f)); ctx.stroke();
+    }
+    // Studs sit on the brick's top surface (local y = -h/2), not painted on a flat sprite.
+    const cols=Math.max(2,Math.min(6,Math.round(w/30))), rows=1;
+    if (showStuds) for(let j=0;j<rows;j++) for(let i=0;i<cols;i++){
+      const sx=-w*.34+(cols===1?0:i*w*.68/(cols-1));
+      const sz=-d*.27+(rows===1?0:j*d*.54);
+      const base=project(sx,-h/2,sz), top=project(sx,-h/2-Math.min(h*.19,10),sz);
+      const rxStud=Math.max(1.2,w/cols*.19*base.f), ryStud=Math.max(.8,rxStud*.72);
+      ctx.beginPath(); ctx.ellipse(base.x,base.y,rxStud,ryStud,0,0,Math.PI*2); ctx.fillStyle=shade(c,.62); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(top.x,top.y,rxStud*.96,ryStud*.96,0,0,Math.PI*2);
+      const grad=ctx.createLinearGradient(top.x-rxStud,top.y-ryStud,top.x+rxStud,top.y+ryStud);
+      grad.addColorStop(0,shade(c,1.42)); grad.addColorStop(.55,shade(c,1.13)); grad.addColorStop(1,shade(c,.78));
+      ctx.fillStyle=grad; ctx.fill(); ctx.strokeStyle='rgba(35,18,22,.45)'; ctx.lineWidth=.7; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(top.x-rxStud*.25,top.y-ryStud*.25,rxStud*.22,ryStud*.18,-.35,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,.42)'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function closeLegoChaos() {
+    legoChaosOverlay.classList.remove('active');
+    legoChaosOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (chaosFrame !== null) cancelAnimationFrame(chaosFrame);
+    if (chaosTimeout !== null) clearTimeout(chaosTimeout);
+    if (chaosResizeHandler) window.removeEventListener('resize', chaosResizeHandler);
+    chaosFrame = null; chaosTimeout = null; chaosResizeHandler = null;
+  }
+
+  function launchLegoChaos() {
+    closeLegoChaos();
+    // Cached, shaded 3-D-looking brick sprites keep the large burst inexpensive.
+    const ctx = legoChaosCanvas.getContext('2d', { alpha: true });
+    let W = 0, H = 0, dpr = 1;
+    const resize = () => {
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
+      W = window.innerWidth; H = window.innerHeight;
+      legoChaosCanvas.width = Math.floor(W * dpr);
+      legoChaosCanvas.height = Math.floor(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    chaosResizeHandler = resize;
+    window.addEventListener('resize', resize);
+    legoChaosOverlay.classList.add('active');
+    legoChaosOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    const colors = ['#ff3047','#ff8c28','#ffd43b','#45e06f','#32c8ff','#4778ff','#b85cff','#ff65bd','#f3f6fb'];
+    // Each cached sprite is a tiny isometric brick: top, front, side, and studs.
+    // We draw these once, then rotate/tumble the cached images for all particles.
+    const sprites = [];
+    const shade = (hex, f) => {
+      const n = parseInt(hex.slice(1), 16);
+      return `rgb(${Math.min(255,((n>>16)&255)*f)|0},${Math.min(255,((n>>8)&255)*f)|0},${Math.min(255,(n&255)*f)|0})`;
+    };
+    for (const color of colors) {
+      for (const [bw, bh] of [[25,17],[31,20],[37,23]]) {
+        const s = document.createElement('canvas'); s.width = bw + 12; s.height = bh + 12;
+        const g = s.getContext('2d');
+        const x=3, y=3, depth=7, front=bh-5;
+        // Soft shadow, then three visible faces with crisp edges.
+        g.fillStyle='rgba(0,0,0,.28)'; g.beginPath(); g.moveTo(x+2,y+depth+front+3); g.lineTo(x+bw+depth+2,y+depth+front+3); g.lineTo(x+bw+depth+2,y+depth+front+7); g.lineTo(x+2,y+depth+front+7); g.closePath(); g.fill();
+        g.beginPath(); g.moveTo(x,y+depth); g.lineTo(x+depth,y); g.lineTo(x+bw+depth,y); g.lineTo(x+bw,y+depth); g.closePath();
+        g.fillStyle=shade(color,1.22); g.fill(); g.strokeStyle='rgba(20,12,18,.48)'; g.lineWidth=1.1; g.stroke();
+        g.beginPath(); g.moveTo(x,y+depth); g.lineTo(x+bw,y+depth); g.lineTo(x+bw,y+depth+front); g.lineTo(x,y+depth+front); g.closePath();
+        let fg=g.createLinearGradient(x,y+depth,x+bw,y+depth+front);
+        fg.addColorStop(0,shade(color,1.22)); fg.addColorStop(.22,color); fg.addColorStop(1,shade(color,.78));
+        g.fillStyle=fg; g.fill(); g.stroke();
+        g.beginPath(); g.moveTo(x+bw,y+depth); g.lineTo(x+bw+depth,y); g.lineTo(x+bw+depth,y+front); g.lineTo(x+bw,y+depth+front); g.closePath();
+        let sg=g.createLinearGradient(x+bw,y+depth,x+bw+depth,y+front);
+        sg.addColorStop(0,shade(color,.78)); sg.addColorStop(1,shade(color,.48));
+        g.fillStyle=sg; g.fill(); g.stroke();
+        // Glossy molded-plastic reflections: a broad soft sheen plus a crisp specular streak.
+        g.save();
+        g.beginPath(); g.moveTo(x+2,y+depth+2); g.lineTo(x+bw-2,y+depth+2); g.lineTo(x+bw-2,y+depth+front*.42); g.lineTo(x+2,y+depth+front*.34); g.closePath(); g.clip();
+        const sheen=g.createLinearGradient(x,y+depth,x,y+depth+front*.5);
+        sheen.addColorStop(0,'rgba(255,255,255,.36)'); sheen.addColorStop(.35,'rgba(255,255,255,.12)'); sheen.addColorStop(1,'rgba(255,255,255,0)');
+        g.fillStyle=sheen; g.fillRect(x,y+depth,bw,front*.5);
+        g.restore();
+        g.save(); g.beginPath(); g.moveTo(x+2,y+depth); g.lineTo(x+bw-2,y+depth); g.lineTo(x+bw+depth-2,y+2); g.lineTo(x+depth+2,y+2); g.closePath(); g.clip();
+        const topSheen=g.createLinearGradient(x,y,x+bw,y+depth);
+        topSheen.addColorStop(0,'rgba(255,255,255,.48)'); topSheen.addColorStop(.5,'rgba(255,255,255,.10)'); topSheen.addColorStop(1,'rgba(255,255,255,0)');
+        g.fillStyle=topSheen; g.fillRect(x,y,bw+depth,depth+2); g.restore();
+        // Two to four raised studs on the top face, with highlight and shadow.
+        const studs=Math.max(2,Math.round(bw/10));
+        for(let k=0;k<studs;k++){
+          const sx=x+5+(k+.5)*(bw-10)/studs, sy=y+depth*.42;
+          g.beginPath(); g.ellipse(sx,sy+1,2.8,2.0,0,0,Math.PI*2); g.fillStyle=shade(color,.62); g.fill();
+          g.beginPath(); g.ellipse(sx,sy,2.6,1.9,0,0,Math.PI*2); g.fillStyle=shade(color,1.32); g.fill();
+          g.strokeStyle='rgba(20,12,18,.32)'; g.lineWidth=.65; g.stroke();
+          g.beginPath(); g.ellipse(sx-.6,sy-.5,.7,.45,-.3,0,Math.PI*2); g.fillStyle='rgba(255,255,255,.82)'; g.fill();
+        }
+        sprites.push({canvas:s,w:s.width,h:s.height});
+      }
+    }
+
+    const start = performance.now();
+    const approachMs = 1200;
+    const burstMs = approachMs;
+    const particles = [];
+    let exploded = false;
+    let burstX = W * .5, burstY = H * .5;
+    function frame(now) {
+      const elapsed = now - start;
+      ctx.clearRect(0, 0, W, H);
+
+      // A single solid red 3-D brick dives in from high above and far away.
+      if (elapsed < approachMs) {
+        const raw = Math.min(1, elapsed / approachMs);
+        const ease = Math.pow(raw, 2.45); // rapid, decisive zoom toward the camera with no pause before the burst
+        const z = -1850 + ease * 2110;
+        const px = (1 - ease) * W * .25;
+        const py = -H * (.78 * (1 - ease)) - H * .025;
+        const rx = -.22 + raw * 6.4, ry = .18 + raw * 12.8, rz = -.18 + raw * 5.1; // slightly faster multi-axis spin
+        const perspective = 850 / Math.max(90, 850-z);
+        burstX = W/2 + px * perspective;
+        burstY = H/2 + py * perspective;
+        // Plain, unbranded red cuboid: no studs, logo, or trademark-like details.
+        drawBrick3D(ctx,W,H,px,py,z,245,135,78,rx,ry,rz,'#f32335',850,false);
+      } else {
+        if (!exploded) {
+          exploded = true;
+          // Restore the original explosive sprite animation and its 1,500 pieces.
+          for (let i = 0; i < 1500; i++) {
+            const a = Math.random() * Math.PI * 2;
+            const speed = 2.8 + Math.random() * Math.min(13, Math.max(W, H) * .009);
+            const sprite = sprites[Math.floor(Math.random() * sprites.length)];
+            particles.push({
+              x: burstX, y: burstY,
+              vx: Math.cos(a) * speed, vy: Math.sin(a) * speed - 1.6,
+              rot: Math.random() * Math.PI * 2, vr: (Math.random() - .5) * .62,
+              yaw: Math.random() * Math.PI * 2, pitch: Math.random() * Math.PI * 2,
+              yawV: (Math.random() - .5) * .62, pitchV: (Math.random() - .5) * .58,
+              sprite, size: .62 + Math.random() * .82,
+              life: 1.18, gravity: .045 + Math.random() * .075
+            });
+          }
+        }
+        const ex = elapsed - burstMs;
+        if (ex < 220) {
+          ctx.fillStyle = `rgba(255,245,220,${Math.max(0, .48 - ex / 460)})`;
+          ctx.fillRect(0, 0, W, H);
+          ctx.beginPath(); ctx.arc(burstX, burstY, Math.max(0, ex) * 2.4, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255,65,75,${Math.max(0, 1 - ex / 220)})`;
+          ctx.lineWidth = 5; ctx.stroke();
+        }
+        for (const p of particles) {
+          p.vy += p.gravity; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          p.yaw += p.yawV; p.pitch += p.pitchV;
+          p.vx *= .998; p.life -= .00235;
+          if (p.life <= 0 || p.x < -120 || p.x > W + 120 || p.y < -120 || p.y > H + 120) continue;
+          ctx.save(); ctx.globalAlpha = Math.min(1,p.life);
+          ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+          // The sprite already has 3-D faces; subtle foreshortening sells the tumble.
+          const sx = Math.max(.28, Math.abs(Math.cos(p.yaw)));
+          const sy = Math.max(.42, Math.abs(Math.cos(p.pitch)));
+          const sw=p.sprite.w*p.size, sh=p.sprite.h*p.size;
+          ctx.scale(sx,sy);
+          ctx.drawImage(p.sprite.canvas,-sw/2,-sh/2,sw,sh);
+          ctx.restore();
+        }
+      }
+      if (elapsed < 7000) chaosFrame = requestAnimationFrame(frame);
+      else closeLegoChaos();
+    }
+    chaosFrame = requestAnimationFrame(frame);
+    chaosTimeout = setTimeout(closeLegoChaos, 7600);
+  }
+
+  legoChaosButton.addEventListener('click', launchLegoChaos);
+  legoChaosClose.addEventListener('click', event => { event.stopPropagation(); closeLegoChaos(); });
+  legoChaosOverlay.addEventListener('click', event => {
+    if (event.target === legoChaosOverlay) closeLegoChaos();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && legoChaosOverlay.classList.contains('active')) closeLegoChaos();
+  });
+
+  const popCanvas = $("populationChart");
+  const sampleCanvas = $("samplingChart");
+
+  const C = {
+    muted: "#b0b2b7",
+    axis: "#858b93",
+    grid: "#383d43"
+  };
+
+  const POP_SIZE = 50000;
+  const SAMPLE_X_SIGMAS = 4.5;
+
+  let population = [];
+  let popMean = 0;
+  let popSD = 0;
+  let randomMixture = null;
+  let cachedPopulationDomain = null;
+
+  let runningSums = [];
+  let sampleMeans = [];
+  let runningN = 0;
+
+  let animating = false;
+  let frameId = null;
+  let previousTime = 0;
+  let simulationToken = 0;
+  let simulationTimer = null;
+  let manualTimer = null;
+  let resizeTimer = null;
+  let internalSliderUpdate = false;
+
+  // Each LEGO particle represents an individual observation. Particles fall
+  // into their population bin, bounce briefly, and fade rather than accumulating.
+  let legoRain = null;
+  let legoFrameId = null;
+  let legoLandedBricks = [];
+
+  function randExp() {
+    return -Math.log(Math.max(1e-12, 1 - Math.random()));
+  }
+
+  function randStandardNormal() {
+    const u1 = Math.max(1e-12, Math.random());
+    const u2 = Math.random();
+    return Math.sqrt(-2 * Math.log(u1)) *
+      Math.cos(2 * Math.PI * u2);
+  }
+
+  function randNormal() {
+    return 4 + randStandardNormal();
+  }
+
+  function randUniform(a, b) {
+    return a + Math.random() * (b - a);
+  }
+
+  // Randomly weighted mixture of four distribution families.
+  // A new mixture is selected whenever a random population is generated.
+  function makeRandomMixture() {
+    const families = [
+      "normal", "exponential", "uniform", "reflected"
+    ];
+
+    const components = Array.from({ length: 4 }, () => ({
+      family: families[Math.floor(Math.random() * families.length)],
+      weight: 0.15 + Math.random(),
+      location: randUniform(-2.5, 5.5),
+      scale: randUniform(0.35, 2.0)
+    }));
+
+    const total = components.reduce((sum, c) => sum + c.weight, 0);
+    components.forEach(c => c.weight /= total);
+
+    return components;
+  }
+
+  function drawRandomMixture() {
+    let r = Math.random();
+    let chosen = randomMixture[randomMixture.length - 1];
+
+    for (const component of randomMixture) {
+      r -= component.weight;
+      if (r <= 0) {
+        chosen = component;
+        break;
+      }
+    }
+
+    switch (chosen.family) {
+      case "normal":
+        return chosen.location +
+          chosen.scale * randStandardNormal();
+
+      case "uniform":
+        return randUniform(
+          chosen.location - chosen.scale,
+          chosen.location + chosen.scale
+        );
+
+      case "reflected":
+        return chosen.location - chosen.scale * randExp();
+
+      default:
+        return chosen.location + chosen.scale * randExp();
+    }
+  }
+
+  function drawPopulationObservation() {
+    switch (shapeSelect.value) {
+      case "left":
+        return 8 - randExp();
+
+      case "center":
+        return randNormal();
+
+      case "random":
+        return drawRandomMixture();
+
+      case "right":
+      default:
+        return randExp();
+    }
+  }
+
+  function stats(values) {
+    let sum = 0;
+    for (const x of values) sum += x;
+
+    const mean = sum / values.length;
+
+    let squaredDifferences = 0;
+    for (const x of values) {
+      squaredDifferences += (x - mean) ** 2;
+    }
+
+    return {
+      mean,
+      sd: Math.sqrt(squaredDifferences / values.length)
+    };
+  }
+
+  function fmt(x) {
+    return Number.isFinite(x) ? x.toFixed(4) : "—";
+  }
+
+  function getPopulationBinCount() {
+    return Number(populationBinSlider.value);
+  }
+
+  function getSamplingBinCount() {
+    return Number(samplingBinSlider.value);
+  }
+
+  function getMeanCount() {
+    const parsed = Number.parseInt(countInput.value, 10);
+    if (!Number.isFinite(parsed)) return 1000;
+    return Math.max(1, Math.min(10000, parsed));
+  }
+
+  function normalizeMeanCountInput() {
+    countInput.value = String(getMeanCount());
+  }
+
+  function populationDomain() {
+    if (cachedPopulationDomain) return cachedPopulationDomain;
+
+    if (shapeSelect.value === "left") {
+      return { min: -4, max: 8 };
+    }
+
+    if (shapeSelect.value === "center") {
+      return { min: 0, max: 8 };
+    }
+
+    if (shapeSelect.value === "right") {
+      return { min: 0, max: 8 };
+    }
+
+    return { min: -5, max: 10 };
+  }
+
+  function calculatePopulationDomain() {
+    if (shapeSelect.value !== "random") {
+      cachedPopulationDomain = null;
+      return;
+    }
+
+    const sorted = [...population].sort((a, b) => a - b);
+    const lo = sorted[Math.floor(sorted.length * 0.005)];
+    const hi = sorted[Math.floor(sorted.length * 0.995)];
+    const pad = Math.max((hi - lo) * 0.06, 0.2);
+
+    cachedPopulationDomain = {
+      min: lo - pad,
+      max: hi + pad
+    };
+  }
+
+  function canvasContext(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.round(rect.width * dpr));
+    const h = Math.max(1, Math.round(rect.height * dpr));
+
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    return { ctx, w: rect.width, h: rect.height };
+  }
+
+  function histogram(values, bins, min, max) {
+    const counts = new Array(bins).fill(0);
+    const width = (max - min) / bins;
+
+    if (!(width > 0)) {
+      return { counts, min, max, width: 1 };
+    }
+
+    for (const value of values) {
+      let i = Math.floor((value - min) / width);
+
+      if (i === bins) i--;
+
+      if (i >= 0 && i < bins) counts[i]++;
+    }
+
+    return { counts, min, max, width };
+  }
+
+  function axes(ctx, w, h, domain, maxY, xLabel, yLabel) {
+    const left = 57;
+    const right = 15;
+    const top = 17;
+    const bottom = 43;
+
+    const pw = Math.max(1, w - left - right);
+    const ph = Math.max(1, h - top - bottom);
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= 4; i++) {
+      const y = top + ph - i / 4 * ph;
+
+      ctx.strokeStyle = C.grid;
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(w - right, y);
+      ctx.stroke();
+
+      ctx.fillStyle = C.muted;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+
+      const value = maxY * i / 4;
+      const decimals = maxY < 20 ? 1 : 0;
+      ctx.fillText(value.toFixed(decimals), left - 8, y);
+    }
+
+    for (let i = 0; i <= 4; i++) {
+      const x = left + i / 4 * pw;
+      const value = domain.min + i / 4 * (domain.max - domain.min);
+
+      ctx.fillStyle = C.muted;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText(value.toFixed(2), x, top + ph + 9);
+    }
+
+    ctx.strokeStyle = C.axis;
+    ctx.beginPath();
+    ctx.moveTo(left, top);
+    ctx.lineTo(left, top + ph);
+    ctx.lineTo(w - right, top + ph);
+    ctx.stroke();
+
+    ctx.fillStyle = C.muted;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(xLabel, left + pw / 2, h - 5);
+
+    ctx.save();
+    ctx.translate(13, top + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(yLabel, 0, 0);
+    ctx.restore();
+
+    return { left, top, pw, ph };
+  }
+
+  // Give the same numerical value the same spectrum color in both graphs.
+  // The population's x-axis domain defines the shared color scale; the
+  // sampling histogram uses its own bin locations but this same scale.
+  function spectrumColor(value, colorDomain) {
+    const span = colorDomain.max - colorDomain.min;
+    const rawT = span > 0 ? (value - colorDomain.min) / span : 0.5;
+    const t = Math.max(0, Math.min(1, rawT));
+    const hue = 275 - 275 * t;
+    return `hsl(${hue}, 78%, 62%)`;
+  }
+
+  function drawBars(ctx, plot, hist, maxY, domain, colorDomain, preservePositionPalette = false) {
+    const bw = plot.pw / hist.counts.length;
+    const binWidth = (domain.max - domain.min) / hist.counts.length;
+
+    for (let i = 0; i < hist.counts.length; i++) {
+      const bh = hist.counts[i] / maxY * plot.ph;
+      const binCenter = domain.min + (i + 0.5) * binWidth;
+
+      // Preserve the population's existing rainbow exactly. On the sampling
+      // graph, color by the same actual numerical scale used by the population.
+      if (preservePositionPalette) {
+        const t = hist.counts.length > 1
+          ? i / (hist.counts.length - 1)
+          : 0.5;
+        ctx.fillStyle = `hsl(${275 - 275 * t}, 78%, 62%)`;
+      } else {
+        ctx.fillStyle = spectrumColor(binCenter, colorDomain);
+      }
+
+      ctx.fillRect(
+        plot.left + i * bw + 0.5,
+        plot.top + plot.ph - bh,
+        Math.max(0.5, bw - 1),
+        bh
+      );
+    }
+  }
+
+  function drawPopulation(frameTime = 0) {
+    if (!population.length) return;
+
+    const { ctx, w, h } = canvasContext(popCanvas);
+    const domain = populationDomain();
+    const bins = getPopulationBinCount();
+    const hist = histogram(population, bins, domain.min, domain.max);
+    const maxY = Math.max(1, ...hist.counts) * 1.12;
+    const plot = axes(
+      ctx, w, h, domain, maxY, "Observation value", "Count"
+    );
+
+    // The population histogram stays intact in the background. The LEGO
+    // bricks are a visual overlay showing a fresh sample's observations being
+    // categorized into the population's value bins.
+    drawBars(ctx, plot, hist, maxY, domain, domain, true);
+
+    if (frameTime) advanceLegoRain(frameTime, plot, domain);
+    for (const brick of legoLandedBricks) {
+      ctx.globalAlpha = Math.max(0, Math.min(1, brick.life));
+      drawLegoBrick(ctx, brick.x, brick.y, brick.width, brick.height, brick.color);
+    }
+    ctx.globalAlpha = 1;
+    if (legoRain && legoRain.active) {
+      for (const brick of legoRain.falling) {
+        drawLegoBrick(ctx, brick.x, brick.y, brick.width, brick.height, brick.color);
+      }
+    }
+  }
+
+  // FIXED HORIZONTAL SCALE:
+  // The sample-mean x-axis is defined by the population SD at n = 2.
+  // It does not change as n increases.
+  function sampleDomain() {
+    const half = Math.max(
+      SAMPLE_X_SIGMAS * popSD / Math.sqrt(2),
+      0.15
+    );
+
+    return {
+      min: popMean - half,
+      max: popMean + half
+    };
+  }
+
+  // FIXED VERTICAL SCALE:
+  // Set the y-axis using the theoretical curve's peak at n = 1500.
+  // This is intentionally retained from the supplied original version.
+  function fixedSampleYMax() {
+    const nMax = 1500;
+    const se = popSD / Math.sqrt(nMax);
+    const peakDensity = se > 0
+      ? 1 / (se * Math.sqrt(2 * Math.PI))
+      : 1;
+
+    const domain = sampleDomain();
+    const binWidth =
+      (domain.max - domain.min) / getSamplingBinCount();
+
+    const peakInCountUnits =
+      peakDensity * getMeanCount() * binWidth;
+
+    return Math.max(1, peakInCountUnits * 1.18);
+  }
+
+  function normalDensity(x, n) {
+    const se = popSD / Math.sqrt(n);
+    if (!(se > 0)) return 0;
+
+    const z = (x - popMean) / se;
+
+    return Math.exp(-0.5 * z * z) /
+      (se * Math.sqrt(2 * Math.PI));
+  }
+
+  function drawSampling() {
+    if (!population.length) return;
+
+    const n = Number(slider.value);
+    const { ctx, w, h } = canvasContext(sampleCanvas);
+    const domain = sampleDomain();
+    const bins = getSamplingBinCount();
+    const hist = histogram(sampleMeans, bins, domain.min, domain.max);
+    const maxY = fixedSampleYMax();
+    const plot = axes(
+      ctx, w, h, domain, maxY, "Sample mean", "Count"
+    );
+
+    // No LEGO animation on this graph: these bins represent sample means.
+    drawBars(ctx, plot, hist, maxY, domain, populationDomain());
+
+    if (showNormalCurve.checked) {
+      const points = 401;
+      const binWidth = (domain.max - domain.min) / bins;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2.8;
+
+      for (let i = 0; i < points; i++) {
+        const xVal = domain.min +
+          (domain.max - domain.min) * i / (points - 1);
+        const yVal = normalDensity(xVal, n) *
+          getMeanCount() * binWidth;
+        const x = plot.left +
+          (xVal - domain.min) / (domain.max - domain.min) * plot.pw;
+        const y = plot.top + plot.ph -
+          Math.min(yVal, maxY) / maxY * plot.ph;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+    }
+  }
+
+  function drawLegoBrick(ctx, x, y, width, height, color) {
+    // Tiny bricks stay inside their bin-sized footprint, but get a little
+    // molded-plastic depth: bevels, a top highlight, a shaded front edge, studs.
+    if (width <= 0 || height <= 0) return;
+    const depth = Math.min(height * 0.22, width * 0.12, 2.2);
+    const radius = Math.min(1.8, width * 0.12, height * 0.18);
+    const canRound = width > 4 && height > 3;
+
+    ctx.save();
+    // No cast shadow: keep falling and landed bin LEGO crisp and uncluttered.
+    const base = ctx.createLinearGradient(x, y, x + width, y + height);
+    base.addColorStop(0, 'rgba(255,255,255,0.24)');
+    base.addColorStop(0.24, color);
+    base.addColorStop(1, 'rgba(0,0,0,0.25)');
+    ctx.fillStyle = base;
+    if (canRound) {
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, radius);
+      ctx.fill();
+    } else {
+      ctx.fillRect(x, y, width, height);
+    }
+
+    if (width >= 2.2 && height >= 1.4) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.34)';
+      ctx.lineWidth = Math.min(0.65, width * 0.07, height * 0.1);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y + ctx.lineWidth / 2);
+      ctx.lineTo(x + width - radius, y + ctx.lineWidth / 2);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(0,0,0,0.18)';
+      ctx.fillRect(x + width * 0.08, y + height * 0.78, width * 0.84, Math.max(0.25, height * 0.12));
+    }
+
+    // LEGO studs are only drawn when there is enough room to read them.
+    if (width >= 7 && height >= 4.5) {
+      const count = Math.max(1, Math.min(4, Math.floor(width / 7.2)));
+      const studR = Math.min(height * 0.25, width / (count * 3.2), 2.4);
+      const usable = Math.max(0, width - studR * 2);
+      for (let i = 0; i < count; i++) {
+        const sx = x + studR + (count === 1 ? usable / 2 : i * usable / (count - 1));
+        const sy = y + Math.min(height * 0.37, studR + 0.3);
+        const stud = ctx.createLinearGradient(sx - studR, sy - studR, sx + studR, sy + studR);
+        stud.addColorStop(0, 'rgba(255,255,255,0.72)');
+        stud.addColorStop(0.35, color);
+        stud.addColorStop(1, 'rgba(0,0,0,0.34)');
+        ctx.beginPath();
+        ctx.ellipse(sx, sy, studR, Math.max(0.65, studR * 0.68), 0, 0, Math.PI * 2);
+        ctx.fillStyle = stud;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.34)';
+        ctx.lineWidth = 0.45;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(sx - studR * 0.22, sy - studR * 0.2, studR * 0.25, studR * 0.15, -0.3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.48)';
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  }
+
+  function stopLegoRain() {
+    if (legoFrameId !== null) {
+      cancelAnimationFrame(legoFrameId);
+      legoFrameId = null;
+    }
+    legoRain = null;
+    legoLandedBricks = [];
+  }
+
+  function startLegoRain() {
+    stopLegoRain();
+
+    if (!animateLego.checked || !population.length) {
+      drawPopulation();
+      return;
+    }
+
+    const domain = populationDomain();
+    const bins = getPopulationBinCount();
+    const binWidth = (domain.max - domain.min) / bins;
+    const n = Number(slider.value);
+    const queue = [];
+
+    // Draw one sample of size n from the population. Each brick represents
+    // one individual observation, not a sample mean.
+    for (let i = 0; i < n; i++) {
+      const value = population[Math.floor(Math.random() * population.length)];
+      if (value < domain.min || value > domain.max) continue;
+      let bin = Math.floor((value - domain.min) / binWidth);
+      if (bin === bins) bin--;
+      if (bin >= 0 && bin < bins) queue.push({ value, bin });
+    }
+
+    // Shuffle arrivals so observations rain into different categories at once.
+    for (let i = queue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [queue[i], queue[j]] = [queue[j], queue[i]];
+    }
+
+    legoLandedBricks = [];
+    legoRain = {
+      active: true,
+      queue,
+      next: 0,
+      landedCounts: new Array(bins).fill(0),
+      falling: [],
+      lastTime: 0,
+      landed: 0,
+      total: queue.length
+    };
+
+    status.textContent = `LEGO rain: ${queue.length.toLocaleString()} observations falling into population bins…`;
+    legoFrameId = requestAnimationFrame(legoRainFrame);
+  }
+
+  function advanceLegoRain(time, plot, domain) {
+    const dt = legoRain && legoRain.lastTime
+      ? Math.min(34, time - legoRain.lastTime)
+      : 16;
+    if (legoRain) legoRain.lastTime = time;
+
+    // Animate particles that have reached their bins: a small bounce, then fade.
+    const gravity = 0.0025;
+    legoLandedBricks = legoLandedBricks.filter(brick => {
+      brick.life -= dt / 1050;
+      brick.vy += gravity * dt;
+      brick.y += brick.vy * dt;
+      if (brick.y >= brick.restY) {
+        brick.y = brick.restY;
+        if (Math.abs(brick.vy) > 0.045) {
+          // Higher restitution gives each little brick a playful, visible hop.
+          brick.vy = -Math.abs(brick.vy) * 0.66;
+          brick.x += (Math.random() - 0.5) * Math.min(2.8, brick.width * 0.3);
+          brick.x = Math.max(brick.binLeft, Math.min(brick.binRight - brick.width, brick.x));
+        } else {
+          brick.vy = 0;
+        }
+      }
+      return brick.life > 0;
+    });
+
+    if (!legoRain || !legoRain.active) return;
+
+    const bins = legoRain.landedCounts.length;
+    const binPixelWidth = plot.pw / bins;
+    const floorY = plot.top + plot.ph;
+    const spawnPerFrame = 4;
+
+    for (let k = 0; k < spawnPerFrame && legoRain.next < legoRain.queue.length; k++) {
+      const item = legoRain.queue[legoRain.next++];
+      // Bricks must fit entirely inside their destination bin. They scale
+      // down as bins get narrower, even at the maximum bar count.
+      const width = Math.max(0.35, Math.min(8, binPixelWidth * 0.72));
+      const height = width * 0.58;
+      const availableX = Math.max(0, binPixelWidth - width);
+      const x = plot.left + item.bin * binPixelWidth +
+        Math.random() * availableX;
+      legoRain.falling.push({
+        bin: item.bin,
+        binLeft: plot.left + item.bin * binPixelWidth,
+        binRight: plot.left + (item.bin + 1) * binPixelWidth,
+        x,
+        y: plot.top - 8 - Math.random() * 35,
+        width,
+        height,
+        restY: floorY - height - Math.random() * Math.min(22, plot.ph * 0.12),
+        speed: 0.58 + Math.random() * 0.38,
+        color: spectrumColor(item.value, domain)
+      });
+    }
+
+    const remaining = [];
+    for (const brick of legoRain.falling) {
+      brick.y += brick.speed * dt;
+      // Each brick gets a stable landing height inside its bin. Small random
+      // offsets suggest a brief pile-up without letting blocks cross bin walls.
+      if (brick.y >= brick.restY) {
+        legoLandedBricks.push({
+          ...brick,
+          y: brick.restY,
+          vy: -(0.28 + Math.random() * 0.22),
+          life: 1
+        });
+      } else {
+        remaining.push(brick);
+      }
+    }
+    legoRain.falling = remaining;
+
+    if (legoRain.next >= legoRain.queue.length && legoRain.falling.length === 0) {
+      const total = legoRain.total;
+      legoRain.active = false;
+      legoRain = null;
+      status.textContent = `Complete: ${total.toLocaleString()} individual observations animated into the population bins.`;
+    }
+  }
+
+  function legoRainFrame(time) {
+    if ((!legoRain || !legoRain.active) && legoLandedBricks.length === 0) {
+      legoFrameId = null;
+      drawPopulation();
+      return;
+    }
+    drawPopulation(time);
+    if ((legoRain && legoRain.active) || legoLandedBricks.length > 0) {
+      legoFrameId = requestAnimationFrame(legoRainFrame);
+    } else {
+      legoFrameId = null;
+      drawPopulation();
+    }
+  }
+
+  function updateStats() {
+    const n = Number(slider.value);
+
+    $("populationMean").textContent = fmt(popMean);
+    $("populationSD").textContent = fmt(popSD);
+    $("standardError").textContent =
+      fmt(popSD / Math.sqrt(n));
+
+    if (sampleMeans.length) {
+      let sum = 0;
+      for (const m of sampleMeans) sum += m;
+
+      $("meanOfMeans").textContent =
+        fmt(sum / sampleMeans.length);
+    } else {
+      $("meanOfMeans").textContent = "—";
+    }
+  }
+
+  function drawAll() {
+    drawPopulation();
+    drawSampling();
+    updateStats();
+  }
+
+  showNormalCurve.addEventListener("change", () => {
+    samplingCurveLegend.hidden = !showNormalCurve.checked;
+    drawSampling();
+  });
+
+  animateLego.addEventListener("change", () => {
+    if (!animateLego.checked) {
+      stopLegoRain();
+      drawPopulation();
+    } else if (population.length) {
+      startLegoRain();
+    }
+  });
+
+  function syncSampleSizeControls(value = slider.value) {
+    const n = Math.max(2, Math.min(1500, Math.round(Number(value) || 2)));
+    slider.value = String(n);
+    sampleSizeInput.value = String(n);
+    return n;
+  }
+
+  function updateCurve() {
+    syncSampleSizeControls();
+    drawSampling();
+    updateStats();
+  }
+
+  function generatePopulation() {
+    randomMixture = shapeSelect.value === "random"
+      ? makeRandomMixture()
+      : null;
+
+    population = new Array(POP_SIZE);
+
+    for (let i = 0; i < POP_SIZE; i++) {
+      population[i] = drawPopulationObservation();
+    }
+
+    const s = stats(population);
+    popMean = s.mean;
+    popSD = s.sd;
+
+    calculatePopulationDomain();
+
+    runningSums = [];
+    sampleMeans = [];
+    runningN = 0;
+
+    drawPopulation();
+    updateStats();
+  }
+
+  function cancelSimulation() {
+    simulationToken++;
+
+    if (simulationTimer !== null) {
+      clearTimeout(simulationTimer);
+      simulationTimer = null;
+    }
+
+    if (manualTimer !== null) {
+      clearTimeout(manualTimer);
+      manualTimer = null;
+    }
+  }
+
+  function updateMeansFromSums() {
+    const divisor = Math.max(1, runningN);
+    sampleMeans = runningSums.map(sum => sum / divisor);
+  }
+
+  // Generate sample means in batches to keep the interface responsive.
+  function simulateAtN(n, callback) {
+    cancelSimulation();
+    stopLegoRain();
+
+    const token = simulationToken;
+    const count = getMeanCount();
+    const sums = new Array(count).fill(0);
+
+    let sampleIndex = 0;
+
+    runningSums = [];
+    sampleMeans = [];
+    runningN = 0;
+
+    drawSampling();
+    updateStats();
+
+    status.textContent =
+      `Generating ${count.toLocaleString()} sample means at n = ${n}…`;
+
+    function batch() {
+      if (token !== simulationToken) return;
+
+      const end = Math.min(sampleIndex + 35, count);
+
+      for (; sampleIndex < end; sampleIndex++) {
+        let sum = 0;
+
+        for (let j = 0; j < n; j++) {
+          const pick = Math.floor(
+            Math.random() * population.length
+          );
+
+          sum += population[pick];
+        }
+
+        sums[sampleIndex] = sum;
+      }
+
+      if (sampleIndex < count) {
+        status.textContent =
+          `Generating sample means: ${Math.round(
+            100 * sampleIndex / count
+          )}%`;
+
+        simulationTimer = setTimeout(batch, 0);
+        return;
+      }
+
+      runningSums = sums;
+      runningN = n;
+      updateMeansFromSums();
+
+      simulationTimer = null;
+
+      status.textContent =
+        `Complete: ${count.toLocaleString()} sample means at n = ${n}.`;
+
+      drawPopulation();
+      updateStats();
+      // Animate individual observations on the population graph only.
+      if (animateLego.checked && !callback) startLegoRain();
+      else {
+        drawPopulation();
+        drawSampling();
+      }
+
+      if (callback) callback();
+    }
+
+    batch();
+  }
+
+  // Advance the existing samples using only their additional observations.
+  function advanceSimulation(targetN) {
+    if (
+      runningSums.length !== getMeanCount() ||
+      runningN < 1 ||
+      targetN < runningN
+    ) {
+      return false;
+    }
+
+    const delta = targetN - runningN;
+    if (delta === 0) return true;
+
+    for (let i = 0; i < runningSums.length; i++) {
+      let sum = runningSums[i];
+
+      for (let j = 0; j < delta; j++) {
+        sum += population[
+          Math.floor(Math.random() * population.length)
+        ];
+      }
+
+      runningSums[i] = sum;
+    }
+
+    runningN = targetN;
+    updateMeansFromSums();
+
+    return true;
+  }
+
+  function stopAnimation() {
+    if (!animating) return;
+
+    animating = false;
+
+    if (frameId !== null) {
+      cancelAnimationFrame(frameId);
+      frameId = null;
+    }
+
+    previousTime = 0;
+    playButton.textContent = "▶ Animate n";
+    status.textContent = `Paused at n = ${slider.value}.`;
+  }
+
+  function animationTick(time) {
+    if (!animating) return;
+
+    const interval = 30; // Fixed animation speed.
+
+    if (!previousTime) previousTime = time;
+
+    if (time - previousTime >= interval) {
+      previousTime = time;
+
+      const current = Number(slider.value);
+      const step = current < 100
+        ? 1
+        : current < 400
+          ? 3
+          : 8;
+
+      const next = Math.min(1500, current + step);
+
+      if (!advanceSimulation(next)) {
+        stopAnimation();
+        simulateAtN(current, startAnimation);
+        return;
+      }
+
+      internalSliderUpdate = true;
+      slider.value = next;
+      internalSliderUpdate = false;
+
+      syncSampleSizeControls(next);
+
+      drawSampling();
+      updateStats();
+
+      status.textContent =
+        `Animating: n = ${next} · ` +
+        `${sampleMeans.length.toLocaleString()} sample means`;
+
+      if (next >= 1500) {
+        animating = false;
+        frameId = null;
+        previousTime = 0;
+
+        playButton.textContent = "▶ Animate n";
+        status.textContent =
+          `Complete: n = 1500 · ` +
+          `${sampleMeans.length.toLocaleString()} sample means`;
+
+        return;
+      }
+    }
+
+    frameId = requestAnimationFrame(animationTick);
+  }
+
+  function beginAnimation() {
+    if (Number(slider.value) >= 1500) return;
+
+    // Start the observation rain on the population graph when n-animation begins.
+    if (animateLego.checked && !legoRain) startLegoRain();
+
+    animating = true;
+    previousTime = 0;
+
+    playButton.textContent = "Ⅱ Pause animation";
+    status.textContent = `Animating from n = ${slider.value}.`;
+
+    frameId = requestAnimationFrame(animationTick);
+  }
+
+  function startAnimation() {
+    if (animating) {
+      stopAnimation();
+      return;
+    }
+
+    stopLegoRain();
+    cancelSimulation();
+
+    // Restart from n = 2 after reaching the maximum.
+    if (Number(slider.value) >= 1500) {
+      internalSliderUpdate = true;
+      slider.value = 2;
+      internalSliderUpdate = false;
+
+      syncSampleSizeControls(2);
+    }
+
+    const n = Number(slider.value);
+    const count = getMeanCount();
+
+    if (
+      runningN !== n ||
+      runningSums.length !== count
+    ) {
+      status.textContent =
+        "Preparing the simulation for animation…";
+
+      animating = true;
+      playButton.textContent = "Ⅱ Pause animation";
+
+      simulateAtN(n, () => {
+        if (animating) {
+          animating = false;
+          beginAnimation();
+        }
+      });
+
+      return;
+    }
+
+    beginAnimation();
+  }
+
+  function handleManualChange() {
+    if (internalSliderUpdate) return;
+
+    if (animating) stopAnimation();
+
+    syncSampleSizeControls();
+
+    updateCurve();
+    cancelSimulation();
+
+    manualTimer = setTimeout(() => {
+      manualTimer = null;
+      simulateAtN(Number(slider.value));
+    }, 180);
+  }
+
+  function generateNewSample() {
+    stopAnimation();
+    cancelSimulation();
+
+    generatePopulation();
+    simulateAtN(Number(slider.value));
+  }
+
+  slider.addEventListener("input", handleManualChange);
+
+  sampleSizeInput.addEventListener("change", () => {
+    const n = syncSampleSizeControls(sampleSizeInput.value);
+    if (animating) stopAnimation();
+    updateCurve();
+    cancelSimulation();
+    manualTimer = setTimeout(() => {
+      manualTimer = null;
+      simulateAtN(n);
+    }, 180);
+  });
+
+  sampleSizeInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sampleSizeInput.blur();
+    }
+  });
+
+  countInput.addEventListener("change", () => {
+    normalizeMeanCountInput();
+    if (animating) stopAnimation();
+
+    cancelSimulation();
+    drawSampling();
+    simulateAtN(Number(slider.value));
+  });
+
+  populationBinSlider.addEventListener("input", () => {
+    syncSampleSizeControls();
+  populationBinValue.value = populationBinSlider.value;
+    populationBinValue.textContent = populationBinSlider.value;
+
+    // Re-run the observation animation against the newly refined bins so
+    // every brick is assigned and rendered using the current bin boundaries.
+    if (animateLego.checked && population.length) {
+      startLegoRain();
+    } else {
+      drawPopulation();
+    }
+  });
+
+  samplingBinSlider.addEventListener("input", () => {
+    samplingBinValue.value = samplingBinSlider.value;
+    samplingBinValue.textContent = samplingBinSlider.value;
+    drawSampling();
+  });
+
+  shapeSelect.addEventListener("change", () => {
+    stopAnimation();
+    cancelSimulation();
+
+    generatePopulation();
+    simulateAtN(Number(slider.value));
+  });
+
+  playButton.addEventListener("click", startAnimation);
+  newButton.addEventListener("click", generateNewSample);
+
+  document.addEventListener("keydown", event => {
+    if (event.code !== "Space" || event.repeat) return;
+
+    const target = event.target;
+    const tag = target && target.tagName;
+
+    if (
+      target?.isContentEditable ||
+      ["INPUT", "BUTTON", "SELECT", "TEXTAREA"].includes(tag)
+    ) return;
+
+    event.preventDefault();
+    startAnimation();
+  });
+
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(drawAll, 100);
+  });
+
+  populationBinValue.value = populationBinSlider.value;
+  populationBinValue.textContent = populationBinSlider.value;
+  samplingBinValue.value = samplingBinSlider.value;
+  samplingBinValue.textContent = samplingBinSlider.value;
+  normalizeMeanCountInput();
+  samplingCurveLegend.hidden = !showNormalCurve.checked;
+
+  generatePopulation();
+  simulateAtN(Number(slider.value));
+})();
+</script>
+</body>
+</html>

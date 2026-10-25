@@ -2,12 +2,26 @@ WorkFlux — Copyright and Permissions Notice
 
 Copyright © 2026 Edwin Garcia Cuevas. All rights reserved.
 
-The original WorkFlux code, documentation, and original visual design are reserved to the copyright holder identified above, except for third-party components and materials identified as belonging to others.
+## 1. Ownership
 
-No license is granted to copy, modify, redistribute, sublicense, or incorporate the original WorkFlux materials into another project without prior written permission from the copyright holder, unless a separate written agreement applies or the use is permitted by applicable law.
+Except for third-party components and materials identified as belonging to others, the original WorkFlux source code, documentation, and original visual design are reserved to the copyright holder identified above.
 
-To request permission, contact the copyright holder through the contact method listed in the project's official repository or website.
+## 2. Permission Required
 
-Third-party libraries and materials are not covered by this notice and remain subject to their respective licenses. See THIRD_PARTY_DEPENDENCIES.md.
+No license or general permission is granted to copy, modify, redistribute, sublicense, or incorporate the original WorkFlux materials into another project without prior written permission from the copyright holder, except where a separate written agreement applies or applicable law permits otherwise.
 
-This notice describes the project's intended permissions; it is not a substitute for legal advice.
+Requests for permission should be directed to the copyright holder through the contact method listed in the project's official repository or website.
+
+## 3. Third-Party Components
+
+This notice applies only to original WorkFlux materials owned by the copyright holder. Third-party libraries and other materials remain subject to their respective licenses and terms. Nothing in this notice is intended to restrict permissions granted by those licenses.
+
+See `THIRD_PARTY_DEPENDENCIES.md` for information about the third-party libraries currently referenced by WorkFlux.
+
+## 4. No Warranty
+
+WorkFlux is an educational visualization provided for exploratory and informational purposes. To the extent permitted by applicable law, the original WorkFlux materials are provided without warranties of any kind. This notice does not exclude any warranty or right that cannot lawfully be excluded.
+
+## 5. Scope of Notice
+
+This document records the copyright holder's intended permissions for original WorkFlux materials. It is not a substitute for legal advice.

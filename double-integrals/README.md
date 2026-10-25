@@ -26,6 +26,8 @@ The simulation uses third-party libraries and fonts. See [`THIRD-PARTY-NOTICES.m
 
 Third-party components retain their respective copyrights and licenses. Please consult [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) for dependency information.
 
-## Author
+## Author/ Copyrights
 
-Edwin Garcia Cuevas
+Designed and programmed by Edwin Garcia Cuevas.
+
+Copyright © 2026 Edwin Garcia Cuevas. All rights reserved.

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central Limit Theorem — Full-Screen Lab v6</title>
+<title>Central Limit Theorem</title>
 
 <style>
 :root {
@@ -879,8 +879,8 @@ canvas {
 </main>
 
 <div class="lego-chaos-overlay" id="legoChaosOverlay" aria-hidden="true" role="dialog" aria-label="LEGO disaster cinematic">
-  <div class="lego-chaos-caption">LEGO CONTAINMENT FAILURE
-    <span class="lego-chaos-subcaption">For educational purposes. Mostly.</span>
+  <div class="lego-chaos-caption">LEGO CONTAINMENT FAILURE!
+    <span class="lego-chaos-subcaption">For educational purposes!</span>
   </div>
   <button class="lego-chaos-close" id="legoChaosClose" type="button" aria-label="Close LEGO animation">✕ Close chaos</button>
   <canvas id="legoChaosCanvas" aria-hidden="true"></canvas>
@@ -1057,7 +1057,7 @@ canvas {
     }
 
     const start = performance.now();
-    const approachMs = 800;
+    const approachMs = 600;
     const burstMs = approachMs;
     const particles = [];
     let exploded = false;
@@ -1083,7 +1083,7 @@ canvas {
         if (!exploded) {
           exploded = true;
           // Restore the original explosive sprite animation and its 1,500 pieces.
-          for (let i = 0; i < 1500; i++) {
+          for (let i = 0; i < 1000; i++) {
             const a = Math.random() * Math.PI * 2;
             const speed = 2.8 + Math.random() * Math.min(13, Math.max(W, H) * .009);
             const sprite = sprites[Math.floor(Math.random() * sprites.length)];

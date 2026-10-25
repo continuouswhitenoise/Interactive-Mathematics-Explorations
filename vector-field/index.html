@@ -487,7 +487,7 @@
   let flowParticles = [];
   let flowLastTime = 0;
   let flowLayerReady = false;
-  // Camera changes request a small, gradual particle refresh instead of
+  // Camera changes results in a small and gradual particle refresh instead of
   // rebuilding the population synchronously during pointer/wheel events.
   let queuedParticleRefresh = 0;
   let particleRefreshFrames = 0;
@@ -1177,7 +1177,7 @@
     const centerX = dragStart.centerX-dx/dragStart.scale;
     const centerY = dragStart.centerY+dy/dragStart.scale;
     setView(centerX,centerY,spanX,spanY);
-    // Trails live in screen coordinates, so clear them only once when a real
+    // Trails live in screen coordinates, so they clear only once when a real
     // drag starts. Keep particle positions, ages, and timing intact while panning.
     if (!dragStart.trailsCleared) {
       if ($('showFlowParticles').checked) {

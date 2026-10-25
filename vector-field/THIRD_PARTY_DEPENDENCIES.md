@@ -19,7 +19,8 @@ This document records the third-party libraries loaded by the current WorkFlux H
 - **Version:** 13.2.0
 - **Project:** https://mathjs.org/
 - **Source repository:** https://github.com/josdejong/mathjs
-- **License:** Apache License 2.0 for math.js; the project distribution also includes third-party components with their own notices. Consult the package's license and notices for the exact distribution being used.
+- **Primary license:** Apache License 2.0.
+- **Additional licensing notes:** The math.js distribution includes third-party components that may be subject to separate licenses and notices. Consult the license and notices associated with the exact version and distribution being used.
 - **License text:** https://www.apache.org/licenses/LICENSE-2.0
 
 ## Runtime and network notes

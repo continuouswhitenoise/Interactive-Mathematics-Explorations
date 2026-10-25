@@ -17,7 +17,7 @@ WorkFlux is a standalone, interactive visualization for exploring a planar vecto
 
 This project is a self-contained HTML page; there is no build step or package installation required.
 
-1. Download `index.html`.
+1. Download the main WorkFlux HTML file.
 2. Open the file in a modern browser.
 3. For full functionality, allow the page to load its third-party libraries from their CDNs. An internet connection is required for MathJax and math.js as currently configured.
 
@@ -29,16 +29,28 @@ The interface includes animation, reset and view-centering controls, curve and v
 
 ## Inspiration and acknowledgments
 
-WorkFlux was inspired in part by **[FieldPlay](https://github.com/anvaka/fieldplay)**, a vector-field explorer created by **Andrei Kashcha ([@anvaka](https://github.com/anvaka))**. FieldPlay helped inspire the idea of making vector fields something to explore dynamically and visually. WorkFlux takes that inspiration in its own direction, focusing on a parameterized curve and the geometric interpretation of work and flux line integrals.
+WorkFlux was inspired in part by **[FieldPlay](https://github.com/anvaka/fieldplay)**, a vector-field explorer created by **Andrei Kashcha ([@anvaka](https://github.com/anvaka))**.
 
-WorkFlux is an independent project and is not affiliated with or endorsed by the FieldPlay project or its creator.
+FieldPlay helped inspire the idea of making vector fields something to explore dynamically and visually. WorkFlux takes that inspiration in its own direction, focusing on a parameterized curve and the geometric interpretation of work and flux line integrals.
 
-This project also relies on the third-party libraries listed in [`THIRD_PARTY_DEPENDENCIES.md`](THIRD_PARTY_DEPENDENCIES.md). Please retain their notices and license information when redistributing those libraries or a bundle that includes them.
+WorkFlux is an independent project and is not affiliated with or endorsed by the FieldPlay project or its creator. This acknowledgment describes conceptual inspiration and does not imply that FieldPlay source code was incorporated into WorkFlux.
+
+This project also relies on third-party libraries listed in [`THIRD_PARTY_DEPENDENCIES.md`](THIRD_PARTY_DEPENDENCIES.md). Please retain their notices and license information when redistributing those libraries or a bundle that includes them.
 
 ## Project status
 
-This is an interactive educational visualization. It is intended to support exploration and intuition, rather than replace formal definitions, proofs, or careful mathematical analysis.
+WorkFlux is an interactive educational visualization. It is intended to support exploration and intuition, rather than replace formal definitions, proofs, or careful mathematical analysis.
 
-## License
+## Copyright and permissions
 
-No project-specific license is declared in this README. Before publicly redistributing or accepting contributions to the project, choose and add a license that reflects how you want others to use, modify, and share your original code. Third-party libraries remain subject to their own licenses.
+Copyright © 2026 Edwin Garcia Cuevas. All rights reserved.
+
+Except for third-party components and materials identified as belonging to others, the original WorkFlux source code, documentation, and original visual design are reserved to the copyright holder.
+
+No license is granted to copy, modify, redistribute, sublicense, or incorporate original WorkFlux materials into another project without prior written permission from the copyright holder, except where a separate written agreement or applicable law permits otherwise.
+
+Third-party libraries remain subject to their respective licenses. See [`THIRD_PARTY_DEPENDENCIES.md`](THIRD_PARTY_DEPENDENCIES.md) for details.
+
+For permission requests, contact the copyright holder through the contact method listed in the project's official repository or website.
+
+This notice describes the project's intended permissions and is not legal advice.

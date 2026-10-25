@@ -17,7 +17,7 @@ WorkFlux is a standalone, interactive visualization for exploring a planar vecto
 
 This project is a self-contained HTML page; there is no build step or package installation required.
 
-1. Download `WorkFluxVectorSim_MobileFriendly_Final.html`.
+1. Download `index.html`.
 2. Open the file in a modern browser.
 3. For full functionality, allow the page to load its third-party libraries from their CDNs. An internet connection is required for MathJax and math.js as currently configured.
 

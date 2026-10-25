@@ -253,6 +253,36 @@ canvas {
   background: #ffffff;
 }
 
+/* NEW: theoretical-curve toggle */
+.curve-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: .9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.curve-toggle input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.curve-toggle:focus-within {
+  outline: 2px solid var(--yellow);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.legend-item[hidden] {
+  display: none;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -323,6 +353,7 @@ canvas {
 .lego-story h3 { color: #ffe36b; margin: 0 0 8px; font-size: 1.05rem; }
 .lego-story h4 { color: var(--text); margin: 16px 0 5px; font-size: .96rem; }
 .lego-story p { margin: 7px 0; }
+
 .lego-equation {
   margin: 16px 0;
   padding: 12px 15px;
@@ -330,6 +361,7 @@ canvas {
   border-radius: 8px;
   background: #292719;
 }
+
 .lego-equation .equation-label {
   display: block;
   color: #d7bd65;
@@ -339,8 +371,10 @@ canvas {
   letter-spacing: .04em;
   text-transform: uppercase;
 }
+
 .lego-equation .math { color: #fff0a6; padding: 7px 0; }
 .story-takeaway { margin-top: 16px !important; }
+
 .lego-story .lego-kicker {
   color: #d7bd65;
   font-size: .75rem;
@@ -349,6 +383,7 @@ canvas {
   text-transform: uppercase;
   margin-bottom: 7px;
 }
+
 .lego-story .math {
   margin: 10px 0;
   border-radius: 8px;
@@ -472,10 +507,17 @@ canvas {
         <span class="legend-item">
           <span class="swatch"></span> Simulated sample means
         </span>
-        <span class="legend-item">
+        <span class="legend-item" id="samplingCurveLegend">
           <span class="swatch curve"></span> Theoretical normal curve
         </span>
       </div>
+
+      <!-- NEW: checkbox for showing or hiding the theoretical curve -->
+      <label class="curve-toggle" for="showNormalCurve">
+        <input id="showNormalCurve" type="checkbox" checked>
+        <span>Show theoretical normal curve</span>
+      </label>
+
       <div class="graph-control">
         <label for="samplingBinCount">
           <span>Sampling-distribution histogram bars</span>
@@ -506,8 +548,6 @@ canvas {
     </div>
   </section>
 
-
-
   <section class="lego-section" aria-label="LEGO analogy explanation">
     <button class="lego-toggle" id="legoToggle" type="button"
       aria-expanded="false" aria-controls="legoStory">
@@ -522,7 +562,7 @@ canvas {
       <h4>1. The population distribution</h4>
       <p>
         Imagine we're at a LEGO store with a massive inventory of bricks
-        in colors spanning the entire visible spectrum.Our store has an 
+        in colors spanning the entire visible spectrum.Our store has an
         enormous inventory. Imagine assigning each brick
         a numerical value corresponding to its position along the color
         spectrum.
@@ -616,11 +656,22 @@ canvas {
   const legoStory = $("legoStory");
   const legoToggleMark = $("legoToggleMark");
 
+  // NEW: references for the theoretical-curve toggle and legend.
+  const showNormalCurve = $("showNormalCurve");
+  const samplingCurveLegend = $("samplingCurveLegend");
+
   legoToggle.addEventListener("click", () => {
     const isExpanded = legoToggle.getAttribute("aria-expanded") === "true";
     legoToggle.setAttribute("aria-expanded", String(!isExpanded));
     legoStory.hidden = isExpanded;
     legoToggleMark.textContent = isExpanded ? "＋" : "−";
+  });
+
+  // NEW: redraw the graph whenever the checkbox changes.
+  // The histogram remains visible; only the theoretical curve is toggled.
+  showNormalCurve.addEventListener("change", () => {
+    samplingCurveLegend.hidden = !showNormalCurve.checked;
+    drawSampling();
   });
 
   const popCanvas = $("populationChart");
@@ -1037,33 +1088,36 @@ canvas {
 
     drawBars(ctx, plot, hist, maxY, domain, populationDomain());
 
-    const points = 401;
-    const binWidth =
-      (domain.max - domain.min) / bins;
+    // NEW: draw the theoretical curve only when its checkbox is checked.
+    if (showNormalCurve.checked) {
+      const points = 401;
+      const binWidth =
+        (domain.max - domain.min) / bins;
 
-    ctx.beginPath();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2.8;
 
-    for (let i = 0; i < points; i++) {
-      const xVal = domain.min +
-        (domain.max - domain.min) * i / (points - 1);
+      for (let i = 0; i < points; i++) {
+        const xVal = domain.min +
+          (domain.max - domain.min) * i / (points - 1);
 
-      const yVal = normalDensity(xVal, n) *
-        getMeanCount() * binWidth;
+        const yVal = normalDensity(xVal, n) *
+          getMeanCount() * binWidth;
 
-      const x = plot.left +
-        (xVal - domain.min) /
-        (domain.max - domain.min) * plot.pw;
+        const x = plot.left +
+          (xVal - domain.min) /
+          (domain.max - domain.min) * plot.pw;
 
-      const y = plot.top + plot.ph -
-        Math.min(yVal, maxY) / maxY * plot.ph;
+        const y = plot.top + plot.ph -
+          Math.min(yVal, maxY) / maxY * plot.ph;
 
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
     }
-
-    ctx.stroke();
   }
 
   function updateStats() {
@@ -1451,6 +1505,9 @@ canvas {
   samplingBinValue.value = samplingBinSlider.value;
   samplingBinValue.textContent = samplingBinSlider.value;
   normalizeMeanCountInput();
+
+  // Ensure the legend matches the checkbox's initial state.
+  samplingCurveLegend.hidden = !showNormalCurve.checked;
 
   generatePopulation();
   simulateAtN(Number(slider.value));

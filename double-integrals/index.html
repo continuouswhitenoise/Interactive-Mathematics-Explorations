@@ -1554,8 +1554,9 @@ const tutorialSteps = [
   {
     title: "Add up all the slices",
     body: String.raw`<p>Move the slice across x. Each position contributes a signed amount:</p>
-      <div class="math-display">\[\int_a^b \int_{y_1(x_0)}^{y_2(x_0)}f(x_0,y)\,dy\,dx\]</div>
-      <p>These two steps give an iterated integral!</p>`
+      <div class="math-display">\[\int_a^b A(x)\,dx\]</div>
+      <p>Together, the two steps give an iterated integral:</p>
+      <div class="math-display">\[\int_a^b\int_{y_1(x)}^{y_2(x)} f(x,y)\,dy\,dx\]</div>`
   },
   {
     title: "Case 2: x-simple region",

@@ -1489,7 +1489,7 @@ if (document.fonts && document.fonts.load) {
 const tutorialSteps = [
   {
     title: "From Riemann sums to iterated integrals",
-    body: String.raw`<p>We defined the double integral by constructing a Riemann sum and taking its limit:</p>
+    body: String.raw`<p>A double integral by defined through a Riemann sum and taking its limit:</p>
       <div class="math-display">\[\iint_D f(x,y)\,dA\]</div>
       <p>Now, let's explore how to <strong>visualize the evaluation of double integrals by hand</strong> using iterated integrals.</p>`,
     tip: "Note: The visualizer uses numerical approximations to compute the integrals displayed here."
@@ -1547,7 +1547,7 @@ const tutorialSteps = [
   },
   {
     title: "Case 1: y-simple region",
-    body: String.raw`<p>Hold x fixed. The red slice creates a single-variable function of y:</p>
+    body: String.raw`<p>Hold x fixed. The red slice creates a single-variable function of y. Integrating along this slice gives</p>
       <div class="math-display">\[\int_{y_1(x)}^{y_2(x)}f(x,y)\,dy\]</div>
       <p>This is just a Calc 1 integral!</p>`
   },

@@ -1488,9 +1488,11 @@ if (document.fonts && document.fonts.load) {
 // A short, optional conceptual tour. The tour reuses the live slice in the 3D scene.
 const tutorialSteps = [
   {
-    title: "From Riemann sums to iterated integrals",
-    body: String.raw`<p>A double integral by defined through a Riemann sum and taking its limit:</p>
-      <div class="math-display">\[\iint_D f(x,y)\,dA\]</div>
+    title: "Double Integrals",
+    body: String.raw`<p>Double integrals are formally defined as the limit of a double Riemann sum:</p>
+      <div class="math-display">        
+      \[\iint_D f(x,y) \, dA := \lim_{\|P\| \to 0} \sum_{i=1}^{n} \sum_{j=1}^{m} f(x_{ij}^*, y_{ij}^*) \Delta A_{ij}\]
+      </div>
       <p>Now, let's explore how to <strong>visualize the evaluation of double integrals by hand</strong> using iterated integrals.</p>`,
     tip: "Note: The visualizer uses numerical approximations to compute the integrals displayed here."
   },

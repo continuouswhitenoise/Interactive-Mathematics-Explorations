@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Double Integral Visualizer: Iterated Integrals</title>
+<title>Double Integral: Iterated Integrals Visualizer</title>
 <!-- Third-party font dependency: Google Fonts (Inter, Manrope, Raleway). See THIRD-PARTY-NOTICES.md. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1509,7 +1509,7 @@ const tutorialSteps = [
     body: String.raw`<div class="tutorial-region-compare" aria-label="Symbolic comparison of y-simple and x-simple regions">
         <div class="tutorial-region-card"><strong>y-simple region</strong>
           <div class="tutorial-region-content">
-            <div class="region-definition">\[D_y=\{(x,y)\;:\;a\le x\le b,\;\; y_1(x)\le y\le y_2(x)\}\]</div>
+            <div class="region-definition">\[D_y=\{(x,y)\,:\,a\le x\le b,\,y_1(x)\le y\le y_2(x)\}\]</div>
             <div class="tutorial-region-visual"><svg viewBox="0 0 180 142" role="img" aria-label="Symbolic y-simple region with lower boundary y one of x and upper boundary y two of x">
             <path d="M30 112 L30 17 M30 112 L164 112" stroke="#8293a8" stroke-width="1.3" fill="none"/>
             <path d="M30.00 112.00 L31.34 102.60 L32.68 98.71 L34.02 95.72 L35.36 93.20 L36.70 90.98 L38.04 88.97 L39.38 87.13 L40.72 85.41 L42.06 83.80 L43.40 82.27 L44.74 80.82 L46.08 79.44 L47.42 78.11 L48.76 76.83 L50.10 75.59 L51.44 74.40 L52.78 73.24 L54.12 72.12 L55.46 71.03 L56.80 69.96 L58.14 68.92 L59.48 67.91 L60.82 66.92 L62.16 65.95 L63.50 65.00 L64.84 64.07 L66.18 63.16 L67.52 62.26 L68.86 61.38 L70.20 60.51 L71.54 59.66 L72.88 58.83 L74.22 58.00 L75.56 57.19 L76.90 56.39 L78.24 55.60 L79.58 54.82 L80.92 54.05 L82.26 53.30 L83.60 52.55 L84.94 51.81 L86.28 51.08 L87.62 50.36 L88.96 49.65 L90.30 48.94 L91.64 48.25 L92.98 47.56 L94.32 46.87 L95.66 46.20 L97.00 45.53 L98.34 44.87 L99.68 44.22 L101.02 43.57 L102.36 42.92 L103.70 42.29 L105.04 41.66 L106.38 41.03 L107.72 40.41 L109.06 39.80 L110.40 39.19 L111.74 38.58 L113.08 37.98 L114.42 37.39 L115.76 36.80 L117.10 36.21 L118.44 35.63 L119.78 35.06 L121.12 34.49 L122.46 33.92 L123.80 33.35 L125.14 32.79 L126.48 32.24 L127.82 31.69 L129.16 31.14 L130.50 30.59 L131.84 30.05 L133.18 29.52 L134.52 28.98 L135.86 28.45 L137.20 27.92 L138.54 27.40 L139.88 26.88 L141.22 26.36 L142.56 25.85 L143.90 25.34 L145.24 24.83 L146.58 24.32 L147.92 23.82 L149.26 23.32 L150.60 22.82 L151.94 22.33 L153.28 21.84 L154.62 21.35 L155.96 20.86 L157.30 20.38 L158.64 19.90 L159.98 19.42 L161.32 18.94 L162.66 18.47 L164.00 18.00 L164 112 Z" fill="#35d9e8" fill-opacity=".17" stroke="none"/>
@@ -1527,7 +1527,7 @@ const tutorialSteps = [
         </div>
         <div class="tutorial-region-card"><strong>x-simple region</strong>
           <div class="tutorial-region-content">
-            <div class="region-definition">\[D_x=\{(x,y)\;:\;c\le y\le d,\;\; x_1(y)\le x\le x_2(y)\}\]</div>
+            <div class="region-definition">\[D_x=\{(x,y)\,:\,c\le y\le d,\, x_1(y)\le x\le x_2(y)\}\]</div>
             <div class="tutorial-region-visual"><svg viewBox="0 0 180 142" role="img" aria-label="Symbolic x-simple region with left boundary x one of y and right boundary x two of y">
             <path d="M30 17 L30 112 M30 64.5 L164 64.5" stroke="#8293a8" stroke-width="1.3" fill="none"/>
             <path d="M97 112 C75 96 30 80 30 64.5 C30 49 75 32 97 17 L147.25 17 C154 32 164 49 164 64.5 C164 80 154 96 147.25 112 Z" fill="#a78bfa" fill-opacity=".18" stroke="none"/>
@@ -1548,15 +1548,14 @@ const tutorialSteps = [
   {
     title: "Case 1: y-simple region",
     body: String.raw`<p>Hold x fixed. The red slice is now a single-variable function of y:</p>
-      <div class="math-display">\[A(x_0)=\int_{y_1(x_0)}^{y_2(x_0)}f(x_0,y)\,dy\]</div>
+      <div class="math-display">\[\int_{y_1(x_0)}^{y_2(x_0)}f(x_0,y)\,dy\]</div>
       <p>That inner integral is just a Calc 1 integral.</p>`
   },
   {
     title: "Add up all the slices",
     body: String.raw`<p>Move the slice across x. Each position contributes a signed amount:</p>
-      <div class="math-display">\[\int_a^b A(x)\,dx\]</div>
-      <p>Together, the two steps give an iterated integral:</p>
-      <div class="math-display">\[\int_a^b\int_{y_1(x)}^{y_2(x)} f(x,y)\,dy\,dx\]</div>`
+      <div class="math-display">\[\int_a^b \int_{y_1(x_0)}^{y_2(x_0)}f(x_0,y)\,dy\,dx\]</div>
+      <p>These two steps give an iterated integral!</p>
   },
   {
     title: "Case 2: x-simple region",

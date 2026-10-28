@@ -1860,13 +1860,12 @@ animate();
 <div class="tutorial-backdrop" id="tutorialBackdrop" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" aria-describedby="tutorialCopy">
   <section class="tutorial-card">
     <div class="tutorial-kicker" id="tutorialKicker">A guided introduction · 1 of 8</div>
-    <h2 id="tutorialTitle">Double integrals begin with Riemann sums</h2>
+    <h2 id="tutorialTitle">Double integrals</h2>
     <div class="tutorial-copy" id="tutorialCopy">
-      <p>We approximate a double integral by adding contributions from many small pieces of a region.</p>
-      <div class="math-display">\[
-        \sum_{i=1}^{m}\sum_{j=1}^{n} f(x_{ij}^{*},y_{ij}^{*})\,\Delta A_{ij}
+      <p>Double integrals are formally defined as the limit of a double Riemann sum:</p>
+      <div class="math-display">
+        \[\iint_D f(x,y) \, dA := \lim_{\|P\| \to 0} \sum_{i=1}^{n} \sum_{j=1}^{m} f(x_{ij}^*, y_{ij}^*) \Delta A_{ij}
       \]</div>
-      <p>Each sample value is multiplied by the area of its small piece. The double integral is the limit of these sums as the pieces become arbitrarily fine.</p>
     </div>
     <div class="tutorial-footer">
       <span class="tutorial-progress" id="tutorialProgress">Step 1 of 8</span>
